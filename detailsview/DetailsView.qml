@@ -47,6 +47,7 @@ import QtQuick.Window 2.0
 
 Item {
     property real itemSize: width / 3
+    property string searchFor: ""
 
     ListModel {
         id: houseTrailImagesModel
@@ -96,6 +97,15 @@ Item {
         }
     }
 
+    DetailsModel {
+      id: theDetails
+      phrase: searchFor
+      searchString: "http://baugeschichte.at/app/v1/getData.php?action=getBuildingDetail&name="
+      onIsLoaded: {
+            console.debug("Reload DeatilsModel")
+
+        }
+    }
     ListView {
         id:                     mainListView
         anchors                 { fill: parent; margins: 10 }
@@ -103,7 +113,7 @@ Item {
         orientation:            ListView.Horizontal
         highlightMoveDuration:  250
         clip:                   true
-        model:                  houseTrailImagesModel
+        model:                  theDetails.model
         delegate:               Item {
             width:      mainListView.width
             height:     mainListView.height
@@ -134,15 +144,21 @@ Item {
                     delegate: Image {
                         height:     itemSize
                         width:      height
-                        source:     imageName
+                        source:     "http://baugeschichte.at/"+imageName
                         fillMode:   Image.PreserveAspectFit
 
                         MouseArea {
                             anchors.fill: parent
                             onClicked: imageView.show()
                         }
+                        onSourceChanged: {
+                            console.log("Source:",source)
+                            console.log("imageName:",imageName)
 
-                        Window {
+
+                        }
+
+                  /*      Window {
                             id:         imageView
                             width: 800
                             height: 600
@@ -159,6 +175,7 @@ Item {
                                 onClicked: imageView.close()
                             }
                         }
+                */
                     }
                 }
 
@@ -174,8 +191,9 @@ Item {
                     TextEdit {
                         anchors             { fill: parent; margins: 5 }
                         readOnly:           true
+
                         wrapMode:           TextEdit.WordWrap
-                        text:               textString
+                        text:               detailText
                         color:              "#333333"
                     }
                 }
@@ -185,8 +203,8 @@ Item {
 
     Rectangle {
         anchors { left: parent.left; bottom: parent.bottom; margins: 10 }
-        width: 20
-        height: 20
+        width: 100
+        height: 100
         color: "red"
 
         MouseArea {
@@ -201,9 +219,9 @@ Item {
 
     Rectangle {
         anchors { right: parent.right; bottom: parent.bottom; margins: 10 }
-        width: 20
-        height: 20
-        color: "red"
+        width: 100
+        height: 100
+        color: "blue"
 
         MouseArea {
             anchors.fill: parent

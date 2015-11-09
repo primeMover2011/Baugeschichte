@@ -55,7 +55,6 @@ void Dialog::createModelAsync(QNetworkReply *theReply)
                         aHouseTrail->setHouseTitle(anObj["title"].toString());
                         aHouseTrail->setTheLocation(QGeoCoordinate(anObj["lat"].toDouble(),anObj["lon"].toDouble()));
                         emit newHousetrail(aHouseTrail);
-//                        m_HouseTrailImages->append(aHouseTrail);
                     }
 
 

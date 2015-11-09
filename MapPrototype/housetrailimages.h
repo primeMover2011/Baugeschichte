@@ -118,7 +118,10 @@ public:
         CoordinateRole,
         CategoryRole,
     };
-    HousetrailModel(QObject *parent = 0){}
+    HousetrailModel(QObject *parent = 0){
+        Q_UNUSED(parent)
+
+    }
     void append(HouseTrail* aHouseTrail)
     {
         beginInsertRows(QModelIndex(), rowCount(), rowCount());

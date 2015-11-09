@@ -91,6 +91,7 @@ public slots:
     }
     void slotError(QNetworkReply::NetworkError anError)
     {
+        Q_UNUSED(anError)
         qDebug() << "Networkerror";
     }
 
@@ -183,6 +184,7 @@ public slots:
     void createModelAsync(QNetworkReply *theReply);
 private slots:
     void httpReadyRead(QNetworkReply *reply){
+        Q_UNUSED(reply)
         qDebug() << "Http ready read ";
     }
 

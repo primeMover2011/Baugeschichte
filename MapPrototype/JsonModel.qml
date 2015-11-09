@@ -31,6 +31,7 @@ Item {
         req.onreadystatechange = function() {
             status = req.readyState;
             if (status === XMLHttpRequest.DONE) {
+                console.log(req.responseText)
                 var searchResult = JSON.parse(req.responseText);
                 if (searchResult.errors !== undefined)
                     console.log("Error fetching searchresults: " + searchResult.errors[0].message)

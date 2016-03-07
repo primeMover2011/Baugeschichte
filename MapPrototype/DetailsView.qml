@@ -39,7 +39,7 @@
 ****************************************************************************/
 
 import QtQuick 2.2
-import QtQuick.Controls 1.2
+import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
 import QtQml.Models 2.2
@@ -275,7 +275,8 @@ Item {
                     color:          "#FFFCF2"
                     border.color:   "#8E8E8E"
 
-                    TextEdit {
+
+                    /*TextEdit {
                         anchors             { fill: parent; margins: 5 }
                         readOnly:           true
 
@@ -283,7 +284,23 @@ Item {
                         text:               detailText
                         font.pixelSize:     localHelper.sp(20)
                         color:              "#333333"
+                    }*/
+                    TextArea {
+                        anchors             { fill: parent; margins: 5 }
+                        readOnly:           true
+                        verticalScrollBarPolicy: Qt.ScrollBarAsNeeded
+                        horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+                        wrapMode:           TextEdit.WordWrap
+                        text:               (detailText.length > 0) ? detailText : "Kein Text"
+                        font.pixelSize:     localHelper.sp(20)
+                        //color:              "#333333"
                     }
+
+
+
+                    Keys.onLeftPressed: console.log("onLeft Details")
+                    Keys.onRightPressed: console.log("onLeft Details")
+
                 }
 
                 }//SplitView

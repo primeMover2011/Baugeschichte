@@ -120,30 +120,23 @@ ApplicationWindow {
 
     }
 
-    Dialog {
+    MessageDialog {
           id: shutDownDialog
+          icon: StandardIcon.Question
+          standardButtons: StandardButton.Yes | StandardButton.No
           modality: Qt.WindowModal
-          title: "Shutdown?"
+          title: "Baugeschichte App beenden?"
           onButtonClicked: console.log("clicked button " + clickedButton)
-          onAccepted: lastChosen.text = "Accepted " +
-              (clickedButton === StandardButton.Ok ? "(OK)" : (clickedButton == StandardButton.Retry ? "(Retry)" : "(Ignore)"))
-          onRejected: lastChosen.text = "Rejected " +
-              (clickedButton == StandardButton.Close ? "(Close)" : (clickedButton == StandardButton.Abort ? "(Abort)" : "(Cancel)"))
-          onHelp: lastChosen.text = "Yelped for help!"
-          onYes: lastChosen.text = (clickedButton == StandardButton.Yes ? "Yeessss!!" : "Yes, now and always")
-          onNo: lastChosen.text = (clickedButton == StandardButton.No ? "Oh No." : "No, no, a thousand times no!")
-          onApply: lastChosen.text = "Apply"
-          onReset: lastChosen.text = "Reset"
+          onYes: Qt.quit()
+          onNo: visible = false
 
-          Label {
-              text: "Hello world!"
-          }
       }
 
     Rectangle {
         color: "#060606"
         anchors.fill: parent
         focus: true
+        z: 40000
         Keys.onReleased: {
             console.log("Keys.onrelease")
             console.log("uiStack Depth:" + uiStack.depth)
@@ -154,7 +147,7 @@ ApplicationWindow {
                         uiStack.pop();
                     }
                     else{
-                        Qt.quit();
+                        shutDownDialog.visible = true;
                     }
                 }
 
@@ -168,6 +161,7 @@ ApplicationWindow {
             onDepthChanged: {
                 console.log("Depth changed:" + depth)
             }
+            z:35000
 
 
 
@@ -178,6 +172,7 @@ ApplicationWindow {
                 anchors.centerIn: parent;
                 anchors.fill: parent
                 center: locationGraz
+                z:32000
                 onSelectedPoiChanged: {
                     console.log("SelectedPoiChanged Begin")
                     uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor:selectedPoi}})

@@ -13,7 +13,7 @@ Map {
     signal routes
     signal followMe
     property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
-
+    z: 20000
     zoomLevel: 16
 
     Timer {
@@ -182,7 +182,6 @@ Map {
 
 
 
-
     plugin: Plugin {
         name: "mapbox"
         PluginParameter { name: "mapbox.map_id"; value: "primemover.c5fe94e8" }
@@ -195,7 +194,10 @@ Map {
         id: housetrailMapItems
         model: filteredTrailModel//houseTrailModel
         property Item currentItem
+        //z: 29000
 
+
+        //onCurrentItemChanged:
 
         delegate: MapQuickItem {
             id: mqItem
@@ -206,69 +208,72 @@ Map {
             sourceItem: Item {
                 id: theSourceItem
                 property Item myBubble : bubble
-                Image {
-                    id: image
-                    source: "marker.png"
-                    width: localHelper.sp(50)
-                    height: localHelper.sp(50)
-                    fillMode: Image.PreserveAspectFit
-                    z:2
-
-
-
-                    MouseArea {
-                        anchors.fill: parent
-                        z: 4
-                        onPressed: {
-                            if (housetrailMapItems.currentItem)
-                            housetrailMapItems.currentItem.myBubble.visible = false
-                            bubble.visible = true
-                            housetrailMapItems.currentItem = theSourceItem
-                        }
-
-                        onClicked: {
-                            if (housetrailMapItems.currentItem)
-                            housetrailMapItems.currentItem.myBubble.visible = false
-                            bubble.visible = true
-                            housetrailMapItems.currentItem = theSourceItem
-                        }
-
-                    }
-                }
+                z:10000
 
                 Rectangle {
+
                     id: bubble
-                    color: "#c1c1c1"
+                    color: "#cccccc"
                     border.width: 1
-                    width: textItem.width * 2.5
-                    height: textItem.height * 2.5
-                    radius: 5
-                    z: 1000
+                    width: textItem.width * 1.2
+                    height: textItem.height * 1.5
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                    radius: 3
+                    z: 10
+
+                    onZChanged: console.log("z:"+z)
                     visible: false
                     Text {
                         id: textItem
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.verticalCenter: parent.verticalCenter
                         text: title
-                        font.pixelSize: localHelper.sp(18)
+                        font.pixelSize: localHelper.sp(24)
                     }
                     MouseArea {
                         anchors.fill: parent
-                        //z: 5
-                        //preventStealing: true
-
-                        onPressed: {
-                            mapOfEurope.selectedPoi = title
+                        onPressed: selectPoi(title)
+                        onClicked: selectPoi(title)
+                        function selectPoi(aTitle){
+                            mapOfEurope.selectedPoi = aTitle
                             bubble.visible = false
-                        //    uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor:textItem.text}})
-                        }
-                        onClicked: {
-                            mapOfEurope.selectedPoi = title
-                            bubble.visible = false
-                         //   uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor:textItem.text}})
                         }
                     }
                 }
+
+
+                Image {
+                    id: image
+                    source: "marker.png"
+                    width: localHelper.sp(50)
+                    height: localHelper.sp(50)
+                    fillMode: Image.PreserveAspectFit
+                    z:9
+                    onZChanged: console.log("z:"+z)
+
+
+
+                    MouseArea {
+                        anchors.fill: parent
+                        z: 4
+                        onPressed: changeCurrentItem()
+                        onClicked: changeCurrentItem()
+
+                        function changeCurrentItem() {
+                            console.log("changing!!")
+                            if (housetrailMapItems.currentItem)
+                            housetrailMapItems.currentItem.myBubble.visible = false
+                            //housetrailMapItems.currentItem.z = 1
+                            bubble.visible = true
+                            housetrailMapItems.currentItem = theSourceItem
+                            housetrailMapItems.currentItem.z = 1000
+
+                        }
+
+                    }
+                }
+
 
 
             }

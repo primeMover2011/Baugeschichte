@@ -43,17 +43,23 @@ void Dialog::createModelAsync(QNetworkReply *theReply)
                 {
                     qDebug() << "no object..." << aDoc.toVariant();
                 }
+                QJsonDocument doc;
                 {
                     QJsonObject anInfoObject=aDoc.object();
                     QJsonArray theValueArray = anInfoObject["payload"].toArray();
-                    int i = 0;
+                    //int i = 0;
                     foreach (const QJsonValue& theValue, theValueArray) {
-                        if (i++ > 30) break;
+                        //if (i++ > 30) break;
                         HouseTrail* aHouseTrail = new HouseTrail();
                         QJsonObject anObj = theValue.toObject();
                         aHouseTrail->setDbId(anObj["id"].toInt());
                         aHouseTrail->setHouseTitle(anObj["title"].toString());
                         aHouseTrail->setTheLocation(QGeoCoordinate(anObj["lat"].toDouble(),anObj["lon"].toDouble()));
+
+
+                        doc.setArray(anObj["cats"].toArray());
+
+                        aHouseTrail->setCategories(doc.toJson());
                         emit newHousetrail(aHouseTrail);
                     }
 

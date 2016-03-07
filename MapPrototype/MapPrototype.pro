@@ -1,12 +1,14 @@
 TEMPLATE = app
 
 QT += qml quick positioning concurrent
+android: QT += androidextras
 
 SOURCES += main.cpp \
     dialog.cpp \
     housetrailimages.cpp \
     clusterproxy.cpp \
     Geohash.cpp
+
 
 RESOURCES += qml.qrc
 CONFIG += c++11

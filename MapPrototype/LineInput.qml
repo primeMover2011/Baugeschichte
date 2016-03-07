@@ -39,6 +39,7 @@
 ****************************************************************************/
 
 import QtQuick 2.0
+import "./"
 
 FocusScope {
     id: wrapper
@@ -48,6 +49,9 @@ FocusScope {
     property alias prefix: prefix.text
 
     signal accepted
+    DensityHelpers {
+        id:localHelper
+    }
 
     Rectangle {
         anchors.fill: parent
@@ -60,7 +64,7 @@ FocusScope {
             anchors { fill: parent; leftMargin: 14 }
             verticalAlignment: Text.AlignVCenter
             text: "Enter word"
-            font.pixelSize: 32
+            font.pixelSize: localHelper.sp(20)
             color: "#707070"
             opacity: input.length ? 0 : 1
         }
@@ -69,7 +73,7 @@ FocusScope {
             id: prefix
             anchors { left: parent.left; leftMargin: 14; verticalCenter: parent.verticalCenter }
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 32
+            font.pixelSize: localHelper.sp(32)
             color: "#707070"
             opacity: !hint.opacity
         }
@@ -79,7 +83,7 @@ FocusScope {
             focus: true
             anchors { left: prefix.right; right: parent.right; top: parent.top; bottom: parent.bottom }
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 32
+            font.pixelSize: localHelper.sp(32)
             color: "#707070"
             onAccepted: wrapper.accepted()
         }

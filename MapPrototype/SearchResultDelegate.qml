@@ -6,7 +6,7 @@ Item {
     height: 88
 
     property alias text: textitem.text
-    signal clicked
+    signal selected(string wot)
 
     Rectangle {
         anchors.fill: parent
@@ -44,7 +44,8 @@ Item {
         id: mouse
         anchors.fill: parent
         onClicked: {
-            uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor:textitem.text}})
+            selected(textitem.text)
+            //uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor:textitem.text}})
         }
 
     }

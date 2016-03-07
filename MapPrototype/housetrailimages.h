@@ -13,14 +13,14 @@ class HouseTrail: public QObject
     Q_PROPERTY(int dbId READ dbId WRITE setDbId NOTIFY dbIdChanged)
     Q_PROPERTY(QString houseTitle READ houseTitle WRITE setHouseTitle NOTIFY houseTitleChanged)
     Q_PROPERTY(QGeoCoordinate theLocation READ theLocation WRITE setTheLocation NOTIFY theLocationChanged)
-    Q_PROPERTY(QStringList categories READ categories WRITE setCategories NOTIFY categoriesChanged)
+    Q_PROPERTY(QString categories READ categories WRITE setCategories NOTIFY categoriesChanged)
     Q_PROPERTY(QString geoHash READ geoHash WRITE setGeoHash NOTIFY geoHashChanged)
 
 protected:
     int m_dbId;
     QString m_houseTitle;
     QGeoCoordinate m_theLocation;
-    QStringList m_categories;
+    QString m_categories;
     QString m_geoHash;
 
 public:
@@ -41,7 +41,7 @@ QGeoCoordinate theLocation() const
     return m_theLocation;
 }
 
-QStringList categories() const
+QString categories() const
 {
     return m_categories;
 }
@@ -82,7 +82,7 @@ void setTheLocation(QGeoCoordinate theLocation)
     emit theLocationChanged(theLocation);
 }
 
-void setCategories(QStringList categories)
+void setCategories(QString categories)
 {
     if (m_categories == categories)
         return;
@@ -104,7 +104,7 @@ signals:
 void dbIdChanged(int dbId);
 void houseTitleChanged(QString houseTitle);
 void theLocationChanged(QGeoCoordinate theLocation);
-void categoriesChanged(QStringList categories);
+void categoriesChanged(QString categories);
 void geoHashChanged(QString geoHash);
 };
 

@@ -3,17 +3,141 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import QtLocation 5.5
 import QtPositioning 5.5
+import "./Helper.js" as Helper
+import "./"
 
 Map {
     id: mapOfEurope
     signal search
     signal categories
+    signal routes
     signal followMe
+    property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
+
     zoomLevel: 16
+
+    Timer {
+        id: scaleTimer
+        interval: 100
+        running: false
+        repeat: false
+        onTriggered: {
+            mapOfEurope.calculateScale()
+        }
+    }
+
+    onCenterChanged:{
+        scaleTimer.restart()
+     //   if (mapOfEurope.followme)
+            //if (mapOfEurope.center !== positionSource.position.coordinate) mapOfEurope.followme = false
+    }
+
+    onZoomLevelChanged:{
+        scaleTimer.restart()
+     //   if (mapOfEurope.followme) mapOfEurope.center = positionSource.position.coordinate
+    }
+
+    onWidthChanged:{
+        scaleTimer.restart()
+    }
+
+    onHeightChanged:{
+        scaleTimer.restart()
+    }
+
+
+    Slider {
+        id: zoomSlider;
+        z: mapOfEurope.z + 3
+        minimumValue: mapOfEurope.minimumZoomLevel;
+        maximumValue: mapOfEurope.maximumZoomLevel;
+        anchors.margins: 10
+        anchors.bottom: scale.top
+        anchors.top: parent.top
+        anchors.right: parent.right
+        orientation : Qt.Vertical
+        value: mapOfEurope.zoomLevel
+        onValueChanged: {
+            mapOfEurope.zoomLevel = value
+        }
+    }
+
+    function calculateScale()
+    {
+        var coord1, coord2, dist, text, f
+        f = 0
+        coord1 = mapOfEurope.toCoordinate(Qt.point(0,scale.y))
+        coord2 = mapOfEurope.toCoordinate(Qt.point(0+scaleImage.sourceSize.width,scale.y))
+        dist = Math.round(coord1.distanceTo(coord2))
+
+        if (dist === 0) {
+            // not visible
+        } else {
+            for (var i = 0; i < scaleLengths.length-1; i++) {
+                if (dist < (scaleLengths[i] + scaleLengths[i+1]) / 2 ) {
+                    f = scaleLengths[i] / dist
+                    dist = scaleLengths[i]
+                    break;
+                }
+            }
+            if (f === 0) {
+                f = dist / scaleLengths[i]
+                dist = scaleLengths[i]
+            }
+        }
+
+        text = Helper.formatDistance(dist)
+        scaleImage.width = (scaleImage.sourceSize.width * f) - 2 * scaleImageLeft.sourceSize.width
+        scaleText.text = text
+    }
+
+    Item {
+        id: scale
+        z: mapOfEurope.z + 3
+        visible: scaleText.text != "0 m"
+        anchors.bottom: parent.bottom;
+        anchors.right: parent.right
+        anchors.margins: 20
+        height: scaleText.height * 2
+        width: scaleImage.width
+
+        Image {
+            id: scaleImageLeft
+            source: "../resources/scale_end.png"
+            anchors.bottom: parent.bottom
+            anchors.right: scaleImage.left
+        }
+        Image {
+            id: scaleImage
+            source: "../resources/scale.png"
+            anchors.bottom: parent.bottom
+            anchors.right: scaleImageRight.left
+        }
+        Image {
+            id: scaleImageRight
+            source: "../resources/scale_end.png"
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+        }
+        Label {
+            id: scaleText
+            color: "#004EAE"
+            anchors.centerIn: parent
+            text: "0 m"
+        }
+        Component.onCompleted: {
+            mapOfEurope.calculateScale();
+        }
+    }
+
+
+    DensityHelpers {
+        id: localHelper
+    }
 
     MapCircle {
         id: point
-        visible: true//myPosition.active
+        visible: myPosition.active
         radius: 100
         color: "blue" //#46a2da"
         border.color: "#190a33"
@@ -69,28 +193,44 @@ Map {
 
     MapItemView {
         id: housetrailMapItems
-        model: houseTrailModel
+        model: filteredTrailModel//houseTrailModel
+        property Item currentItem
+
+
         delegate: MapQuickItem {
+            id: mqItem
             coordinate   : QtPositioning.coordinate(coord.latitude, coord.longitude)
             anchorPoint.x: image.width * 0.5
             anchorPoint.y: image.height
 
             sourceItem: Item {
-
+                id: theSourceItem
+                property Item myBubble : bubble
                 Image {
                     id: image
                     source: "marker.png"
-                    width: 100
-                    height: 100
+                    width: localHelper.sp(50)
+                    height: localHelper.sp(50)
                     fillMode: Image.PreserveAspectFit
+                    z:2
 
 
 
                     MouseArea {
                         anchors.fill: parent
-                        z: 2
+                        z: 4
                         onPressed: {
+                            if (housetrailMapItems.currentItem)
+                            housetrailMapItems.currentItem.myBubble.visible = false
                             bubble.visible = true
+                            housetrailMapItems.currentItem = theSourceItem
+                        }
+
+                        onClicked: {
+                            if (housetrailMapItems.currentItem)
+                            housetrailMapItems.currentItem.myBubble.visible = false
+                            bubble.visible = true
+                            housetrailMapItems.currentItem = theSourceItem
                         }
 
                     }
@@ -98,26 +238,34 @@ Map {
 
                 Rectangle {
                     id: bubble
-                    color: "lightblue"
+                    color: "#c1c1c1"
                     border.width: 1
-                    width: text.width * 1.5
-                    height: text.height * 2
+                    width: textItem.width * 2.5
+                    height: textItem.height * 2.5
                     radius: 5
-                    z: 1
+                    z: 1000
                     visible: false
                     Text {
-                        id: text
+                        id: textItem
                         anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.verticalCenter: parent.verticalCenter
                         text: title
+                        font.pixelSize: localHelper.sp(18)
                     }
                     MouseArea {
                         anchors.fill: parent
-                        z: 1
-                        preventStealing: true
+                        //z: 5
+                        //preventStealing: true
 
                         onPressed: {
                             mapOfEurope.selectedPoi = title
                             bubble.visible = false
+                        //    uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor:textItem.text}})
+                        }
+                        onClicked: {
+                            mapOfEurope.selectedPoi = title
+                            bubble.visible = false
+                         //   uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor:textItem.text}})
                         }
                     }
                 }
@@ -140,22 +288,25 @@ Map {
     }
     RowLayout{
 //        Layout.fillWidth: true
+        z: 10
         anchors {
             left: parent.left
             right: parent.right
             margins: 5
         }
-
+        id: myLayout
+        property real sideLength: localHelper.dp(60)
         height: 60
+
 
 
 
 
             Rectangle{
                 id: cellLeft
-                color: "#ff0000"
-                height: 50
-                Layout.preferredWidth: 50
+                color: "#444444"
+                height: myLayout.sideLength
+                Layout.preferredWidth: myLayout.sideLength
                 Layout.alignment: Qt.AlignLeft
                 MouseArea {
                     anchors.fill: parent
@@ -175,15 +326,15 @@ Map {
 
     Rectangle{
         id: cellMiddle
-        color: "#00ff00"
-        Layout.preferredWidth: 50
-        height: 50
+        color: "#444444"
+        Layout.preferredWidth: myLayout.sideLength
+        height: myLayout.sideLength
         Layout.alignment: Qt.AlignHCenter
         MouseArea {
             anchors.fill: parent
             onClicked: {
                 console.log("cellMiddle clicked")
-              search()
+              routes()
             }
 
         }
@@ -195,9 +346,9 @@ Map {
         property bool isRunning: false
         visible: myPosition.valid
         color: "#0000ff"
-        Layout.preferredWidth: 50
+        Layout.preferredWidth: myLayout.sideLength
         opacity: isRunning ? 1 : 0.5
-        height: 50
+        height: myLayout.sideLength
         Layout.alignment: Qt.AlignRight
         MouseArea {
             anchors.fill: parent

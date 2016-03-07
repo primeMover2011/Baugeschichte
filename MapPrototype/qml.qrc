@@ -13,5 +13,12 @@
         <file>SearchPage.qml</file>
         <file>SearchResultDelegate.qml</file>
         <file>JsonModel.qml</file>
+        <file>flickresize.qml</file>
+        <file>DensityHelpers.qml</file>
+        <file>RouteView.qml</file>
+        <file>SimpleMap.qml</file>
+        <file>resources/scale_end.png</file>
+        <file>resources/scale.png</file>
+        <file>Helper.js</file>
     </qresource>
 </RCC>

@@ -44,76 +44,23 @@ import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
 import QtQml.Models 2.2
 import QtQuick.Window 2.0
+import "./"
 
 Item {
     property real itemSize: width / 3
     property string searchFor: ""
 
-    ListModel {
-        id: houseTrailImagesModel
-
-        ListElement {
-            area: "letzte Ansicht"
-            title: "Letzte Ansicht"
-            textString: "Ehemaliges \u0022Kommodhaus\u0022\n\nEckhaus mit Walmdach und fr\u00fchklassizistischer Plattenstilfassadierung, 1813 von Jakob Koll erbaut, 1839 durch Georg Hauberrisser um 2 Achsen verl\u00e4ngert. Der Bau war aus den Resten des ehemaligen Opernhauses am Tummelplatz hervorgegangen, dessen Vorg\u00e4nger wiederum von Erzherzo Karl II. erbaut, h\u00f6lzerne Wagenremisen der Lipizzaner waren. 1849 - 1855 befand sich das Haus im Besitz von Anton Sigl, dem Erbauer der Schlo\u00dfberg-Modelle.\nDas denkmalgesch\u00fctzte und keinesfalls einsturzgef\u00e4hrdete Geb\u00e4ude wurde im Jahre 2003 abgebrochen. Dies auf Grund eines Abbruchbescheides der Stadt Graz und trotz heftiger Proteste der Grazer Bev\u00f6lkerung.    \n\n(Nach: Andorfer, Opernhaus; Laukhardt, Kommodhaus)"
-            images: [
-                ListElement{
-                    area: "image"
-                    imageName:"images/img1.jpg"
-                    imageDescription:"(Foto AGIS - 2002)"
-                },
-                ListElement {
-                    area: "image2"
-                    imageName:"images/img2.jpg"
-                    imageDescription:"(Foto AGIS - 2002) "
-                },
-                ListElement {
-                    area: "image2"
-                    imageName:"images/img4.jpg"
-                    imageDescription:"(Foto AGIS - 2002) "
-                },
-                ListElement {
-                    area: "image2"
-                    imageName:"images/img5.jpg"
-                    imageDescription:"(Foto AGIS - 2002) "
-                },
-                ListElement {
-                    area: "image2"
-                    imageName:"images/img6.jpg"
-                    imageDescription:"(Foto AGIS - 2002) "
-                }
-            ]
-        }
-        ListElement {
-            area:"Info"
-            title:"Info: "
-            textString:"Burggasse 15\n8010 Graz\nSteiermark\n\u00d6sterreich\n\n47\u00b04\u002712.58\u0022N,15\u00b026\u002740.57\u0022E\nmehr unter http:\/\/baugeschichte.at"
-            images: [
-                ListElement {
-                    area: "impfo"
-                    imageName:"images/img3.jpg"
-                    imageDescription:"\nwww.baugeschichte.at "}
-            ]
-        }
+    DensityHelpers {
+        id:localHelper
     }
 
-/*    DetailsModel {
-      id: theDetails
-      phrase: searchFor
-      searchString: "http://baugeschichte.at/app/v1/getData.php?action=getBuildingDetail&name="
-      onIsLoaded: {
-            console.debug("Reload DeatilsModel")
-
-        }
-    }
-  */
     JsonModel {
         id: theDetails
         phrase: searchFor
         searchString: "http://baugeschichte.at/app/v1/getData.php?action=getBuildingDetail&name="
         onNewobject: {
-            for (var key in magneto) {
-                var jsonObject = magneto[key];
+            for (var key in magneto.payload) {
+                var jsonObject = magneto.payload[key];
                 jsonObject.detailText=jsonObject.text
                 jsonObject.text = ""
                 model.append(jsonObject);
@@ -135,45 +82,156 @@ Item {
         interactive:            false
         orientation:            ListView.Horizontal
         highlightMoveDuration:  250
-        clip:                   true
+        clip:                   false
         model:                  theDetails.model
+
         delegate:               Item {
             width:      mainListView.width
             height:     mainListView.height
-
+//            anchors.fill: parent
+        //+++ColumnLayout+++
             ColumnLayout {
                 anchors.fill: parent
 
+                SplitView{
+                    anchors.fill: parent
+                    orientation: Qt.Vertical
                 PathView {
                     id: imagePathView
+                    focus: true
+                    Keys.onLeftPressed: {
+                        console.log("details: onpressleft")
+                        decrementCurrentIndex()
+                    }
+                    Keys.onRightPressed: incrementCurrentIndex()
+                    flickDeceleration: 390
 
                     Layout.fillWidth:           true
-                    Layout.preferredHeight:     parent.height / 3
+                    Layout.fillHeight: true
+//                    Layout.preferredHeight:     parent.height / 3
+                    Layout.preferredHeight:     parent.height / 4
+                    //anchors.top : parent.top
                     pathItemCount:              3
                     preferredHighlightBegin:    0.5
                     preferredHighlightEnd:      0.5
                     highlightRangeMode:         PathView.StrictlyEnforceRange
                     model:                      images
                     path: Path {
-                        startX: 0
-                        startY: imagePathView.height / 2
-                        PathQuad {
-                            x: imagePathView.width
-                            y: imagePathView.height / 2
-                            controlX: imagePathView.width / 2
-                            controlY: imagePathView.height / 2
-                        }
+                        id: myPath
+                        startX: 0; startY: imagePathView.height / 2 //parent.height / 6
+                        PathAttribute {name: "rotateY"; value: 50.0}
+                        PathAttribute {name: "scalePic"; value: 0.2}
+                        PathAttribute {name: "zOrder"; value: 1}
+
+                        PathLine{x:imagePathView.width/4; y: imagePathView.height/ 2}
+                        PathPercent {value: 0.44}
+                        PathAttribute {name: "rotateY"; value: 50.0}
+                        PathAttribute {name: "scalePic"; value: 0.5}
+                        PathAttribute {name: "zOrder"; value: 10}
+
+                        PathQuad{x:imagePathView.width/2; y: imagePathView.height / 2.2 ; controlX: imagePathView.width/2.2; controlY: imagePathView.height / 2.2 }
+                        PathPercent {value: 0.50}
+                        PathAttribute {name: "rotateY"; value: 0.0}
+                        PathAttribute {name: "scalePic"; value: 1.0}
+                        PathAttribute {name: "zOrder"; value: 50}
+
+                        PathQuad{x:imagePathView.width * 0.75; y: imagePathView.height / 2 ; controlX: imagePathView.width * 0.78; controlY: imagePathView.height / 2}
+                        PathPercent {value: 0.56}
+                        PathAttribute {name: "rotateY"; value: -50.0}
+                        PathAttribute {name: "scalePic"; value: 0.5}
+                        PathAttribute {name: "zOrder"; value: 10}
+
+                        PathLine{x:imagePathView.width; y: imagePathView.height / 2}
+                        PathPercent {value: 1.00}
+                        PathAttribute {name: "rotateY"; value: -50.0}
+                        PathAttribute {name: "scalePic"; value: 0.2}
+                        PathAttribute {name: "zOrder"; value: 1}
                     }
-                    delegate: Image {
+
+
+
+
+                    delegate:
+                        Item{
+                                id: imageContainer
+                                property real tmpAngle : PathView.rotateY
+                                property real scaleValue: PathView.scalePic
+                                width: parent.width
+                                height: parent.height
+                                visible: PathView.onPath
+                                z: PathView.zOrder
+
+                                Image{
+                                    id:myImage
+                                    width: parent.width
+                                    height: parent.height
+                                    source: "http://baugeschichte.at/"+imageName
+                                    fillMode: Image.PreserveAspectFit
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    smooth: true
+                                }
+                                Image {
+                                    id: subImage
+                                    width: myImage.width
+                                    height: myImage.height
+                                    source: "http://baugeschichte.at/"+imageName
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    smooth: true
+                                    transform: Rotation { origin.x: 0; origin.y: parent.height; axis { x: 1; y: 0; z: 0 } angle: 180 }
+                                }
+                                Rectangle{
+                                    y: myImage.height;
+                                    x: -1
+                                    width: myImage.width + 1
+                                    height: myImage.height
+                                    gradient: Gradient {
+                                        GradientStop { position: 0.0; color: Qt.rgba(0,0,0, 0.7) }
+                                    }
+                                }
+
+                                transform:[
+                                    Rotation{
+                                        angle: tmpAngle
+                                        origin.x: myImage.width/2
+                                        axis { x: 0; y: 1; z: 0 }
+                                    },
+                                    Scale {
+                                        xScale:scaleValue; yScale:scaleValue
+                                        origin.x: myImage.width/2;   origin.y: myImage.height/2
+                                    }
+                                ]
+
+
+
+
+                        /*Image {
+                        id: smallImage
                         height:     itemSize
                         width:      height
                         source:     "http://baugeschichte.at/"+imageName
                         fillMode:   Image.PreserveAspectFit
+                        PinchArea {
+                               anchors.fill: parent
+                               pinch.target: smallImage
+                               pinch.minimumRotation: -360
+                               pinch.maximumRotation: 360
+                               pinch.minimumScale: 0.1
+                               pinch.maximumScale: 10
+                               pinch.dragAxis: Pinch.XAndYAxis
+                         //      onPinchStarted: setFrameColor();
 
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: imageView.show()
+                               MouseArea {
+                                   anchors.fill: parent
+                                   onClicked: {
+                                       smallImage.height = 1000
+                                       smallImage.width = 1000
+
+                                   }
+
                         }
+}
+
+
                         onSourceChanged: {
                             console.log("Source:",source)
                             console.log("imageName:",imageName)
@@ -181,7 +239,10 @@ Item {
 
                         }
 
-                  /*      Window {
+
+
+
+                        Window {
                             id:         imageView
                             width: 800
                             height: 600
@@ -189,7 +250,7 @@ Item {
                             flags:      Qt.SplashScreen
                             Image {
                                 anchors.fill: parent
-                                source: imageName
+                                source: smallImage.source
                                 fillMode: Image.PreserveAspectFit
                             }
 
@@ -198,15 +259,18 @@ Item {
                                 onClicked: imageView.close()
                             }
                         }
-                */
-                    }
-                }
 
+                    }//IMAGE*/
+                }
+                }
                 Rectangle {
                     id: textBase
 
                     Layout.fillWidth:   true
-                    Layout.fillHeight:  true
+                    Layout.maximumHeight: parent.height * 0.75
+                    Layout.minimumHeight: parent.height * 0.25
+                    height: parent.height / 2
+                    anchors.bottom: parent.bottom
 
                     color:          "#FFFCF2"
                     border.color:   "#8E8E8E"
@@ -217,10 +281,14 @@ Item {
 
                         wrapMode:           TextEdit.WordWrap
                         text:               detailText
+                        font.pixelSize:     localHelper.sp(20)
                         color:              "#333333"
                     }
                 }
+
+                }//SplitView
             }
+        //---ColumnLayout---
         }
     }
 
@@ -232,6 +300,7 @@ Item {
 
         MouseArea {
             anchors.fill: parent
+
             onClicked: {
                 if ( mainListView.currentIndex != 0 ) {
                     mainListView.decrementCurrentIndex()

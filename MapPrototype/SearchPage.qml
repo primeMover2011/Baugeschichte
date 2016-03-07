@@ -28,11 +28,14 @@ Item {
         }
 
     }
+    DensityHelpers {
+        id:localHelper
+    }
 
     FocusScope {
         id: theFocusScope
         signal ok
-        height: 60
+        height: localHelper.dp(60)
         width: parent.width
         Rectangle {
             anchors.fill: parent
@@ -43,14 +46,14 @@ Item {
 
             LineInput {
                 id: lineInput
-                hint: "Was wollen?"
+                hint: "Adresse..."
                 focus: true //flipBar.opened
                 anchors { fill: parent; margins: 6 }
                 onAccepted: {
                     if (Qt.inputMethod.visible)
                         Qt.inputMethod.hide()
                     console.log("accepted")
-                    searchModel.phrase = text
+                    searchModel.phrase = text + "*"
                 }
             }
         //lineInput
@@ -75,6 +78,7 @@ Item {
         delegate: SearchResultDelegate {
                 text: title
                 //onClicked: stackView.push(Qt.resolvedUrl(page))
+                onSelected: uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor: wot/*textitem.text*/}})
 
             }
 

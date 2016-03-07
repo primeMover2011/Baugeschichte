@@ -25,13 +25,16 @@ Item {
 
 //! [requesting]
         var req = new XMLHttpRequest;
-
-        req.open("GET",searchString + encodePhrase(phrase));
+        var searchPhrase = searchString.trim() + encodePhrase(phrase.trim()) //escape(phrase)
+        //console.log(searchPhrase)
+        req.open("GET", searchPhrase);
+//        req.open("GET",searchString + base64Phrase);
+        //console.log(req.responseText)
 
         req.onreadystatechange = function() {
             status = req.readyState;
             if (status === XMLHttpRequest.DONE) {
-                console.log(req.responseText)
+                //console.log(req.responseText)
                 var searchResult = JSON.parse(req.responseText);
                 if (searchResult.errors !== undefined)
                     console.log("Error fetching searchresults: " + searchResult.errors[0].message)

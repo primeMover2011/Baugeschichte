@@ -4,8 +4,24 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.4
 import QtPositioning 5.5
 import QtLocation 5.5
+import Qt.labs.settings 1.0
+import QtQuick.Dialogs 1.2
+import "./"
 
 ApplicationWindow {
+
+    onClosing: {
+        close.accepted = false;
+    }
+
+    Settings {
+        id: settings
+        property alias lastSeenLat: mapOfEurope.center.latitude
+        property alias lastSeenLon: mapOfEurope.center.longitude
+
+
+    }
+
 
     visible: true
     //    PositionSource
@@ -14,12 +30,70 @@ ApplicationWindow {
         dialog.getAllPois();
 
     }
+    ExclusiveGroup {
+        id: categoryGroup
+    }
+    width: 1024
+    height: 800
+
+
+
+
+    function selectCategory(theCat)
+    {
+       filteredTrailModel.setFilterWildcard(theCat);
+    }
+    menuBar: MenuBar {
+        id: mainMenuBar
+        Menu{
+            id: categoryMenu
+            title: "Categories"
+            function createMenu()
+            {
+                clear()
+                addCategory("Keine Kategorie");
+                for (var i=0; i<categoryModel.count;i++) {
+                    var catName = categoryModel.get(i).category
+//                    var catName = categoryModel[i].category
+
+                    addCategory(catName)
+                }
+            }
+
+            function selectCategory(theCat)
+            {
+//                filteredTrailModel.setFilterWildcard("Geschichte");
+                  if (theCat.indexOf("Keine") > -1)
+                      theCat=""
+                  filteredTrailModel.setFilterWildcard(theCat);
+            }
+            function addCategory(theName)
+            {
+                var item = addItem(theName)
+                item.checkable = true;
+                item.exclusiveGroup = categoryGroup;
+                //console.log(theName);
+                item.triggered.connect(function(){selectCategory(theName)});
+            }
+
+
+        }
+
+/*        function createProviderMenuItem(provider)
+        {
+            var item = addItem(provider);
+            item.checkable = true;
+            item.triggered.connect(function(){selectProvider(provider)})
+        }
+*/
+    }
 
 /*    Connections {
         target: mapOfEurope
         onSelectedPoiChanged: {
             console.log("Poi:", mapOfEurope.selectedPoi)
         }
+
     }
     */
     ListModel {
@@ -41,24 +115,59 @@ ApplicationWindow {
             }
             }
 
+            categoryMenu.createMenu();
         }
 
     }
+
+    Dialog {
+          id: shutDownDialog
+          modality: Qt.WindowModal
+          title: "Shutdown?"
+          onButtonClicked: console.log("clicked button " + clickedButton)
+          onAccepted: lastChosen.text = "Accepted " +
+              (clickedButton === StandardButton.Ok ? "(OK)" : (clickedButton == StandardButton.Retry ? "(Retry)" : "(Ignore)"))
+          onRejected: lastChosen.text = "Rejected " +
+              (clickedButton == StandardButton.Close ? "(Close)" : (clickedButton == StandardButton.Abort ? "(Abort)" : "(Cancel)"))
+          onHelp: lastChosen.text = "Yelped for help!"
+          onYes: lastChosen.text = (clickedButton == StandardButton.Yes ? "Yeessss!!" : "Yes, now and always")
+          onNo: lastChosen.text = (clickedButton == StandardButton.No ? "Oh No." : "No, no, a thousand times no!")
+          onApply: lastChosen.text = "Apply"
+          onReset: lastChosen.text = "Reset"
+
+          Label {
+              text: "Hello world!"
+          }
+      }
+
     Rectangle {
         color: "#060606"
         anchors.fill: parent
+        focus: true
         Keys.onReleased: {
             console.log("Keys.onrelease")
-            if (event.key === Qt.Key_Back && uiStack.depth > 1) {
-                             uiStack.pop();
-                             event.accepted = true;
-                         }
+            console.log("uiStack Depth:" + uiStack.depth)
+            if (event.key === Qt.Key_Back) {
+                event.accepted = true;
+                    if (uiStack.depth > 1) {
+                        console.log("pop");
+                        uiStack.pop();
+                    }
+                    else{
+                        Qt.quit();
+                    }
+                }
+
+
         }
 
         StackView
         {
             id: uiStack
             initialItem: mapOfEurope
+            onDepthChanged: {
+                console.log("Depth changed:" + depth)
+            }
 
 
 
@@ -72,11 +181,13 @@ ApplicationWindow {
                 onSelectedPoiChanged: {
                     console.log("SelectedPoiChanged Begin")
                     uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor:selectedPoi}})
-                    console.log("SelectedPoiChanged End")
+                    //console.log("SelectedPoiChanged End")
                 }
                 onSearch: {
                     uiStack.push({item: Qt.resolvedUrl("SearchPage.qml"), properties: {searchFor:selectedPoi}})
                 }
+                onRoutes:
+                    uiStack.push({item: Qt.resolvedUrl("RouteView.qml")})
 
             }
 

@@ -213,7 +213,7 @@ Map {
                 anchors.fill: parent
                 onClicked: {
                     console.log("cellLeft clicked")
-                    search()
+                    //search()
                 }
             }
             Image {

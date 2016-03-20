@@ -135,34 +135,6 @@ Map {
         id: localHelper
     }
 
-    MapCircle {
-        id: point
-        visible: myPosition.active
-        radius: 100
-        color: "blue" //#46a2da"
-        border.color: "#190a33"
-        border.width: 2
-        smooth: true
-        opacity: 0.4
-
-
-
-
-        center: myPosition.position.coordinate
-
-
-        SequentialAnimation on radius {
-                   loops: Animation.Infinite
-                   NumberAnimation { from: point.radius; to: point.radius * 1.8; duration: 800; easing.type: Easing.InOutQuad }
-                   NumberAnimation { from: point.radius * 1.8 ; to: point.radius; duration: 1000; easing.type: Easing.InOutQuad }
-               }
-       /* SequentialAnimation on height {
-                    loops: Animation.Infinite
-                    NumberAnimation { from: height * 1; to: height * 1.15; duration: 1200; easing.type: Easing.InOutQuad }
-                    NumberAnimation { from: height * 1.15; to: height * 1; duration: 1000; easing.type: Easing.InOutQuad }
-                }
-*/
-    }
 
     PositionSource {
         id: myPosition
@@ -204,6 +176,8 @@ Map {
             coordinate   : QtPositioning.coordinate(coord.latitude, coord.longitude)
             anchorPoint.x: image.width * 0.5
             anchorPoint.y: image.height
+            z: 5
+
 
             sourceItem: Item {
                 id: theSourceItem
@@ -268,6 +242,10 @@ Map {
                             bubble.visible = true
                             housetrailMapItems.currentItem = theSourceItem
                             housetrailMapItems.currentItem.z = 1000
+                            tricksterRectangle.coordinate = mqItem.coordinate
+                            //var points = textItem.mapToItem(tricksterRectangle, textItem.x, textItem.y)
+                            //tricksterRectangle.x = points.x
+                            //tricksterRectangle.y = points.y
 
                         }
 
@@ -279,6 +257,79 @@ Map {
             }
 
         }
+    }
+    MapCircle {
+        id: point
+        visible: myPosition.active
+        radius: 100
+        color: "blue" //#46a2da"
+        border.color: "#190a33"
+        border.width: 2
+        smooth: true
+        opacity: 0.4
+
+
+
+
+
+        center: myPosition.position.coordinate
+
+
+        SequentialAnimation on radius {
+                   loops: Animation.Infinite
+                   NumberAnimation { from: point.radius; to: point.radius * 1.8; duration: 800; easing.type: Easing.InOutQuad }
+                   NumberAnimation { from: point.radius * 1.8 ; to: point.radius; duration: 1000; easing.type: Easing.InOutQuad }
+               }
+       /* SequentialAnimation on height {
+                    loops: Animation.Infinite
+                    NumberAnimation { from: height * 1; to: height * 1.15; duration: 1200; easing.type: Easing.InOutQuad }
+                    NumberAnimation { from: height * 1.15; to: height * 1; duration: 1000; easing.type: Easing.InOutQuad }
+                }
+*/
+    }
+
+    MapQuickItem {
+        id: tricksterRectangle
+        zoomLevel: 0.0
+        //coordinate: mqItem.coordinate
+        onCoordinateChanged: {
+            console.log("coordinate changed")
+        }
+        z:20
+        property real externX: housetrailMapItems.delegate.sourceItem.x
+        property real externY: housetrailMapItems.delegate.sourceItem.x
+        onExternXChanged: {
+            var points=theSourceItem.mapToItem(tricksterRectangle)
+            tricksterRectangle.x=points.x
+        }
+        onExternYChanged: {
+            var points=theSourceItem.mapToItem(tricksterRectangle)
+            tricksterRectangle.y=points.y
+        }
+
+        sourceItem: Rectangle {
+            id: coco
+
+            color: "#cccccc"
+            border.width: 1
+            width: 150//textItem.width * 1.2
+            height: 150//textItem.height * 1.5
+            //anchors.horizontalCenter: parent.horizontalCenter
+            //anchors.verticalCenter: parent.verticalCenter
+            radius: 3
+            //z: 10
+
+            onZChanged: console.log("z:"+z)
+            visible: true
+            Text {
+                id: textItem2
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                text: "TEST"
+                font.pixelSize: localHelper.sp(24)
+            }
+        }
+
     }
 
     /*==Mapitemview==*/

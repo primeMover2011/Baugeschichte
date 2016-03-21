@@ -14,13 +14,6 @@ ApplicationWindow {
         close.accepted = false;
     }
 
-    Settings {
-        id: settings
-        property alias lastSeenLat: mapOfEurope.center.latitude
-        property alias lastSeenLon: mapOfEurope.center.longitude
-
-
-    }
 
 
     visible: true
@@ -153,11 +146,10 @@ ApplicationWindow {
 
 
         }
-
         StackView
         {
             id: uiStack
-            initialItem: mapOfEurope
+            initialItem: loader_mapOfEurope
             onDepthChanged: {
                 console.log("Depth changed:" + depth)
             }
@@ -167,24 +159,41 @@ ApplicationWindow {
 
             objectName: "theStackView"
             anchors.fill: parent
-            MapComponent {
-                id: mapOfEurope
+
+            Component {
+                id: component_mapOfEurope
+
+                MapComponent {
+                    id: mapOfEurope
+                    Settings {
+                        id: settings
+                        property alias lastSeenLat: mapOfEurope.center.latitude
+                        property alias lastSeenLon: mapOfEurope.center.longitude
+                    }
+
+                    center: locationGraz
+                    z:32000
+                    onSelectedPoiChanged: {
+                        console.log("SelectedPoiChanged Begin")
+                        uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor:selectedPoi}})
+                        //console.log("SelectedPoiChanged End")
+                    }
+                    onSearch: {
+                        uiStack.push({item: Qt.resolvedUrl("SearchPage.qml"), properties: {searchFor:selectedPoi}})
+                    }
+                    onRoutes:
+                        uiStack.push({item: Qt.resolvedUrl("RouteView.qml")})
+
+                }
+            }
+            Loader {
+                id: loader_mapOfEurope
+
+                sourceComponent: component_mapOfEurope
                 anchors.centerIn: parent;
                 anchors.fill: parent
-                center: locationGraz
-                z:32000
-                onSelectedPoiChanged: {
-                    console.log("SelectedPoiChanged Begin")
-                    uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor:selectedPoi}})
-                    //console.log("SelectedPoiChanged End")
-                }
-                onSearch: {
-                    uiStack.push({item: Qt.resolvedUrl("SearchPage.qml"), properties: {searchFor:selectedPoi}})
-                }
-                onRoutes:
-                    uiStack.push({item: Qt.resolvedUrl("RouteView.qml")})
-
             }
+
 
 /*            RgbPage {
             id: rgbComponent

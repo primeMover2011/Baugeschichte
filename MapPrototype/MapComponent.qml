@@ -26,58 +26,59 @@ Map {
         }
     }
 
-    onCenterChanged:{
+    onCenterChanged: {
         scaleTimer.restart()
-     //   if (mapOfEurope.followme)
-            //if (mapOfEurope.center !== positionSource.position.coordinate) mapOfEurope.followme = false
+        //   if (mapOfEurope.followme)
+        //if (mapOfEurope.center !== positionSource.position.coordinate) mapOfEurope.followme = false
     }
 
-    onZoomLevelChanged:{
+    onZoomLevelChanged: {
         scaleTimer.restart()
-     //   if (mapOfEurope.followme) mapOfEurope.center = positionSource.position.coordinate
+        //   if (mapOfEurope.followme) mapOfEurope.center = positionSource.position.coordinate
     }
 
-    onWidthChanged:{
-        scaleTimer.restart()
-    }
-
-    onHeightChanged:{
+    onWidthChanged: {
         scaleTimer.restart()
     }
 
+    onHeightChanged: {
+        scaleTimer.restart()
+    }
 
     Slider {
-        id: zoomSlider;
+        id: zoomSlider
         z: mapOfEurope.z + 3
-        minimumValue: mapOfEurope.minimumZoomLevel;
-        maximumValue: mapOfEurope.maximumZoomLevel;
+        minimumValue: mapOfEurope.minimumZoomLevel
+        maximumValue: mapOfEurope.maximumZoomLevel
         anchors.margins: 10
         anchors.bottom: scale.top
         anchors.top: parent.top
         anchors.right: parent.right
-        orientation : Qt.Vertical
+        orientation: Qt.Vertical
         value: mapOfEurope.zoomLevel
         onValueChanged: {
             mapOfEurope.zoomLevel = value
+            console.log("Zoomlevel: " + mapOfEurope.zoomLevel)
         }
     }
 
-    function calculateScale()
-    {
+    function calculateScale() {
         var coord1, coord2, dist, text, f
         f = 0
-        coord1 = mapOfEurope.toCoordinate(Qt.point(0,scale.y))
-        coord2 = mapOfEurope.toCoordinate(Qt.point(0+scaleImage.sourceSize.width,scale.y))
+        coord1 = mapOfEurope.toCoordinate(Qt.point(0, scale.y))
+        coord2 = mapOfEurope.toCoordinate(
+                    Qt.point(0 + scaleImage.sourceSize.width, scale.y))
         dist = Math.round(coord1.distanceTo(coord2))
 
         if (dist === 0) {
+
             // not visible
         } else {
-            for (var i = 0; i < scaleLengths.length-1; i++) {
-                if (dist < (scaleLengths[i] + scaleLengths[i+1]) / 2 ) {
+            for (var i = 0; i < scaleLengths.length - 1; i++) {
+                if (dist < (scaleLengths[i] + scaleLengths[i + 1]) / 2) {
                     f = scaleLengths[i] / dist
                     dist = scaleLengths[i]
-                    break;
+                    break
                 }
             }
             if (f === 0) {
@@ -95,7 +96,7 @@ Map {
         id: scale
         z: mapOfEurope.z + 3
         visible: scaleText.text != "0 m"
-        anchors.bottom: parent.bottom;
+        anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.margins: 20
         height: scaleText.height * 2
@@ -126,15 +127,13 @@ Map {
             text: "0 m"
         }
         Component.onCompleted: {
-            mapOfEurope.calculateScale();
+            mapOfEurope.calculateScale()
         }
     }
-
 
     DensityHelpers {
         id: localHelper
     }
-
 
     PositionSource {
         id: myPosition
@@ -145,44 +144,42 @@ Map {
             mapOfEurope.center = myPosition.position.coordinate
             //mapOfEurope.zoomLevel = 12
         }
-
-
-
-
     }
-
-
-
 
     plugin: Plugin {
         name: "mapbox"
-        PluginParameter { name: "mapbox.map_id"; value: "primemover.c5fe94e8" }
-        PluginParameter { name: "mapbox.access_token"; value: "pk.eyJ1IjoicHJpbWVtb3ZlciIsImEiOiIzNjFlYWNjZmZhMjAyNGFhMWQ0NDM0ZDIyMTE4YmEyMCJ9.d5wi3uI5VayKiniPnkxojg" }
+        PluginParameter {
+            name: "mapbox.map_id"
+            value: "primemover.c5fe94e8"
+        }
+        PluginParameter {
+            name: "mapbox.access_token"
+            value: "pk.eyJ1IjoicHJpbWVtb3ZlciIsImEiOiIzNjFlYWNjZmZhMjAyNGFhMWQ0NDM0ZDIyMTE4YmEyMCJ9.d5wi3uI5VayKiniPnkxojg"
+        }
     }
     center: QtPositioning.coordinate(47.0666667, 15.45)
     property string selectedPoi: ""
 
     MapItemView {
         id: housetrailMapItems
-        model: filteredTrailModel//houseTrailModel
+        model: filteredTrailModel //houseTrailModel
         property Item currentItem
+
         //z: 29000
 
-
         //onCurrentItemChanged:
-
         delegate: MapQuickItem {
             id: mqItem
-            coordinate   : QtPositioning.coordinate(coord.latitude, coord.longitude)
+            coordinate: QtPositioning.coordinate(coord.latitude,
+                                                 coord.longitude)
             anchorPoint.x: image.width * 0.5
             anchorPoint.y: image.height
             z: 5
 
-
             sourceItem: Item {
                 id: theSourceItem
-                property Item myBubble : bubble
-                z:10000
+                //property Item myBubble : bubble
+                z: 10000
 
                 Rectangle {
 
@@ -196,7 +193,7 @@ Map {
                     radius: 3
                     z: 10
 
-                    onZChanged: console.log("z:"+z)
+                    onZChanged: console.log("z:" + z)
                     visible: false
                     Text {
                         id: textItem
@@ -209,13 +206,12 @@ Map {
                         anchors.fill: parent
                         onPressed: selectPoi(title)
                         onClicked: selectPoi(title)
-                        function selectPoi(aTitle){
+                        function selectPoi(aTitle) {
                             mapOfEurope.selectedPoi = aTitle
                             bubble.visible = false
                         }
                     }
                 }
-
 
                 Image {
                     id: image
@@ -223,10 +219,8 @@ Map {
                     width: localHelper.sp(50)
                     height: localHelper.sp(50)
                     fillMode: Image.PreserveAspectFit
-                    z:9
-                    onZChanged: console.log("z:"+z)
-
-
+                    z: 9
+                    onZChanged: console.log("z:" + z)
 
                     MouseArea {
                         anchors.fill: parent
@@ -236,26 +230,22 @@ Map {
 
                         function changeCurrentItem() {
                             console.log("changing!!")
-                            if (housetrailMapItems.currentItem)
-                            housetrailMapItems.currentItem.myBubble.visible = false
+                            //if (housetrailMapItems.currentItem)
+                            //housetrailMapItems.currentItem.myBubble.visible = false
                             //housetrailMapItems.currentItem.z = 1
-                            bubble.visible = true
-                            housetrailMapItems.currentItem = theSourceItem
-                            housetrailMapItems.currentItem.z = 1000
+                            //bubble.visible = true
+                            //housetrailMapItems.currentItem = theSourceItem
+                            //housetrailMapItems.currentItem.z = 1000
                             tricksterRectangle.coordinate = mqItem.coordinate
+                            tricksterRectangle.title = title
+                            tricksterRectangle.visible = true
                             //var points = textItem.mapToItem(tricksterRectangle, textItem.x, textItem.y)
                             //tricksterRectangle.x = points.x
                             //tricksterRectangle.y = points.y
-
                         }
-
                     }
                 }
-
-
-
             }
-
         }
     }
     MapCircle {
@@ -268,24 +258,29 @@ Map {
         smooth: true
         opacity: 0.4
 
-
-
-
-
         center: myPosition.position.coordinate
 
-
         SequentialAnimation on radius {
-                   loops: Animation.Infinite
-                   NumberAnimation { from: point.radius; to: point.radius * 1.8; duration: 800; easing.type: Easing.InOutQuad }
-                   NumberAnimation { from: point.radius * 1.8 ; to: point.radius; duration: 1000; easing.type: Easing.InOutQuad }
-               }
-       /* SequentialAnimation on height {
-                    loops: Animation.Infinite
-                    NumberAnimation { from: height * 1; to: height * 1.15; duration: 1200; easing.type: Easing.InOutQuad }
-                    NumberAnimation { from: height * 1.15; to: height * 1; duration: 1000; easing.type: Easing.InOutQuad }
-                }
-*/
+            loops: Animation.Infinite
+            NumberAnimation {
+                from: point.radius
+                to: point.radius * 1.8
+                duration: 800
+                easing.type: Easing.InOutQuad
+            }
+            NumberAnimation {
+                from: point.radius * 1.8
+                to: point.radius
+                duration: 1000
+                easing.type: Easing.InOutQuad
+            }
+        }
+        /* SequentialAnimation on height {
+                            loops: Animation.Infinite
+                                                NumberAnimation { from: height * 1; to: height * 1.15; duration: 1200; easing.type: Easing.InOutQuad }
+                                                                    NumberAnimation { from: height * 1.15; to: height * 1; duration: 1000; easing.type: Easing.InOutQuad }
+                                                                                    }
+                                                                                    */
     }
 
     MapQuickItem {
@@ -295,41 +290,56 @@ Map {
         onCoordinateChanged: {
             console.log("coordinate changed")
         }
-        z:20
-        property real externX: housetrailMapItems.delegate.sourceItem.x
-        property real externY: housetrailMapItems.delegate.sourceItem.x
-        onExternXChanged: {
-            var points=theSourceItem.mapToItem(tricksterRectangle)
-            tricksterRectangle.x=points.x
+        property string title: "NO Title"
+        onTitleChanged: {
+            textItem2.text = title
         }
-        onExternYChanged: {
-            var points=theSourceItem.mapToItem(tricksterRectangle)
-            tricksterRectangle.y=points.y
-        }
+
+        z: 20
+        anchorPoint.x: coco.width / 2
+        anchorPoint.y: coco.height * 1.9
 
         sourceItem: Rectangle {
             id: coco
 
-            color: "#cccccc"
+            color: "#ffffff"
+
             border.width: 1
-            width: 150//textItem.width * 1.2
-            height: 150//textItem.height * 1.5
+            border.color: "#e02222"
+            width: textItem2.width * 1.2
+            height: textItem2.height * 1.5
+            //x: width/2
+            //y: height/2
+            //anchors.horizontalCenter: tricksterRectangle.horizontalCenter
+            //anchors.verticalCenter: tricksterRectangle.verticalCenter
+
             //anchors.horizontalCenter: parent.horizontalCenter
             //anchors.verticalCenter: parent.verticalCenter
             radius: 3
-            //z: 10
 
-            onZChanged: console.log("z:"+z)
+            //z: 10
+            onZChanged: console.log("z:" + z)
             visible: true
             Text {
                 id: textItem2
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
-                text: "TEST"
+                text: "Text"
                 font.pixelSize: localHelper.sp(24)
+                color: "#ff0000"
+                font.bold: true
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onPressed: selectPoi(tricksterRectangle.title)
+                onClicked: selectPoi(tricksterRectangle.title)
+                function selectPoi(aTitle) {
+                    mapOfEurope.selectedPoi = aTitle
+                    tricksterRectangle.visible = false
+                }
             }
         }
-
     }
 
     /*==Mapitemview==*/
@@ -338,12 +348,12 @@ Map {
         anchors.fill: parent
         propagateComposedEvents: true
         onClicked: {
-//to prevent swallowing of events
+            //to prevent swallowing of events
             mouse.accepted = false
         }
     }
-    RowLayout{
-//        Layout.fillWidth: true
+    RowLayout {
+        //        Layout.fillWidth: true
         z: 10
         anchors {
             left: parent.left
@@ -354,74 +364,61 @@ Map {
         property real sideLength: localHelper.dp(60)
         height: 60
 
-
-
-
-
-            Rectangle{
-                id: cellLeft
-                color: "#444444"
-                height: myLayout.sideLength
-                Layout.preferredWidth: myLayout.sideLength
-                Layout.alignment: Qt.AlignLeft
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                      console.log("cellLeft clicked")
-                      search()
-                    }
-
-                }
-                Image {
-                    source: "resources/icon-search.png"
-                    anchors.right: parent.right
-                    anchors.rightMargin: 12
-                    anchors.verticalCenter: parent.verticalCenter
+        Rectangle {
+            id: cellLeft
+            color: "#444444"
+            height: myLayout.sideLength
+            Layout.preferredWidth: myLayout.sideLength
+            Layout.alignment: Qt.AlignLeft
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    console.log("cellLeft clicked")
+                    search()
                 }
             }
-
-    Rectangle{
-        id: cellMiddle
-        color: "#444444"
-        Layout.preferredWidth: myLayout.sideLength
-        height: myLayout.sideLength
-        Layout.alignment: Qt.AlignHCenter
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                console.log("cellMiddle clicked")
-              routes()
+            Image {
+                source: "resources/icon-search.png"
+                anchors.right: parent.right
+                anchors.rightMargin: 12
+                anchors.verticalCenter: parent.verticalCenter
             }
-
         }
 
-    }
-    Rectangle{
-        id: followMeSwitch
-
-        property bool isRunning: false
-        visible: myPosition.valid
-        color: "#0000ff"
-        Layout.preferredWidth: myLayout.sideLength
-        opacity: isRunning ? 1 : 0.5
-        height: myLayout.sideLength
-        Layout.alignment: Qt.AlignRight
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                console.log("cellRight clicked")
-                followMeSwitch.isRunning = !followMeSwitch.isRunning
-                if (followMeSwitch === true)
-                    followMe()
+        Rectangle {
+            id: cellMiddle
+            color: "#444444"
+            Layout.preferredWidth: myLayout.sideLength
+            height: myLayout.sideLength
+            Layout.alignment: Qt.AlignHCenter
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    console.log("cellMiddle clicked")
+                    routes()
+                }
             }
-
         }
+        Rectangle {
+            id: followMeSwitch
 
+            property bool isRunning: false
+            visible: myPosition.valid
+            color: "#0000ff"
+            Layout.preferredWidth: myLayout.sideLength
+            opacity: isRunning ? 1 : 0.5
+            height: myLayout.sideLength
+            Layout.alignment: Qt.AlignRight
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    console.log("cellRight clicked")
+                    followMeSwitch.isRunning = !followMeSwitch.isRunning
+                    if (followMeSwitch === true)
+                        followMe()
+                }
+            }
+        }
     }
+}//***RowLayout
 
-    }
-//***RowLayout
-
-
-
-}

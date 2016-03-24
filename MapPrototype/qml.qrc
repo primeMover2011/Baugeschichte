@@ -20,7 +20,6 @@
         <file>resources/scale_end.png</file>
         <file>resources/scale.png</file>
         <file>Helper.js</file>
-        <file>resources/Simpleicons_Places_map-marker-2.svg</file>
         <file>resources/Ic_gps_off_48px.svg</file>
         <file>resources/Ic_gps_not_fixed_48px.svg</file>
         <file>resources/Map-icon.svg</file>
@@ -28,5 +27,6 @@
         <file>resources/System-search.svg</file>
         <file>resources/Go-previous.svg</file>
         <file>resources/Go-next.svg</file>
+        <file>resources/marker-2.svg</file>
     </qresource>
 </RCC>

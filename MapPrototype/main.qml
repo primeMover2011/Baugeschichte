@@ -36,7 +36,7 @@ ApplicationWindow {
                         width: 50
                         height: 50
                         Image {
-                            source:"qrc:/resources/Map-icon.svg"
+                            source:"Map-icon.svg"
                             width: parent.width
                             height: parent.height
                         }
@@ -61,7 +61,7 @@ ApplicationWindow {
                          width: 50
                          height: 50
                          Image {
-                             source:"qrc:/resources/System-search.svg"
+                             source:"System-search.svg"
                              width: parent.width
                              height: parent.height
                          }
@@ -86,7 +86,7 @@ ApplicationWindow {
                           height: 50
                           opacity: 0.5
                           Image {
-                              source:"qrc:/resources/Edit-find-cats.svg"
+                              source:"Edit-find-cats.svg"
                               width: parent.width
                               height: parent.height
                           }
@@ -103,7 +103,7 @@ ApplicationWindow {
                            opacity: isEnabled ? 1 : 0.5
                            Image {
                                id:theFollowMeImage
-                               source:"qrc:/resources/Ic_gps_off_48px.svg"
+                               source:"Ic_gps_off_48px.svg"
                                width: parent.width
                                height: parent.height
                            }
@@ -130,7 +130,7 @@ ApplicationWindow {
                             width: 50
                             height: 50
                             Image {
-                                source:"qrc:/resources/Map-icon.svg"
+                                source:"Map-icon.svg"
                                 width: parent.width
                                 height: parent.height
                             }

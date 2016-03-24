@@ -58,7 +58,7 @@ Map {
         value: mapOfEurope.zoomLevel
         onValueChanged: {
             mapOfEurope.zoomLevel = value
-            console.log("Zoomlevel: " + mapOfEurope.zoomLevel)
+            //console.log("Zoomlevel: " + mapOfEurope.zoomLevel)
         }
     }
 
@@ -221,7 +221,7 @@ Map {
                 Image {
                     id: image
                     antialiasing: true
-                    source: "qrc:/resources/Simpleicons_Places_map-marker-2.svg"
+                    source: "Simpleicons_Places_map-marker-2.svg"
                     width: localHelper.sp(50)
                     height: localHelper.sp(50)
                     fillMode: Image.PreserveAspectFit

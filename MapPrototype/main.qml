@@ -14,27 +14,133 @@ ApplicationWindow {
         close.accepted = false;
     }
 
+    PositionSource {
+        id: thePosition
+        preferredPositioningMethods: PositionSource.AllPositioningMethods
+        active: false
+    }
 
-    toolBar:     ToolBar {
+    toolBar:     Rectangle {
         id: theTool
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+        opacity: 0.5
+        height: 50
+        width:parent.width
+
         RowLayout {
                    anchors.fill: parent
-                   ToolButton {
-                           id:searchbottn
-                           iconSource: "https://upload.wikimedia.org/wikipedia/commons/archive/1/17/20120911200436%21System-search.svg"
-                   }
+                  //Map
+                   Rectangle {
+                        width: 50
+                        height: 50
+                        Image {
+                            source:"qrc:/resources/Map-icon.svg"
+                            width: parent.width
+                            height: parent.height
+                        }
 
-                   ToolButton {
-                       iconSource: "https://upload.wikimedia.org/wikipedia/commons/7/7d/Edit-find.svg"
-                   }
-                   ToolButton {
-                       iconSource: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Map-icon.svg"
-                   }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+//                              uiStack.push({item: Qt.resolvedUrl("SearchPage.qml"), properties: {searchFor:selectedPoi}})
+
+                                while (uiStack.depth > 1) {
+                                    uiStack.pop();
+                                    //in
+                                }
+
+                            }
+                        }
+                    }
+                   //<-- Map
+
+                   //Search
+                    Rectangle {
+                         width: 50
+                         height: 50
+                         Image {
+                             source:"qrc:/resources/System-search.svg"
+                             width: parent.width
+                             height: parent.height
+                         }
+                         MouseArea {
+                             anchors.fill: parent
+                             onClicked: {
+//                              uiStack.push({item: Qt.resolvedUrl("SearchPage.qml"), properties: {searchFor:selectedPoi}})
+
+                                 if (uiStack.depth > 1) {
+                                     uiStack.clear();
+                                 }
+                                 uiStack.push({item: Qt.resolvedUrl("SearchPage.qml")})
+                             }
+                         }
+
+                     }
+                    //<-- Search
+
+                    //Categories
+                     Rectangle {
+                          width: 50
+                          height: 50
+                          opacity: 0.5
+                          Image {
+                              source:"qrc:/resources/Edit-find-cats.svg"
+                              width: parent.width
+                              height: parent.height
+                          }
+                      }
+                     //<--Categories
+
+                     //FollowMe
+                      Rectangle {
+                          id: theFollowMeButton
+                           property bool isEnabled: thePosition.valid
+                            property bool isActive: false
+                           width: 50
+                           height: 50
+                           opacity: isEnabled ? 1 : 0.5
+                           Image {
+                               id:theFollowMeImage
+                               source:"qrc:/resources/Ic_gps_off_48px.svg"
+                               width: parent.width
+                               height: parent.height
+                           }
+                           MouseArea {
+                               anchors.fill: parent
+                               enabled: parent.isEnabled
+                               onClicked: {
+                                    parent.isActive = !parent.isActive
+                                   if (parent.isActive)
+                                       theFollowMeImage.source ="qrc:/resources/Ic_gps_not_fixed_48px.svg"
+                                   else
+                                       theFollowMeImage.source = "qrc:/resources/Ic_gps_off_48px.svg"
+
+
+
+                               }
+                           }
+
+                       }
+                      //FollowMe
+
+                      //Routes
+                       Rectangle {
+                            width: 50
+                            height: 50
+                            Image {
+                                source:"qrc:/resources/Map-icon.svg"
+                                width: parent.width
+                                height: parent.height
+                            }
+//                                uiStack.push({item: Qt.resolvedUrl("RouteView.qml")})
+
+                        }
+                       //<--Routes
+
+
                }
-
     }
 
     visible: true
@@ -199,12 +305,14 @@ ApplicationWindow {
                         uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor:selectedPoi}})
                         //console.log("SelectedPoiChanged End")
                     }
+                    followMe: theFollowMeButton.isActive
+/*
                     onSearch: {
                         uiStack.push({item: Qt.resolvedUrl("SearchPage.qml"), properties: {searchFor:selectedPoi}})
                     }
                     onRoutes:
                         uiStack.push({item: Qt.resolvedUrl("RouteView.qml")})
-
+*/
                 }
             }
             Loader {

@@ -11,7 +11,7 @@ Map {
     signal search
     signal categories
     signal routes
-    signal followMe
+    property bool followMe:false
     property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
     z: 20000
     zoomLevel: 16
@@ -138,11 +138,16 @@ Map {
     PositionSource {
         id: myPosition
         preferredPositioningMethods: PositionSource.AllPositioningMethods
-        active: followMeSwitch.isRunning
+        //active: followMeSwitch.isRunning
+        active: followMe
         updateInterval: 1500
         onPositionChanged: {
             mapOfEurope.center = myPosition.position.coordinate
             //mapOfEurope.zoomLevel = 12
+        }
+        onActiveChanged:
+        {
+            console.log("open the pod bay doors, hal")
         }
     }
 
@@ -231,18 +236,9 @@ Map {
 
                         function changeCurrentItem() {
                             console.log("changing!!")
-                            //if (housetrailMapItems.currentItem)
-                            //housetrailMapItems.currentItem.myBubble.visible = false
-                            //housetrailMapItems.currentItem.z = 1
-                            //bubble.visible = true
-                            //housetrailMapItems.currentItem = theSourceItem
-                            //housetrailMapItems.currentItem.z = 1000
                             tricksterRectangle.coordinate = mqItem.coordinate
                             tricksterRectangle.title = title
                             tricksterRectangle.visible = true
-                            //var points = textItem.mapToItem(tricksterRectangle, textItem.x, textItem.y)
-                            //tricksterRectangle.x = points.x
-                            //tricksterRectangle.y = points.y
                         }
                     }
                 }
@@ -353,6 +349,8 @@ Map {
             mouse.accepted = false
         }
     }
+
+/*
     RowLayout {
         //        Layout.fillWidth: true
         z: 10
@@ -365,7 +363,7 @@ Map {
         property real sideLength: localHelper.dp(60)
         height: 60
 
-        Rectangle {
+/*        Rectangle {
             id: cellLeft
             color: "#444444"
             height: myLayout.sideLength
@@ -384,9 +382,9 @@ Map {
                 anchors.rightMargin: 12
                 anchors.verticalCenter: parent.verticalCenter
             }
-        }
+        }SEARCH*/
 
-        Rectangle {
+        /*Rectangle {
             id: cellMiddle
             color: "#444444"
             Layout.preferredWidth: myLayout.sideLength
@@ -399,12 +397,13 @@ Map {
                     routes()
                 }
             }
-        }
-        Rectangle {
+        }ROUTES*/
+  /*      Rectangle {
             id: followMeSwitch
 
             property bool isRunning: false
             visible: myPosition.valid
+
             color: "#0000ff"
             Layout.preferredWidth: myLayout.sideLength
             opacity: isRunning ? 1 : 0.5
@@ -421,5 +420,7 @@ Map {
             }
         }
     }
+*/
+
 }//***RowLayout
 

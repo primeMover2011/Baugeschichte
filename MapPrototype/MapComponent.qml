@@ -221,7 +221,7 @@ Map {
                 Image {
                     id: image
                     antialiasing: true
-                    source: "xSimpleicons_Places_map-marker-2.svg"
+                    source: "resources/marker-2.svg"
                     width: localHelper.sp(50)
                     height: localHelper.sp(50)
                     fillMode: Image.PreserveAspectFit

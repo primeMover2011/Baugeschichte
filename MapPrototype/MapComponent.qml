@@ -215,7 +215,8 @@ Map {
 
                 Image {
                     id: image
-                    source: "marker.png"
+                    antialiasing: true
+                    source: "qrc:/resources/Simpleicons_Places_map-marker-2.svg"
                     width: localHelper.sp(50)
                     height: localHelper.sp(50)
                     fillMode: Image.PreserveAspectFit

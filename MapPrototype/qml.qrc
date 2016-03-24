@@ -20,5 +20,6 @@
         <file>resources/scale_end.png</file>
         <file>resources/scale.png</file>
         <file>Helper.js</file>
+        <file>resources/Simpleicons_Places_map-marker-2.svg</file>
     </qresource>
 </RCC>

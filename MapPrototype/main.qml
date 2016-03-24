@@ -15,6 +15,27 @@ ApplicationWindow {
     }
 
 
+    toolBar:     ToolBar {
+        id: theTool
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        RowLayout {
+                   anchors.fill: parent
+                   ToolButton {
+                           id:searchbottn
+                           iconSource: "https://upload.wikimedia.org/wikipedia/commons/archive/1/17/20120911200436%21System-search.svg"
+                   }
+
+                   ToolButton {
+                       iconSource: "https://upload.wikimedia.org/wikipedia/commons/7/7d/Edit-find.svg"
+                   }
+                   ToolButton {
+                       iconSource: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Map-icon.svg"
+                   }
+               }
+
+    }
 
     visible: true
     //    PositionSource

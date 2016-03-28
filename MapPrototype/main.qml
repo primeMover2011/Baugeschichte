@@ -269,6 +269,7 @@ ApplicationWindow {
                     if (uiStack.depth > 1) {
                         console.log("pop");
                         uiStack.pop();
+                        mapOfEurope.selectedPoi = ""
                     }
                     else{
                         shutDownDialog.visible = true;
@@ -306,8 +307,10 @@ ApplicationWindow {
                     z:32000
                     onSelectedPoiChanged: {
                         console.log("SelectedPoiChanged Begin")
+                        if (selectedPoi === "") return;
                         uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor:selectedPoi}})
                         //console.log("SelectedPoiChanged End")
+                        selectedPoi = ""
                     }
                     followMe: theFollowMeButton.isActive
 /*

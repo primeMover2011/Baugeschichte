@@ -153,6 +153,7 @@ ApplicationWindow {
     Component.onCompleted: {
         dialog.getAllPois();
 
+
     }
     ExclusiveGroup {
         id: categoryGroup

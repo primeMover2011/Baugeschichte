@@ -124,11 +124,14 @@ public:
     }
     void append(HouseTrail* aHouseTrail)
     {
+        if (contains(aHouseTrail->theLocation().latitude(),aHouseTrail->theLocation().longitude())) return;
+        QString theHash= QString("%1o%2").arg(lat).arg(lon);
+        m_Contained[theHash]=1;
         beginInsertRows(QModelIndex(), rowCount(), rowCount());
         m_Housetrails.append(aHouseTrail);
         endInsertRows();
     }
-    void clear()
+    Q_INVOKABLE void clear()
     {
         beginRemoveRows(QModelIndex(),0,m_Housetrails.count());
         m_Housetrails.clear();
@@ -140,6 +143,12 @@ public:
         Q_UNUSED(parent);
         return m_Housetrails.count();
     }
+
+    Q_INVOKABLE bool contains(double lat, double lon) {
+        QString theHash= QString("%1o%2").arg(lat).arg(lon);
+        return m_Contained.contains(theHash);
+    }
+
 
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const
     {
@@ -168,7 +177,9 @@ protected:
         roles[CategoryRole] = "category";
         return roles;
     }
-private: QList<HouseTrail*> m_Housetrails;
+private:
+    QList<HouseTrail*> m_Housetrails;
+    QHash<QString, int> m_Contained;
 };
 
 

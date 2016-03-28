@@ -20,6 +20,10 @@ ApplicationWindow {
         active: false
     }
 
+    DensityHelpers {
+        id: localHelper
+    }
+
     toolBar:     Rectangle {
         id: theTool
         anchors.top: parent.top
@@ -33,8 +37,8 @@ ApplicationWindow {
                    anchors.fill: parent
                   //Map
                    Rectangle {
-                        width: 50
-                        height: 50
+                        width: localHelper.dp(50)
+                        height: localHelper.dp(50)
                         Image {
                             source:"resources/Map-icon.svg"
                             width: parent.width
@@ -58,8 +62,8 @@ ApplicationWindow {
 
                    //Search
                     Rectangle {
-                         width: 50
-                         height: 50
+                        width: localHelper.dp(50)
+                        height: localHelper.dp(50)
                          Image {
                              source:"resources/System-search.svg"
                              width: parent.width
@@ -82,8 +86,8 @@ ApplicationWindow {
 
                     //Categories
                      Rectangle {
-                          width: 50
-                          height: 50
+                         width: localHelper.dp(50)
+                         height: localHelper.dp(50)
                           opacity: 0.5
                           Image {
                               source:"resources/Edit-find-cats.svg"
@@ -98,8 +102,8 @@ ApplicationWindow {
                           id: theFollowMeButton
                            property bool isEnabled: thePosition.valid
                             property bool isActive: false
-                           width: 50
-                           height: 50
+                          width: localHelper.dp(50)
+                          height: localHelper.dp(50)
                            opacity: isEnabled ? 1 : 0.5
                            Image {
                                id:theFollowMeImage
@@ -127,8 +131,8 @@ ApplicationWindow {
 
                       //Routes
                        Rectangle {
-                            width: 50
-                            height: 50
+                           width: localHelper.dp(50)
+                           height: localHelper.dp(50)
                             Image {
                                 source:"resources/Map-icon.svg"
                                 width: parent.width

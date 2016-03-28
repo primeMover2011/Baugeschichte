@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick positioning concurrent
+QT += qml quick positioning concurrent svg xml
 android: QT += androidextras
 
 SOURCES += main.cpp \

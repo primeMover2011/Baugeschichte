@@ -212,6 +212,7 @@ Map {
                         onPressed: selectPoi(title)
                         onClicked: selectPoi(title)
                         function selectPoi(aTitle) {
+                            console.log("poi selected...")
                             mapOfEurope.selectedPoi = aTitle
                             bubble.visible = false
                         }
@@ -332,6 +333,7 @@ Map {
                 onPressed: selectPoi(tricksterRectangle.title)
                 onClicked: selectPoi(tricksterRectangle.title)
                 function selectPoi(aTitle) {
+                     console.log("textItem2 poi selected...")
                     mapOfEurope.selectedPoi = aTitle
                     tricksterRectangle.visible = false
                 }
@@ -346,6 +348,12 @@ Map {
         propagateComposedEvents: true
         onClicked: {
             //to prevent swallowing of events
+            console.log("workaround for QTBUG-46388")
+            mouse.accepted = false
+        }
+        onPressed: {
+            //to prevent swallowing of events
+            console.log("workaround for onpressed QTBUG-46388")
             mouse.accepted = false
         }
     }

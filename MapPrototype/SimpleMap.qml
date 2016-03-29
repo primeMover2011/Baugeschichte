@@ -10,7 +10,7 @@ Map {
     signal followMe
     zoomLevel: 8
     property string searchFor: ""
-    onSearchForChanged: simpleMapSearchModel.phrase = " "//searchFor
+    onSearchForChanged: simpleMapSearchModel.phrase = searchFor//" "
 
     RouteModel {
         id: routeModel
@@ -21,22 +21,24 @@ Map {
         id: routeQuery
     }
 
+    BusyIndicator {
+        running: simpleMapSearchModel.isLoading
+
+    }
+
     JsonModel {
         id: simpleMapSearchModel
+        shouldEncode: false //due to searchapi problems when encoding routes...
         onNewobject: {
             for (var key in magneto.payload) {
                 var jsonObject = magneto.payload[key]
-                if (jsonObject.lat === 0) break;
-                if (jsonObject.lon === 0) break;
+                if (jsonObject.lat === 0) continue;
+                if (jsonObject.lon === 0) continue;
 
                 model.append(jsonObject)
             }
         }
-//        searchString: "http://baugeschichte.at/app/v1/getData.php?action=getRoutePoints&name="
-        searchString: "http://baugeschichte.at/app/v1/getData.php?action=getRoutePoints&name=Route:Landpartie_(Graz)"
-        onIsLoaded: {
-            console.debug("Reload simpleMapSearchModel")
-        }
+        searchString: "http://baugeschichte.at/app/v1/getData.php?action=getRoutePoints&name="
     }
 //QtPositioning.coordinate(-27.5, 153.1)
     MapPolyline {
@@ -89,8 +91,8 @@ Map {
         active: followMeSwitch.isRunning
         updateInterval: 1500
         onPositionChanged: {
-            mapOfEurope.center = myPosition.position.coordinate
-            //mapOfEurope.zoomLevel = 12
+            mapOfRoute.center = myPosition.position.coordinate
+
         }
     }
 
@@ -111,13 +113,13 @@ Map {
 
     MapItemView {
         id: housetrailMapItems
-        model: simpleMapSearchModel //houseTrailModel
+        model: simpleMapSearchModel.model //houseTrailModel
         property Item currentItem
 
         delegate: MapQuickItem {
             id: mqItem
-            coordinate: QtPositioning.coordinate(coord.latitude,
-                                                 coord.longitude)
+            coordinate: QtPositioning.coordinate(lat,
+                                                 lon)
             anchorPoint.x: image.width * 0.5
             anchorPoint.y: image.height
 

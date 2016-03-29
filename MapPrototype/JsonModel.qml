@@ -11,11 +11,15 @@ Item {
     property int status: XMLHttpRequest.UNSENT
     property bool isLoading: status === XMLHttpRequest.LOADING
     property bool wasLoading: false
+    property bool shouldEncode: true//default. due to problems with encoding on serverside. switched off in routesearch
     signal isLoaded
 
     ListModel { id: housetrailDetails }
 
-    function encodePhrase(x) { return encodeURIComponent(x); }
+    function encodePhrase(x) {
+        return (shouldEncode) ? encodeURIComponent(x) : x;
+        //return encodeURIComponent(x);
+    }
 
     function reload() {
         housetrailDetails.clear()

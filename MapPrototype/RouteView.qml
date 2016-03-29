@@ -71,7 +71,11 @@ Item {
 
         delegate: SearchResultDelegate {
                 text: title
-                onSelected: uiStack.push({item: Qt.resolvedUrl("SimpleMap.qml"), properties: {searchFor: wot/*textitem.text*/}})
+                onSelected:
+                {
+                    var searchString=wot.replace(" ","_")//Manchmal müssen Spaces umgewandelt werden...
+                    uiStack.push({item: Qt.resolvedUrl("SimpleMap.qml"), properties: {searchFor: searchString/*textitem.text*/}})
+                }
             }
 
     }

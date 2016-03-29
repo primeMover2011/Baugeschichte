@@ -12,19 +12,16 @@ Map {
     property string searchFor: ""
     onSearchForChanged: simpleMapSearchModel.phrase = searchFor//" "
 
-    RouteModel {
-        id: routeModel
-
+    Timer {
+        id: viewportTimer
+        interval: 1000
+        running: false
+        repeat: false
+        onTriggered: {
+            mapOfRoute.fitViewportToMapItems()
+        }
     }
 
-    RouteQuery {
-        id: routeQuery
-    }
-
-    BusyIndicator {
-        running: simpleMapSearchModel.isLoading
-
-    }
 
     JsonModel {
         id: simpleMapSearchModel
@@ -37,6 +34,7 @@ Map {
 
                 model.append(jsonObject)
             }
+           // viewportTimer.restart()
         }
         searchString: "http://baugeschichte.at/app/v1/getData.php?action=getRoutePoints&name="
     }
@@ -88,7 +86,7 @@ Map {
     PositionSource {
         id: myPosition
         preferredPositioningMethods: PositionSource.AllPositioningMethods
-        active: followMeSwitch.isRunning
+        active: false//followMeSwitch.isRunning
         updateInterval: 1500
         onPositionChanged: {
             mapOfRoute.center = myPosition.position.coordinate
@@ -115,6 +113,7 @@ Map {
         id: housetrailMapItems
         model: simpleMapSearchModel.model //houseTrailModel
         property Item currentItem
+        autoFitViewport: true
 
         delegate: MapQuickItem {
             id: mqItem
@@ -193,73 +192,11 @@ Map {
             mouse.accepted = false
         }
     }
-    RowLayout {
-        //        Layout.fillWidth: true
-        z: 10
-        anchors {
-            left: parent.left
-            right: parent.right
-            margins: 5
-        }
-        id: myLayout
-        property real sideLength: localHelper.dp(60)
-        height: 60
+    BusyIndicator {
+        running: simpleMapSearchModel.isLoading
+        onRunningChanged: console.log("running? "+running)
 
-        Rectangle {
-            id: cellLeft
-            color: "#444444"
-            height: myLayout.sideLength
-            Layout.preferredWidth: myLayout.sideLength
-            Layout.alignment: Qt.AlignLeft
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    console.log("cellLeft clicked")
-                    //search()
-                }
-            }
-            Image {
-                source: "resources/icon-search.png"
-                anchors.right: parent.right
-                anchors.rightMargin: 12
-                anchors.verticalCenter: parent.verticalCenter
-            }
-        }
-
-        Rectangle {
-            id: cellMiddle
-            color: "#444444"
-            Layout.preferredWidth: myLayout.sideLength
-            height: myLayout.sideLength
-            Layout.alignment: Qt.AlignHCenter
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    console.log("cellMiddle clicked")
-                    //routes()
-                }
-            }
-        }
-        Rectangle {
-            id: followMeSwitch
-
-            property bool isRunning: false
-            visible: myPosition.valid
-            color: "#0000ff"
-            Layout.preferredWidth: myLayout.sideLength
-            opacity: isRunning ? 1 : 0.5
-            height: myLayout.sideLength
-            Layout.alignment: Qt.AlignRight
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    console.log("cellRight clicked")
-                    followMeSwitch.isRunning = !followMeSwitch.isRunning
-                    if (followMeSwitch === true)
-                        followMe()
-                }
-            }
-        }
     }
+
     //***RowLayout
 }

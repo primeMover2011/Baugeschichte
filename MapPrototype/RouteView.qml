@@ -12,10 +12,6 @@ Item {
             }
         }
         searchString: "http://baugeschichte.at/api.php?action=query&format=json&list=categorymembers&cmtitle=Category:Liste_(Routen)&cmsort=timestamp&cmdir=desc&cmlimit=50"
-        onIsLoaded: {
-            console.debug("Reload searchModel")
-
-        }
         Component.onCompleted: phrase = " " //fires a searchrequest
 
     }
@@ -73,7 +69,9 @@ Item {
                 text: title
                 onSelected:
                 {
-                    var searchString=wot.replace(" ","_")//Manchmal müssen Spaces umgewandelt werden...
+                    var searchString=wot.replace(new RegExp(' ', 'g'),"_")//Manchmal müssen Spaces umgewandelt werden...
+                    //und um alle vorkommnisse von " " zu erstetzen muss man in Javascript eine RegEx verwenden.
+                    //http://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
                     uiStack.push({item: Qt.resolvedUrl("SimpleMap.qml"), properties: {searchFor: searchString/*textitem.text*/}})
                 }
             }

@@ -261,7 +261,8 @@ ApplicationWindow {
                 if (uiStack.depth > 1) {
                     console.log("pop")
                     uiStack.pop()
-                    mapOfEurope.selectedPoi = ""
+                    loader_mapOfEurope.item.selectedPoi = ""
+                    //mapOfEurope.selectedPoi = ""
                 } else {
                     shutDownDialog.visible = true
                 }

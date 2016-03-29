@@ -124,9 +124,11 @@ public:
     }
     void append(HouseTrail* aHouseTrail)
     {
-        if (contains(aHouseTrail->theLocation().latitude(),aHouseTrail->theLocation().longitude())) return;
-        QString theHash= QString("%1o%2").arg(lat).arg(lon);
-        m_Contained[theHash]=1;
+        auto lat = aHouseTrail->theLocation().latitude();
+        auto lon = aHouseTrail->theLocation().longitude();
+        if (this->contains(lat,lon)) return;
+        QString theHash= getHash(lat,lon);
+        m_Contained[theHash]=aHouseTrail;
         beginInsertRows(QModelIndex(), rowCount(), rowCount());
         m_Housetrails.append(aHouseTrail);
         endInsertRows();
@@ -144,8 +146,13 @@ public:
         return m_Housetrails.count();
     }
 
+    QString getHash(double lat, double lon)
+    {
+        return QString("%1o%2").arg(lat,0,'f',7).arg(lon,0,'f',7);
+    }
+
     Q_INVOKABLE bool contains(double lat, double lon) {
-        QString theHash= QString("%1o%2").arg(lat).arg(lon);
+        QString theHash= getHash(lat,lon);
         return m_Contained.contains(theHash);
     }
 
@@ -179,7 +186,7 @@ protected:
     }
 private:
     QList<HouseTrail*> m_Housetrails;
-    QHash<QString, int> m_Contained;
+    QHash<QString, HouseTrail*> m_Contained;
 };
 
 

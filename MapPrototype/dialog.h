@@ -44,6 +44,7 @@ public:
         { return m_longitude;}
 
     Q_INVOKABLE void getAllPois();
+    Q_INVOKABLE void getPois(double lat, double lon, double radius, double zoomlevel);
 
     Q_INVOKABLE void locateMe() const
     {

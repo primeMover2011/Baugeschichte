@@ -151,7 +151,7 @@ ApplicationWindow {
     //    PositionSource
     property variant locationGraz: QtPositioning.coordinate(47.0666667, 15.45)
     Component.onCompleted: {
-        dialog.getAllPois();
+        //dialog.getAllPois();
 
 
     }

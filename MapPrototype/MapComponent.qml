@@ -23,6 +23,7 @@ Map {
         repeat: false
         onTriggered: {
             mapOfEurope.calculateScale()
+            updatePois()
         }
     }
 
@@ -60,6 +61,14 @@ Map {
             mapOfEurope.zoomLevel = value
             //console.log("Zoomlevel: " + mapOfEurope.zoomLevel)
         }
+    }
+    function updatePois() {
+            var coord1 = mapOfEurope.toCoordinate(Qt.point(0, 0))
+            var coord2 = mapOfEurope.toCoordinate(Qt.point(mapOfEurope.width, mapOfEurope.height))
+            var dist1 = Math.abs(coord1.latitude - coord2.latitude)
+            var dist2 = Math.abs(coord1.longitude - coord2.longitude)
+            var dist = (dist1 > dist2) ? dist1 : dist2;
+            dialog.getPois(mapOfEurope.center.latitude,mapOfEurope.center.longitude, 2*dist, mapOfEurope.zoomLevel);
     }
 
     function calculateScale() {

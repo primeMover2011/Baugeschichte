@@ -14,6 +14,19 @@ void Dialog::getAllPois()
     m_manager->get(QNetworkRequest(QUrl(theRequest4Pois)));
 }
 
+void Dialog::getPois(double lat, double lon, double radius, double zoomlevel)
+{
+//    Q_INVOKABLE void getPois(double lat, double lon, double zoomlevel);
+    QString theRequest4Pois=QString("http://baugeschichte.at/app/v1/getData.php?action=getBuildingsBoxed&lat=%1&lon=%2&radius=%3")
+            .arg(lat,0,'f',7)
+            .arg(lon,0,'f',7)
+            .arg(radius,0,'f',7);
+    if (zoomlevel < 1.5)
+        theRequest4Pois = theRequest4Pois % "&all=1";
+    m_manager->get(QNetworkRequest(QUrl(theRequest4Pois)));
+
+}
+
 void Dialog::poisFinished(QNetworkReply *theReply)
 {
     QtConcurrent::run(this, &Dialog::createModelAsync, theReply);

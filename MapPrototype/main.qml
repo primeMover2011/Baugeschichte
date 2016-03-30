@@ -13,6 +13,10 @@ ApplicationWindow {
     onClosing: {
         close.accepted = false
     }
+    ExclusiveGroup {
+          id: categoryGroup
+    }
+
 
     PositionSource {
         id: thePosition
@@ -88,11 +92,23 @@ ApplicationWindow {
             Rectangle {
                 width: localHelper.dp(50)
                 height: localHelper.dp(50)
-                opacity: 0.5
+                //opacity: 0.5
                 Image {
                     source: "resources/Edit-find-cats.svg"
                     width: parent.width
                     height: parent.height
+                }
+                MouseArea {
+                    id:catMouse
+                    anchors.fill: parent
+                    onClicked: {
+                        if (uiStack.depth > 1) {
+                            uiStack.clear()
+                        }
+                        uiStack.push({
+                                         item: Qt.resolvedUrl("CategoryselectionView.qml")
+                                     })
+                    }
                 }
             }
             //<--Categories
@@ -156,9 +172,14 @@ ApplicationWindow {
 
         //dialog.getAllPois();
     }
-    ExclusiveGroup {
-        id: categoryGroup
-    }
+    /*    Connections {
+            target: mapOfEurope
+                    onSelectedPoiChanged: {
+                                console.log("Poi:", mapOfEurope.selectedPoi)
+                                        }
+
+                                            }
+                                                */
     width: 1024
     height: 800
 
@@ -207,14 +228,7 @@ ApplicationWindow {
                                                             */
     }
 
-    /*    Connections {
-            target: mapOfEurope
-                    onSelectedPoiChanged: {
-                                console.log("Poi:", mapOfEurope.selectedPoi)
-                                        }
 
-                                            }
-                                                */
     ListModel {
         id: categoryModel
         Component.onCompleted: {

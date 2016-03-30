@@ -8,9 +8,10 @@ import "./"
 Map {
     id: mapOfRoute
     signal followMe
-    zoomLevel: 8
+    zoomLevel: 13
     property string searchFor: ""
     onSearchForChanged: simpleMapSearchModel.phrase = searchFor//" "
+    onZoomLevelChanged: console.log("MapofRoute zoomlevel:" + zoomLevel)
 
     Timer {
         id: viewportTimer
@@ -113,7 +114,7 @@ Map {
         id: housetrailMapItems
         model: simpleMapSearchModel.model //houseTrailModel
         property Item currentItem
-        autoFitViewport: true
+        //autoFitViewport: true
 
         delegate: MapQuickItem {
             id: mqItem

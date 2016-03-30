@@ -28,5 +28,6 @@
         <file>resources/Go-previous.svg</file>
         <file>resources/Go-next.svg</file>
         <file>resources/marker-2.svg</file>
+        <file>CategoryselectionView.qml</file>
     </qresource>
 </RCC>

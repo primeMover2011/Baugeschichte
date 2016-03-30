@@ -21,7 +21,7 @@ void Dialog::getPois(double lat, double lon, double radius, double zoomlevel)
             .arg(lat,0,'f',7)
             .arg(lon,0,'f',7)
             .arg(radius,0,'f',7);
-    if (zoomlevel < 1.5)
+    if (zoomlevel > 17)
         theRequest4Pois = theRequest4Pois % "&all=1";
     m_manager->get(QNetworkRequest(QUrl(theRequest4Pois)));
 

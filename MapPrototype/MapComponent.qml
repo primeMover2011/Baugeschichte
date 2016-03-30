@@ -338,6 +338,8 @@ Map {
             }
 
             MouseArea {
+                id: rectMouse
+                preventStealing: true
                 anchors.fill: parent
                 onPressed: selectPoi(tricksterRectangle.title)
                 onClicked: selectPoi(tricksterRectangle.title)

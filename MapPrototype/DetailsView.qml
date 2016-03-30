@@ -49,7 +49,7 @@ import "./"
 Item {
     property real itemSize: width / 3
     property string searchFor: ""
-
+    property string poiName: ""
     DensityHelpers {
         id:localHelper
     }
@@ -59,6 +59,7 @@ Item {
         phrase: searchFor
         searchString: "http://baugeschichte.at/app/v1/getData.php?action=getBuildingDetail&name="
         onNewobject: {
+            poiName = magneto.title
             for (var key in magneto.payload) {
                 var jsonObject = magneto.payload[key];
                 jsonObject.detailText=jsonObject.text
@@ -67,10 +68,7 @@ Item {
 
             }
         }
-        onIsLoaded: {
-              console.debug("Reload DeatilsModel")
 
-          }
 
 
     }
@@ -186,9 +184,6 @@ Item {
                                         anchors.horizontalCenter: parent.horizontalCenter
                                         //anchors.verticalCenter: parent.verticalCenter
                                         text: imageDescription
-                                        onTextChanged: {
-                                            console.log("text: " + text)
-                                        }
                                         smooth: true
                                         font.pixelSize: localHelper.sp(24)
 
@@ -232,6 +227,9 @@ Item {
 
                 }
                 }
+
+
+
                 Rectangle {
                     id: textBase
 
@@ -244,8 +242,21 @@ Item {
                     color:          "#FFFCF2"
                     border.color:   "#8E8E8E"
 
+                    Text {
+                        id: titleText
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.margins: localHelper.dp(5)
+                        //anchors.verticalCenter: parent.verticalCenter
+                        text: poiName + ": " + title
+                        smooth: true
+                        font.pixelSize: localHelper.sp(24)
+
+                    }
+
                     TextArea {
-                        anchors             { fill: parent; margins: 5 }
+                        anchors             { top: titleText.bottom;
+                            bottom: parent.bottom; left: parent.left;
+                            right: parent.right; margins: 5 }
                         readOnly:           true
                         verticalScrollBarPolicy: Qt.ScrollBarAsNeeded
                         horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff

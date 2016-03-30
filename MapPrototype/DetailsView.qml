@@ -275,16 +275,6 @@ Item {
                     color:          "#FFFCF2"
                     border.color:   "#8E8E8E"
 
-
-                    /*TextEdit {
-                        anchors             { fill: parent; margins: 5 }
-                        readOnly:           true
-
-                        wrapMode:           TextEdit.WordWrap
-                        text:               detailText
-                        font.pixelSize:     localHelper.sp(20)
-                        color:              "#333333"
-                    }*/
                     TextArea {
                         anchors             { fill: parent; margins: 5 }
                         readOnly:           true
@@ -309,28 +299,38 @@ Item {
         }
     }
 
-    Rectangle {
-        anchors { left: parent.left; bottom: parent.bottom; margins: 10 }
-        width: 100
-        height: 100
-        color: "red"
+   Image{
+            id:prevImage
+            anchors { left: parent.left; bottom: parent.bottom; margins: 10 }
+            source: "resources/Go-previous.svg"
+            fillMode: Image.PreserveAspectFit
+            smooth: true
+            width: localHelper.dp(100)
+            height: localHelper.dp(100)
+            MouseArea {
+                anchors.fill: parent
 
-        MouseArea {
-            anchors.fill: parent
-
-            onClicked: {
-                if ( mainListView.currentIndex != 0 ) {
-                    mainListView.decrementCurrentIndex()
-                } else mainListView.currentIndex = mainListView.count - 1
+                onClicked: {
+                    if ( mainListView.currentIndex != 0 ) {
+                        mainListView.decrementCurrentIndex()
+                    } else mainListView.currentIndex = mainListView.count - 1
+                }
             }
         }
-    }
 
-    Rectangle {
+
+
+
+    Image{
+        id:nextImage
         anchors { right: parent.right; bottom: parent.bottom; margins: 10 }
-        width: 100
-        height: 100
-        color: "blue"
+        width: localHelper.dp(100)
+        height: localHelper.dp(100)
+
+        source: "resources/Go-next.svg"
+        fillMode: Image.PreserveAspectFit
+        //anchors.centerIn: parent
+        smooth: true
 
         MouseArea {
             anchors.fill: parent

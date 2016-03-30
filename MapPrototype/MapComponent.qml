@@ -193,10 +193,6 @@ Map {
             id: mqItem
             coordinate: QtPositioning.coordinate(coord.latitude,
                                                  coord.longitude)
-            onCoordinateChanged: {
-                console.log("coordinate changed")
-                console.log("geohash:" + geohash)
-            }
 
             anchorPoint.x: image.width * 0.5
             anchorPoint.y: image.height

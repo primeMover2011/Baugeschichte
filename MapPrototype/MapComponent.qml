@@ -289,9 +289,12 @@ Map {
         id: myPositionCircle
         visible: myPosition.active
         coordinate: myPosition.position.coordinate
+        anchorPoint.x: mePositron.width / 2
+        anchorPoint.y: mePositron.height / 2
 
 
         sourceItem: Rectangle {
+            id: mePositron
             color: "#00a200"
             border.color: "#190a33"
             border.width: 2
@@ -302,17 +305,17 @@ Map {
             radius: width/2
 
 
-            SequentialAnimation on radius {
+            SequentialAnimation on width {
                 loops: Animation.Infinite
                 NumberAnimation {
-                    from: point.radius
-                    to: point.radius * 1.8
+                    from: mePositron.width
+                    to: mePositron.width * 1.8
                     duration: 800
                     easing.type: Easing.InOutQuad
                 }
                 NumberAnimation {
-                    from: point.radius * 1.8
-                    to: point.radius
+                    from: mePositron.width * 1.8
+                    to: mePositron.width
                     duration: 1000
                     easing.type: Easing.InOutQuad
                 }

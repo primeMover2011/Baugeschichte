@@ -76,7 +76,7 @@ void setTheLocation(QGeoCoordinate theLocation)
 
     m_theLocation = theLocation;
     std::string aGeoHash;
-    GeographicLib::Geohash::Forward(m_theLocation.latitude(),m_theLocation.longitude(),18,aGeoHash);
+    GeographicLib::Geohash::Forward(m_theLocation.latitude(),m_theLocation.longitude(),12,aGeoHash);
     setGeoHash(QString::fromStdString(aGeoHash));
 
     emit theLocationChanged(theLocation);
@@ -117,6 +117,8 @@ public:
         HouseTitleRole,
         CoordinateRole,
         CategoryRole,
+        GeohashRole,
+
     };
     HousetrailModel(QObject *parent = 0){
         Q_UNUSED(parent)
@@ -171,6 +173,8 @@ public:
             return QVariant::fromValue(aHousetrail->theLocation());
         else if (role == CategoryRole)
             return aHousetrail->categories();
+        else if (role == GeohashRole)
+            return aHousetrail->geoHash();
         return QVariant();
     }
 
@@ -182,6 +186,7 @@ protected:
         roles[HouseTitleRole] = "title";
         roles[CoordinateRole] = "coord";
         roles[CategoryRole] = "category";
+        roles[GeohashRole] = "geohash";
         return roles;
     }
 private:

@@ -15,7 +15,7 @@ Map {
     property bool autoUpdatePois:true
     property variant currentModel: filteredTrailModel
     property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
-
+    property alias theItemModel: housetrailMapItems
     z: 20000
     zoomLevel: 16
 
@@ -195,6 +195,7 @@ Map {
                                                  coord.longitude)
             onCoordinateChanged: {
                 console.log("coordinate changed")
+                console.log("geohash:" + geohash)
             }
 
             anchorPoint.x: image.width * 0.5

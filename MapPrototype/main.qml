@@ -130,7 +130,7 @@ ApplicationWindow {
                 MouseArea {
                     id:mouseFollowMe
                     anchors.fill: parent
-                    enabled: theFollowMeButton.valid
+                    enabled: thePosition.valid
 
                     onClicked: {
                         parent.isActive = !parent.isActive

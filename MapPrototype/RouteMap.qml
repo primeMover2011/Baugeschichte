@@ -24,6 +24,7 @@ Item {
                 //routeMap.currentModel = model
                 var entryInTheMiddle = model.get(iCnt % 2)
                 routeMap.center = QtPositioning.coordinate(entryInTheMiddle.coord.latitude,entryInTheMiddle.coord.longitude)
+                //routeMap.fitViewportToMapItems()
             }
             searchString: "http://baugeschichte.at/app/v1/getData.php?action=getRoutePoints&name="
         }

@@ -46,6 +46,30 @@ public:
     Q_INVOKABLE void getAllPois();
     Q_INVOKABLE void getPois(double lat, double lon, double radius, double zoomlevel);
 
+
+    Q_INVOKABLE QString getGeoHashFromLocation(QGeoCoordinate theLocation, int thePrecision )
+    {   if (thePrecision < 1) thePrecision = 1;
+        if (thePrecision > 12) thePrecision = 12;
+
+        std::string aGeoHash;
+        GeographicLib::Geohash::Forward(theLocation.latitude(),theLocation.longitude(),thePrecision,aGeoHash);
+        return QString::fromStdString(aGeoHash);
+    }
+
+    Q_INVOKABLE QGeoCoordinate getLocationFromGeoHash(QString theGeoHash )
+    {
+        //if (thePrecision < 1) thePrecision = 1;
+        //if (thePrecision > 12) thePrecision = 12;
+
+        std::string aGeoHash = theGeoHash.toStdString();
+        double lat, lon;
+        int theLen;
+
+        GeographicLib::Geohash::Reverse(aGeoHash, lat,lon,theLen);
+        return QGeoCoordinate(lat, lon);
+    }
+
+
     Q_INVOKABLE void locateMe() const
     {
         if (m_source)

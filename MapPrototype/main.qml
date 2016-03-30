@@ -314,13 +314,6 @@ ApplicationWindow {
                         selectedPoi = ""
                     }
                     followMe: theFollowMeButton.isActive
-                    /*
-                                        onSearch: {
-                                                                uiStack.push({item: Qt.resolvedUrl("SearchPage.qml"), properties: {searchFor:selectedPoi}})
-                                                                                    }
-                                                                                                        onRoutes:
-                                                                                                                                uiStack.push({item: Qt.resolvedUrl("RouteView.qml")})
-                                                                                                                                */
                 }
             }
             Loader {
@@ -331,14 +324,6 @@ ApplicationWindow {
                 anchors.fill: parent
             }
 
-            /*            RgbPage {
-                        id: rgbComponent
-                                    //opacity: 0.5
-                                                onSearch: {
-                                                                uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor:"Burggasse 15"}})
-                                                                            }
-
-                                                                                        }*/
         }
     }
     //Rectangle

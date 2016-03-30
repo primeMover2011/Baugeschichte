@@ -12,8 +12,10 @@ Map {
     signal categories
     signal routes
     property bool followMe:false
+    property bool autoUpdatePois:true
     property variant currentModel: filteredTrailModel
     property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
+
     z: 20000
     zoomLevel: 16
 
@@ -24,6 +26,7 @@ Map {
         repeat: false
         onTriggered: {
             mapOfEurope.calculateScale()
+            if (autoUpdatePois)
             updatePois()
         }
     }
@@ -69,7 +72,7 @@ Map {
             var dist1 = Math.abs(coord1.latitude - coord2.latitude)
             var dist2 = Math.abs(coord1.longitude - coord2.longitude)
             var dist = (dist1 > dist2) ? dist1 : dist2;
-            dialog.getPois(mapOfEurope.center.latitude,mapOfEurope.center.longitude, 2*dist, mapOfEurope.zoomLevel);
+            dialog.getPois(mapOfEurope.center.latitude,mapOfEurope.center.longitude, dist, mapOfEurope.zoomLevel);
     }
 
     function calculateScale() {
@@ -181,12 +184,19 @@ Map {
         property Item currentItem
 
         //z: 29000
+        onModelChanged:{
+            console.log("model changed")
+        }
 
         //onCurrentItemChanged:
         delegate: MapQuickItem {
             id: mqItem
             coordinate: QtPositioning.coordinate(coord.latitude,
                                                  coord.longitude)
+            onCoordinateChanged: {
+                console.log("coordinate changed")
+            }
+
             anchorPoint.x: image.width * 0.5
             anchorPoint.y: image.height
             z: 5

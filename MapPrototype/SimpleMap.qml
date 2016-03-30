@@ -39,11 +39,6 @@ Map {
         }
         searchString: "http://baugeschichte.at/app/v1/getData.php?action=getRoutePoints&name="
     }
-//QtPositioning.coordinate(-27.5, 153.1)
-    MapPolyline {
-        id: theRoute
-
-    }
 
     DensityHelpers {
         id: localHelper
@@ -83,7 +78,6 @@ Map {
                                                                                                                                                                                                                                                             }
                                                                                                                                                                                                                                                                                                                                                     */
     }
-
     PositionSource {
         id: myPosition
         preferredPositioningMethods: PositionSource.AllPositioningMethods

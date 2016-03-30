@@ -30,5 +30,6 @@
         <file>resources/marker-2.svg</file>
         <file>CategoryselectionView.qml</file>
         <file>resources/Edit-check-sheet.svg</file>
+        <file>RouteMap.qml</file>
     </qresource>
 </RCC>

@@ -78,7 +78,7 @@ Item {
 
     ListView {
         id:                     mainListView
-        anchors                 { fill: parent; margins: 10 }
+        anchors                 { fill: parent; /*margins: 10*/ }
         interactive:            false
         orientation:            ListView.Horizontal
         highlightMoveDuration:  250
@@ -88,6 +88,7 @@ Item {
         delegate:               Item {
             width:      mainListView.width
             height:     mainListView.height
+            anchors.top: parent.top
 //            anchors.fill: parent
         //+++ColumnLayout+++
             ColumnLayout {
@@ -160,6 +161,7 @@ Item {
                                 height: parent.height
                                 visible: PathView.onPath
                                 z: PathView.zOrder
+                                anchors.top:parent.top
 
                                 Image{
                                     id:myImage
@@ -167,10 +169,34 @@ Item {
                                     height: parent.height
                                     source: "http://baugeschichte.at/"+imageName
                                     fillMode: Image.PreserveAspectFit
+                                    anchors.top: parent.top
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     smooth: true
                                 }
-                                Image {
+                                Rectangle {
+                                    id: textRect
+                                    width: textItem.width
+                                    height: textItem.height
+                                    anchors.bottom: myImage.bottom
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    color: "#ffffff"
+                                    smooth: true
+                                    Text {
+                                        id: textItem
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        //anchors.verticalCenter: parent.verticalCenter
+                                        text: imageDescription
+                                        onTextChanged: {
+                                            console.log("text: " + text)
+                                        }
+                                        smooth: true
+                                        font.pixelSize: localHelper.sp(24)
+
+                                    }
+                                }
+
+
+                                /*Image {
                                     id: subImage
                                     width: myImage.width
                                     height: myImage.height
@@ -187,7 +213,7 @@ Item {
                                     gradient: Gradient {
                                         GradientStop { position: 0.0; color: Qt.rgba(0,0,0, 0.7) }
                                     }
-                                }
+                                }*/
 
                                 transform:[
                                     Rotation{
@@ -204,63 +230,6 @@ Item {
 
 
 
-                        /*Image {
-                        id: smallImage
-                        height:     itemSize
-                        width:      height
-                        source:     "http://baugeschichte.at/"+imageName
-                        fillMode:   Image.PreserveAspectFit
-                        PinchArea {
-                               anchors.fill: parent
-                               pinch.target: smallImage
-                               pinch.minimumRotation: -360
-                               pinch.maximumRotation: 360
-                               pinch.minimumScale: 0.1
-                               pinch.maximumScale: 10
-                               pinch.dragAxis: Pinch.XAndYAxis
-                         //      onPinchStarted: setFrameColor();
-
-                               MouseArea {
-                                   anchors.fill: parent
-                                   onClicked: {
-                                       smallImage.height = 1000
-                                       smallImage.width = 1000
-
-                                   }
-
-                        }
-}
-
-
-                        onSourceChanged: {
-                            console.log("Source:",source)
-                            console.log("imageName:",imageName)
-
-
-                        }
-
-
-
-
-                        Window {
-                            id:         imageView
-                            width: 800
-                            height: 600
-                            color: "#FFFCF2"
-                            flags:      Qt.SplashScreen
-                            Image {
-                                anchors.fill: parent
-                                source: smallImage.source
-                                fillMode: Image.PreserveAspectFit
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: imageView.close()
-                            }
-                        }
-
-                    }//IMAGE*/
                 }
                 }
                 Rectangle {
@@ -317,10 +286,6 @@ Item {
                 }
             }
         }
-
-
-
-
     Image{
         id:nextImage
         anchors { right: parent.right; bottom: parent.bottom; margins: 10 }

@@ -258,6 +258,10 @@ ApplicationWindow {
     Rectangle {
         color: "#060606"
         anchors.fill: parent
+        //anchors.topMargin: toolBar.height
+//        anchors { right: parent.right; left:parent.left;
+//            top: toolBar.bottom; bottom: parent.bottom; /*margins: 10*/ }
+
         focus: true
         z: 40000
         Keys.onReleased: {
@@ -285,6 +289,7 @@ ApplicationWindow {
 
             objectName: "theStackView"
             anchors.fill: parent
+
 
             Component {
                 id: component_mapOfEurope

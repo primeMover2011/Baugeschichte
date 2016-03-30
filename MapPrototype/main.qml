@@ -34,7 +34,7 @@ ApplicationWindow {
         anchors.left: parent.left
         anchors.right: parent.right
         opacity: 0.5
-        height: 50
+        height: localHelper.dp(50)
         width: parent.width
 
         RowLayout {
@@ -120,7 +120,7 @@ ApplicationWindow {
                 property bool isActive: false
                 width: localHelper.dp(50)
                 height: localHelper.dp(50)
-                opacity: isEnabled ? 1 : 0.5
+                opacity: isEnabled ? 1 : 0.3
                 Image {
                     id: theFollowMeImage
                     source: "resources/Ic_gps_off_48px.svg"
@@ -128,8 +128,10 @@ ApplicationWindow {
                     height: parent.height
                 }
                 MouseArea {
+                    id:mouseFollowMe
                     anchors.fill: parent
-                    enabled: parent.isEnabled
+                    enabled: theFollowMeButton.valid
+
                     onClicked: {
                         parent.isActive = !parent.isActive
                         if (parent.isActive)
@@ -146,14 +148,14 @@ ApplicationWindow {
                 width: localHelper.dp(50)
                 height: localHelper.dp(50)
                 Image {
-                    source: "resources/Map-icon.svg"
+                    source: "resources/Edit-check-sheet.svg"
                     width: parent.width
                     height: parent.height
                 }
                 //                                uiStack.push({item: Qt.resolvedUrl("RouteView.qml")})
                 MouseArea {
                     anchors.fill: parent
-                    enabled: parent.isEnabled
+                    //enabled: parent.isEnabled
                     onClicked: {
                         uiStack.push({
                                          item: Qt.resolvedUrl("RouteView.qml")
@@ -183,10 +185,7 @@ ApplicationWindow {
     width: 1024
     height: 800
 
-    function selectCategory(theCat) {
-        filteredTrailModel.setFilterWildcard(theCat)
-    }
-    menuBar: MenuBar {
+/*    menuBar: MenuBar {
         id: mainMenuBar
         Menu {
             id: categoryMenu
@@ -219,15 +218,9 @@ ApplicationWindow {
             }
         }
 
-        /*        function createProviderMenuItem(provider)
-                {
-                            var item = addItem(provider);
-                                        item.checkable = true;
-                                                    item.triggered.connect(function(){selectProvider(provider)})
-                                                            }
-                                                            */
-    }
 
+    }//<--menuBar
+*/
 
     ListModel {
         id: categoryModel
@@ -247,7 +240,7 @@ ApplicationWindow {
                 }
             }
 
-            categoryMenu.createMenu()
+            //categoryMenu.createMenu()
         }
     }
 

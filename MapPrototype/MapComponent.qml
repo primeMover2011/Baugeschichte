@@ -255,6 +255,7 @@ Map {
             }
         }
     }
+
     MapCircle {
         id: point
         visible: myPosition.active
@@ -282,12 +283,43 @@ Map {
                 easing.type: Easing.InOutQuad
             }
         }
-        /* SequentialAnimation on height {
-                            loops: Animation.Infinite
-                                                NumberAnimation { from: height * 1; to: height * 1.15; duration: 1200; easing.type: Easing.InOutQuad }
-                                                                    NumberAnimation { from: height * 1.15; to: height * 1; duration: 1000; easing.type: Easing.InOutQuad }
-                                                                                    }
-                                                                                    */
+    }//<--MapCircle
+
+    MapQuickItem {
+        id: myPositionCircle
+        visible: myPosition.active
+        coordinate: myPosition.position.coordinate
+
+
+        sourceItem: Rectangle {
+            color: "#00a200"
+            border.color: "#190a33"
+            border.width: 2
+            smooth: true
+            opacity: 0.4
+            width: localHelper.dp(90)
+            height: width
+            radius: width/2
+
+
+            SequentialAnimation on radius {
+                loops: Animation.Infinite
+                NumberAnimation {
+                    from: point.radius
+                    to: point.radius * 1.8
+                    duration: 800
+                    easing.type: Easing.InOutQuad
+                }
+                NumberAnimation {
+                    from: point.radius * 1.8
+                    to: point.radius
+                    duration: 1000
+                    easing.type: Easing.InOutQuad
+                }
+            }
+        }//<--MapCircle
+
+
     }
 
     MapQuickItem {

@@ -202,6 +202,8 @@ Map {
                 id: theSourceItem
                 //property Item myBubble : bubble
                 z: 10000
+                width: image.width
+                height: image.height
 
                 Rectangle {
 

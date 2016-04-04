@@ -242,6 +242,7 @@ Map {
                     source: "resources/marker-2.svg"
                     width: localHelper.sp(50)
                     height: localHelper.sp(50)
+                    sourceSize: Qt.size(width, height)
                     fillMode: Image.PreserveAspectFit
                     z: 9
                     onZChanged: console.log("z:" + z)

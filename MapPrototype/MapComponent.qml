@@ -68,7 +68,7 @@ Map {
     }
     function updatePois() {
             var coord1 = mapOfEurope.toCoordinate(Qt.point(0, 0))
-            var coord2 = mapOfEurope.toCoordinate(Qt.point(mapOfEurope.width, mapOfEurope.height))
+            var coord2 = mapOfEurope.toCoordinate(Qt.point(mapOfEurope.width-1, mapOfEurope.height-1))
             var dist1 = Math.abs(coord1.latitude - coord2.latitude)
             var dist2 = Math.abs(coord1.longitude - coord2.longitude)
             var dist = (dist1 > dist2) ? dist1 : dist2;

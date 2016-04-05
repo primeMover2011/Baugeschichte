@@ -44,7 +44,7 @@ BaseView {
 
             LineInput {
                 id: lineInput
-                hint: "Adresse..."
+                hint: qsTr("Adresse...")
                 focus: true //flipBar.opened
                 anchors { fill: parent; margins: 6 }
                 onAccepted: {

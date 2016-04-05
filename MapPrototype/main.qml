@@ -176,7 +176,7 @@ ApplicationWindow{
         icon: StandardIcon.Question
         standardButtons: StandardButton.Yes | StandardButton.No
         modality: Qt.WindowModal
-        title: "Baugeschichte App beenden?"
+        title: qsTr("Baugeschichte App beenden?")
         onButtonClicked: console.log("clicked button " + clickedButton)
         onYes: Qt.quit()
         onNo: visible = false

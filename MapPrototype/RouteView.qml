@@ -35,7 +35,7 @@ BaseView {
 
             LineInput {
                 id: lineInput
-                hint: "Suchbegriff..."
+                hint: qsTr("Suchbegriff...")
                 focus: true //flipBar.opened
                 anchors { fill: parent; margins: 6 }
                 onAccepted: {

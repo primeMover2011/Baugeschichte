@@ -22,10 +22,11 @@ Item {
     }
 
     function reload() {
-        housetrailDetails.clear()
-
-        if (phrase == "")
+        if (phrase == "") {
             return;
+        }
+
+        status = XMLHttpRequest.LOADING;
 
 //! [requesting]
         var req = new XMLHttpRequest;
@@ -36,8 +37,7 @@ Item {
         //console.log(req.responseText)
 
         req.onreadystatechange = function() {
-            status = req.readyState;
-            if (status === XMLHttpRequest.DONE) {
+            if (req.readyState === XMLHttpRequest.DONE) {
                 //console.log(req.responseText)
                 var searchResult = JSON.parse(req.responseText);
                 if (searchResult.errors !== undefined)
@@ -48,6 +48,7 @@ Item {
                 if (wasLoading == true)
                     wrapper.isLoaded()
             }
+            status = req.readyState;
             wasLoading = (status === XMLHttpRequest.LOADING);
         }
         req.send();

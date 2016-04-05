@@ -16,8 +16,9 @@ Map {
     property variant currentModel: filteredTrailModel
     property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
     property alias theItemModel: housetrailMapItems
-    z: 20000
     zoomLevel: 16
+
+    property bool loading: false
 
     Timer {
         id: scaleTimer
@@ -68,7 +69,7 @@ Map {
     }
     function updatePois() {
             var coord1 = mapOfEurope.toCoordinate(Qt.point(0, 0))
-            var coord2 = mapOfEurope.toCoordinate(Qt.point(mapOfEurope.width, mapOfEurope.height))
+            var coord2 = mapOfEurope.toCoordinate(Qt.point(mapOfEurope.width-1, mapOfEurope.height-1))
             var dist1 = Math.abs(coord1.latitude - coord2.latitude)
             var dist2 = Math.abs(coord1.longitude - coord2.longitude)
             var dist = (dist1 > dist2) ? dist1 : dist2;
@@ -202,6 +203,8 @@ Map {
                 id: theSourceItem
                 //property Item myBubble : bubble
                 z: 10000
+                width: image.width
+                height: image.height
 
                 Rectangle {
 
@@ -242,6 +245,7 @@ Map {
                     source: "resources/marker-2.svg"
                     width: localHelper.sp(50)
                     height: localHelper.sp(50)
+                    sourceSize: Qt.size(width, height)
                     fillMode: Image.PreserveAspectFit
                     z: 9
                     onZChanged: console.log("z:" + z)

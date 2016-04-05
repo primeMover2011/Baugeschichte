@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.4
 import "./"
 
-Item {
+BaseView {
 
     ListModel {
         id: categoryModel

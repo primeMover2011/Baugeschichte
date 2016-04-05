@@ -31,5 +31,7 @@
         <file>CategoryselectionView.qml</file>
         <file>resources/Edit-check-sheet.svg</file>
         <file>RouteMap.qml</file>
+        <file>ToobalButton.qml</file>
+        <file>BaseView.qml</file>
     </qresource>
 </RCC>

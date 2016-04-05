@@ -1,4 +1,5 @@
 #include "dialog.h"
+#include "Geohash.hpp"
 
 #include <QDebug>
 #include <QJsonObject>

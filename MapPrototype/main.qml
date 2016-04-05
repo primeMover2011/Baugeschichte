@@ -13,13 +13,14 @@ ApplicationWindow {
     width: 1024
     height: 800
 
+    visible: true
+
     onClosing: {
         close.accepted = false
     }
     ExclusiveGroup {
           id: categoryGroup
     }
-
 
     PositionSource {
         id: thePosition
@@ -38,7 +39,6 @@ ApplicationWindow {
         anchors.right: parent.right
         opacity: 0.5
         height: localHelper.dp(50)
-        width: parent.width
 
         RowLayout {
             anchors.fill: parent
@@ -103,21 +103,11 @@ ApplicationWindow {
         }
     }
 
-    visible: true
     //    PositionSource
     property variant locationGraz: QtPositioning.coordinate(47.0666667, 15.45)
     Component.onCompleted: {
-
         //dialog.getAllPois();
     }
-    /*    Connections {
-            target: mapOfEurope
-                    onSelectedPoiChanged: {
-                                console.log("Poi:", mapOfEurope.selectedPoi)
-                                        }
-
-                                            }
-                                                */
 
 /*    menuBar: MenuBar {
         id: mainMenuBar
@@ -151,8 +141,6 @@ ApplicationWindow {
                 })
             }
         }
-
-
     }//<--menuBar
 */
 
@@ -173,7 +161,6 @@ ApplicationWindow {
                     categoryModel.append(jsonObject)
                 }
             }
-
             //categoryMenu.createMenu()
         }
     }

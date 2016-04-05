@@ -22,6 +22,8 @@ Item {
     }
 
     function reload() {
+        model.clear();
+
         if (phrase == "") {
             return;
         }

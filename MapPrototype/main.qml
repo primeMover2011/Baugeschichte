@@ -256,6 +256,7 @@ ApplicationWindow{
             }
             Loader {
                 id: loader_mapOfEurope
+                property bool loading: false
 
                 sourceComponent: component_mapOfEurope
                 anchors.centerIn: parent

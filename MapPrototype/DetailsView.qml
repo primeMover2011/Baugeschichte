@@ -46,10 +46,13 @@ import QtQml.Models 2.2
 import QtQuick.Window 2.0
 import "./"
 
-Item {
+BaseView {
     property real itemSize: width / 3
     property string searchFor: ""
     property string poiName: ""
+
+    loading: theDetails.isLoading
+
     DensityHelpers {
         id:localHelper
     }
@@ -65,14 +68,9 @@ Item {
                 jsonObject.detailText=jsonObject.text
                 jsonObject.text = ""
                 model.append(jsonObject);
-
             }
         }
-
-
-
     }
-
 
     ListView {
         id:                     mainListView
@@ -147,9 +145,6 @@ Item {
                         PathAttribute {name: "zOrder"; value: 1}
                     }
 
-
-
-
                     delegate:
                         Item{
                                 id: imageContainer
@@ -186,10 +181,8 @@ Item {
                                         text: imageDescription
                                         smooth: true
                                         font.pixelSize: localHelper.sp(24)
-
                                     }
                                 }
-
 
                                 /*Image {
                                     id: subImage
@@ -221,14 +214,8 @@ Item {
                                         origin.x: myImage.width/2;   origin.y: myImage.height/2
                                     }
                                 ]
-
-
-
-
                 }
                 }
-
-
 
                 Rectangle {
                     id: textBase
@@ -266,38 +253,34 @@ Item {
                         //color:              "#333333"
                     }
 
-
-
                     Keys.onLeftPressed: console.log("onLeft Details")
                     Keys.onRightPressed: console.log("onLeft Details")
-
                 }
-
                 }//SplitView
             }
         //---ColumnLayout---
         }
     }
 
-   Image{
-            id:prevImage
-            anchors { left: parent.left; bottom: parent.bottom; margins: 10 }
-            source: "resources/Go-previous.svg"
-            fillMode: Image.PreserveAspectFit
-            smooth: true
-            width: localHelper.dp(100)
-            height: localHelper.dp(100)
-            MouseArea {
-                anchors.fill: parent
+    Image {
+        id:prevImage
+        anchors { left: parent.left; bottom: parent.bottom; margins: 10 }
+        source: "resources/Go-previous.svg"
+        fillMode: Image.PreserveAspectFit
+        smooth: true
+        width: localHelper.dp(100)
+        height: localHelper.dp(100)
+        MouseArea {
+            anchors.fill: parent
 
-                onClicked: {
-                    if ( mainListView.currentIndex != 0 ) {
-                        mainListView.decrementCurrentIndex()
-                    } else mainListView.currentIndex = mainListView.count - 1
-                }
+            onClicked: {
+                if ( mainListView.currentIndex != 0 ) {
+                    mainListView.decrementCurrentIndex()
+                } else mainListView.currentIndex = mainListView.count - 1
             }
         }
-    Image{
+    }
+    Image {
         id:nextImage
         anchors { right: parent.right; bottom: parent.bottom; margins: 10 }
         width: localHelper.dp(100)

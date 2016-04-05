@@ -1,8 +1,10 @@
-import QtQuick 2.0
+import QtQuick 2.4
 import QtQuick.Controls 1.4
 import "./"
 
-Item {
+BaseView {
+    loading: searchModel.isLoading
+
     JsonModel {
         id: searchModel
         onNewobject: {
@@ -19,9 +21,6 @@ Item {
         id:localHelper
     }
 
-    BusyIndicator {
-        running: searchModel.isLoading === true
-    }
     FocusScope {
         id: theFocusScope
         signal ok
@@ -56,6 +55,7 @@ Item {
         id: searchResult
         model: searchModel.model
         interactive: true
+        clip: true
         anchors  {
             top: theFocusScope.bottom
             bottom: parent.bottom
@@ -63,23 +63,18 @@ Item {
             right: parent.right
 
         }
- //        clip: true
 
         delegate: SearchResultDelegate {
-                text: title
-                onSelected:
-                {
-                    var searchString=wot.replace(new RegExp(' ', 'g'),"_")//Manchmal müssen Spaces umgewandelt werden...
-                    //und um alle vorkommnisse von " " zu erstetzen muss man in Javascript eine RegEx verwenden.
-                    //http://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
-                    //uiStack.push({item: Qt.resolvedUrl("SimpleMap.qml"), properties: {searchFor: searchString/*textitem.text*/}})
-                    uiStack.push({item: Qt.resolvedUrl("RouteMap.qml"), properties: {searchFor: searchString/*textitem.text*/}})
-
-                }
+            text: title
+            onSelected:
+            {
+                var searchString=wot.replace(new RegExp(' ', 'g'),"_")//Manchmal müssen Spaces umgewandelt werden...
+                //und um alle vorkommnisse von " " zu erstetzen muss man in Javascript eine RegEx verwenden.
+                //http://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
+                //uiStack.push({item: Qt.resolvedUrl("SimpleMap.qml"), properties: {searchFor: searchString/*textitem.text*/}})
+                uiStack.push({item: Qt.resolvedUrl("RouteMap.qml"), properties: {searchFor: searchString/*textitem.text*/}})
             }
-
+        }
     }
-
-
 }
 

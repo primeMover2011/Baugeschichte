@@ -2,17 +2,9 @@ import QtQuick 2.0
 import QtQuick.Controls 1.4
 import "./"
 
-Item {
+BaseView {
+    loading: searchModel.isLoading
 
-/*    SearchModel {
-        id: searchModel
-        searchString: "http://baugeschichte.at/api.php?action=query&list=search&srwhat=text&format=json&srsearch="
-        onIsLoaded: {
-            console.debug("Reload searchModel")
-
-        }
-    }
- */
     JsonModel {
         id: searchModel
         onNewobject: {
@@ -24,7 +16,6 @@ Item {
         searchString: "http://baugeschichte.at/api.php?action=query&list=search&srwhat=text&format=json&srsearch="
         onIsLoaded: {
             console.debug("Reload searchModel")
-
         }
 
     }
@@ -57,8 +48,6 @@ Item {
                 }
             }
         //lineInput
-
-
         }
     }//focusscope
 
@@ -66,24 +55,19 @@ Item {
         id: searchResult
         model: searchModel.model
         interactive: true
+        clip: true
         anchors  {
             top: theFocusScope.bottom
             bottom: parent.bottom
             left: parent.left
             right: parent.right
-
         }
- //        clip: true
 
         delegate: SearchResultDelegate {
                 text: title
                 //onClicked: stackView.push(Qt.resolvedUrl(page))
                 onSelected: uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor: wot/*textitem.text*/}})
-
             }
-
     }
-
-
 }
 

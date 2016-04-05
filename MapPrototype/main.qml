@@ -8,12 +8,15 @@ import Qt.labs.settings 1.0
 import QtQuick.Dialogs 1.2
 import "./"
 
-ApplicationWindow {
+ApplicationWindow{
+    id: root
 
     width: 1024
     height: 800
 
     visible: true
+
+    readonly property bool loading: uiStack.currentItem.loading
 
     onClosing: {
         close.accepted = false
@@ -100,6 +103,15 @@ ApplicationWindow {
                                  })
                 }
             }
+        }
+
+        BusyIndicator {
+            width: height
+            height: parent.height * 0.8
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+
+            running: root.loading
         }
     }
 

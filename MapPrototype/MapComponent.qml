@@ -16,8 +16,9 @@ Map {
     property variant currentModel: filteredTrailModel
     property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
     property alias theItemModel: housetrailMapItems
-    z: 20000
     zoomLevel: 16
+
+    property bool loading: false
 
     Timer {
         id: scaleTimer

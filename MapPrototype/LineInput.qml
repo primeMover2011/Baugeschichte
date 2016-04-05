@@ -38,7 +38,7 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.4
 import "./"
 
 FocusScope {
@@ -63,7 +63,7 @@ FocusScope {
             id: hint
             anchors { fill: parent; leftMargin: 14 }
             verticalAlignment: Text.AlignVCenter
-            text: "Enter word"
+            text: qsTr("Enter word")
             font.pixelSize: localHelper.sp(20)
             color: "#707070"
             opacity: input.length ? 0 : 1

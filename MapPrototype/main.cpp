@@ -1,9 +1,11 @@
+#include "dialog.h"
+
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <QtQml/QQmlContext>
+#include <QQmlContext>
 #include <QSortFilterProxyModel>
-#include "dialog.h"
 #include <QScreen>
+
 #if defined(Q_OS_ANDROID)
     #include <QAndroidJniObject>
 #endif
@@ -23,7 +25,6 @@ int main(int argc, char *argv[])
     //detailsProxyModel->setFilterRegExp( "^\\S+$" );
     detailsProxyModel.setSourceModel(&aHouseTrailImages);
 
-
      qreal dpi;
      #if defined(Q_OS_ANDROID)
         QAndroidJniObject qtActivity = QAndroidJniObject::callStaticObjectMethod("org/qtproject/qt5/android/QtNative", "activity", "()Landroid/app/Activity;");
@@ -38,16 +39,12 @@ int main(int argc, char *argv[])
          dpi = app.primaryScreen()->physicalDotsPerInch() * app.devicePixelRatio();
     #endif
 
-
-//    channel.registerObject(QStringLiteral("dialog"), &dialog);
     context->setContextProperty(QStringLiteral("dialog"), &dialog);
     context->setContextProperty(QStringLiteral("houseTrailModel"), &aHouseTrailImages);
     context->setContextProperty(QStringLiteral("filteredTrailModel"), &detailsProxyModel);
     context->setContextProperty(QStringLiteral("screenDpi"), dpi);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-
-
 
     return app.exec();
 }

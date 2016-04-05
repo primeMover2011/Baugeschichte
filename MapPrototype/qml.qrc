@@ -1,33 +1,31 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>marker.png</file>
-        <file>MapComponent.qml</file>
-        <file>DetailsView.qml</file>
-        <file>LineInput.qml</file>
+        <file>resources/Edit-find-cats.svg</file>
+        <file>resources/Go-previous.svg</file>
+        <file>resources/Go-next.svg</file>
+        <file>resources/Ic_gps_off_48px.svg</file>
+        <file>resources/Ic_gps_not_fixed_48px.svg</file>
         <file>resources/icon-clear.png</file>
         <file>resources/icon-loading.png</file>
         <file>resources/icon-refresh.png</file>
         <file>resources/icon-search.png</file>
+        <file>resources/Map-icon.svg</file>
+        <file>resources/marker.png</file>
+        <file>resources/marker-2.svg</file>
         <file>resources/navigation_next_item.png</file>
+        <file>resources/System-search.svg</file>
+        <file>main.qml</file>
+        <file>MapComponent.qml</file>
+        <file>DetailsView.qml</file>
+        <file>LineInput.qml</file>
         <file>SearchPage.qml</file>
         <file>SearchResultDelegate.qml</file>
         <file>JsonModel.qml</file>
-        <file>flickresize.qml</file>
         <file>DensityHelpers.qml</file>
         <file>RouteView.qml</file>
-        <file>SimpleMap.qml</file>
         <file>resources/scale_end.png</file>
         <file>resources/scale.png</file>
         <file>Helper.js</file>
-        <file>resources/Ic_gps_off_48px.svg</file>
-        <file>resources/Ic_gps_not_fixed_48px.svg</file>
-        <file>resources/Map-icon.svg</file>
-        <file>resources/Edit-find-cats.svg</file>
-        <file>resources/System-search.svg</file>
-        <file>resources/Go-previous.svg</file>
-        <file>resources/Go-next.svg</file>
-        <file>resources/marker-2.svg</file>
         <file>CategoryselectionView.qml</file>
         <file>resources/Edit-check-sheet.svg</file>
         <file>RouteMap.qml</file>

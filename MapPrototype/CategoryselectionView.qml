@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.4
 import QtQuick.Controls 1.4
 import "./"
 
@@ -44,7 +44,7 @@ BaseView {
 
             LineInput {
                 id: lineInput
-                hint: "Adresse..."
+                hint: qsTr("Adresse...")
                 focus: true //flipBar.opened
                 anchors { fill: parent; margins: 6 }
                 onAccepted: {

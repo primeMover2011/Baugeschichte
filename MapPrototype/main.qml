@@ -10,13 +10,17 @@ import "./"
 
 ApplicationWindow {
 
+    width: 1024
+    height: 800
+
+    visible: true
+
     onClosing: {
         close.accepted = false
     }
     ExclusiveGroup {
           id: categoryGroup
     }
-
 
     PositionSource {
         id: thePosition
@@ -35,155 +39,75 @@ ApplicationWindow {
         anchors.right: parent.right
         opacity: 0.5
         height: localHelper.dp(50)
-        width: parent.width
 
         RowLayout {
             anchors.fill: parent
-            //Map
-            Rectangle {
-                width: localHelper.dp(50)
-                height: localHelper.dp(50)
-                Image {
-                    source: "resources/Map-icon.svg"
-                    width: parent.width
-                    height: parent.height
-                }
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-
-                        //                              uiStack.push({item: Qt.resolvedUrl("SearchPage.qml"), properties: {searchFor:selectedPoi}})
-                        while (uiStack.depth > 1) {
-                            uiStack.pop()
-                            //in
-                        }
+            ToobalButton {
+                id: mapButton
+                source: "resources/Map-icon.svg"
+                onClicked: {
+                    while (uiStack.depth > 1) {
+                        uiStack.pop()
                     }
                 }
             }
-            //<-- Map
 
-            //Search
-            Rectangle {
-                width: localHelper.dp(50)
-                height: localHelper.dp(50)
-                Image {
-                    source: "resources/System-search.svg"
-                    width: parent.width
-                    height: parent.height
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-
-                        //                              uiStack.push({item: Qt.resolvedUrl("SearchPage.qml"), properties: {searchFor:selectedPoi}})
-                        if (uiStack.depth > 1) {
-                            uiStack.clear()
-                        }
-                        uiStack.push({
-                                         item: Qt.resolvedUrl("SearchPage.qml")
-                                     })
+            ToobalButton {
+                id: searchButton
+                source: "resources/System-search.svg"
+                onClicked: {
+                    if (uiStack.depth > 1) {
+                        uiStack.clear()
                     }
+                    uiStack.push({
+                                     item: Qt.resolvedUrl("SearchPage.qml")
+                                 })
                 }
             }
-            //<-- Search
 
-            //Categories
-            Rectangle {
-                width: localHelper.dp(50)
-                height: localHelper.dp(50)
-                //opacity: 0.5
-                Image {
-                    source: "resources/Edit-find-cats.svg"
-                    width: parent.width
-                    height: parent.height
-                }
-                MouseArea {
-                    id:catMouse
-                    anchors.fill: parent
-                    onClicked: {
-                        if (uiStack.depth > 1) {
-                            uiStack.clear()
-                        }
-                        uiStack.push({
-                                         item: Qt.resolvedUrl("CategoryselectionView.qml")
-                                     })
+            ToobalButton {
+                id: categoriesButton
+                source: "resources/Edit-find-cats.svg"
+                onClicked: {
+                    if (uiStack.depth > 1) {
+                        uiStack.clear()
                     }
+                    uiStack.push({
+                                     item: Qt.resolvedUrl("CategoryselectionView.qml")
+                                 })
                 }
             }
-            //<--Categories
 
-            //FollowMe
-            Rectangle {
+            ToobalButton {
                 id: theFollowMeButton
-                property bool isEnabled: thePosition.valid
+                source: "qrc:/resources/Ic_gps_" + (isActive ? "not_fixed" : "off") + "_48px.svg"
+                enabled: thePosition.valid
+
                 property bool isActive: false
-                width: localHelper.dp(50)
-                height: localHelper.dp(50)
-                opacity: isEnabled ? 1 : 0.3
-                Image {
-                    id: theFollowMeImage
-                    source: "resources/Ic_gps_off_48px.svg"
-                    width: parent.width
-                    height: parent.height
-                }
-                MouseArea {
-                    id:mouseFollowMe
-                    anchors.fill: parent
-                    enabled: thePosition.valid
 
-                    onClicked: {
-                        parent.isActive = !parent.isActive
-                        if (parent.isActive)
-                            theFollowMeImage.source = "qrc:/resources/Ic_gps_not_fixed_48px.svg"
-                        else
-                            theFollowMeImage.source = "qrc:/resources/Ic_gps_off_48px.svg"
-                    }
+                onClicked: {
+                    isActive = !isActive;
                 }
             }
-            //FollowMe
 
-            //Routes
-            Rectangle {
-                width: localHelper.dp(50)
-                height: localHelper.dp(50)
-                Image {
-                    source: "resources/Edit-check-sheet.svg"
-                    width: parent.width
-                    height: parent.height
-                }
-                //                                uiStack.push({item: Qt.resolvedUrl("RouteView.qml")})
-                MouseArea {
-                    anchors.fill: parent
-                    //enabled: parent.isEnabled
-                    onClicked: {
-                        uiStack.push({
-                                         item: Qt.resolvedUrl("RouteView.qml")
-                                     })
-                    }
+            ToobalButton {
+                id: routesButton
+                source: "resources/Edit-check-sheet.svg"
+                onClicked: {
+                    uiStack.push({
+                                     item: Qt.resolvedUrl("RouteView.qml")
+                                 })
                 }
             }
-            //<--Routes
         }
     }
 
-    visible: true
     //    PositionSource
     property variant locationGraz: QtPositioning.coordinate(47.0666667, 15.45)
     Component.onCompleted: {
-
         //dialog.getAllPois();
     }
-    /*    Connections {
-            target: mapOfEurope
-                    onSelectedPoiChanged: {
-                                console.log("Poi:", mapOfEurope.selectedPoi)
-                                        }
-
-                                            }
-                                                */
-    width: 1024
-    height: 800
 
 /*    menuBar: MenuBar {
         id: mainMenuBar
@@ -217,8 +141,6 @@ ApplicationWindow {
                 })
             }
         }
-
-
     }//<--menuBar
 */
 
@@ -239,7 +161,6 @@ ApplicationWindow {
                     categoryModel.append(jsonObject)
                 }
             }
-
             //categoryMenu.createMenu()
         }
     }

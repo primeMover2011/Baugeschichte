@@ -10,16 +10,18 @@
 #include <QtConcurrent>
 
 Dialog::Dialog(HousetrailModel *aHouseTrails, QObject *parent)
-    : QObject(parent), m_HouseTrailImages(aHouseTrails)
+    : QObject(parent)
+    , m_source(QGeoPositionInfoSource::createDefaultSource(this))
+    , m_manager (new QNetworkAccessManager(this))
+    , m_HouseTrailImages(aHouseTrails)
+    , m_loading(false)
 {
-    m_source = QGeoPositionInfoSource::createDefaultSource(this);
     if (m_source)
     {
         connect(m_source, SIGNAL(positionUpdated(QGeoPositionInfo)),
                 this, SLOT(positionUpdated(QGeoPositionInfo)));
     }
 
-    m_manager = new QNetworkAccessManager(this);
     //m_manager->setAtt
     connect(m_manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(poisFinished(QNetworkReply*)));
@@ -83,15 +85,21 @@ QString Dialog::detailTitle() const
     return m_detailTitle;
 }
 
+bool Dialog::loading() const
+{
+    return m_loading;
+}
+
 void Dialog::getAllPois()
 {
+    setLoading(true);
     QString theRequest4Pois("http://baugeschichte.at/app/v1/getData.php?action=getBuildingsBoxed&lat=47&lon=15&radius=1");
     m_manager->get(QNetworkRequest(QUrl(theRequest4Pois)));
 }
 
 void Dialog::getPois(double lat, double lon, double radius, double zoomlevel)
 {
-//    Q_INVOKABLE void getPois(double lat, double lon, double zoomlevel);
+    setLoading(true);
     QString theRequest4Pois=QString("http://baugeschichte.at/app/v1/getData.php?action=getBuildingsBoxed&lat=%1&lon=%2&radius=%3")
             .arg(lat,0,'f',7)
             .arg(lon,0,'f',7)
@@ -303,6 +311,8 @@ void Dialog::createModelAsync(QNetworkReply *theReply)
                   " response: "<< theResponse;
         theReply->deleteLater();
     }
+
+    setLoading(false);
 }
 
 void Dialog::httpReadyRead(QNetworkReply *reply){
@@ -323,4 +333,14 @@ void Dialog::positionUpdated(const QGeoPositionInfo &info)
     emit latitudeChanged(m_latitude);
     emit longitudeChanged(m_longitude);
     emit locationChanged(m_longitude, m_latitude);
+}
+
+void Dialog::setLoading(bool loading)
+{
+    if (loading == m_loading) {
+        return;
+    }
+
+    m_loading = loading;
+    emit loadingChanged(m_loading);
 }

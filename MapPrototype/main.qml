@@ -16,7 +16,7 @@ ApplicationWindow{
 
     visible: true
 
-    readonly property bool loading: uiStack.currentItem.loading
+    readonly property bool loading: uiStack.currentItem.loading || dialog.loading
 
     onClosing: {
         close.accepted = false

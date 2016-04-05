@@ -16,6 +16,7 @@ class Dialog : public QObject
     Q_PROPERTY(int poiID READ poiID WRITE setPoiID NOTIFY poiIDChanged)
     Q_PROPERTY(QString detailTitle READ detailTitle WRITE setDetailTitle NOTIFY detailTitleChanged)
 //    Q_PROPERTY(HousetrailImagesModel houseTrailImages READ houseTrailImages NOTIFY houseTrailImagesChanged)
+    Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
 
 public:
     explicit Dialog(HousetrailModel* aHouseTrails, QObject *parent = 0);
@@ -28,6 +29,8 @@ public:
     double longitude() const;
     void setDetailTitle(const QString aDetailTitle);
     QString detailTitle() const;
+
+    bool loading() const;
 
     Q_INVOKABLE void getAllPois();
     Q_INVOKABLE void getPois(double lat, double lon, double radius, double zoomlevel);
@@ -47,6 +50,7 @@ signals:
     void poiIDChanged(int);
     void detailTitleChanged(const QString& aDetailTitle);
     void newHousetrail(HouseTrail* aNewHouseTrail);
+    void loadingChanged(bool loading);
 
 public slots:
     /*!
@@ -65,6 +69,8 @@ private slots:
     void positionUpdated(const QGeoPositionInfo &info);
 
 private:
+    void setLoading(bool loading);
+
     QString m_infotext;
     QString m_detailTitle;
     QGeoPositionInfoSource* m_source;
@@ -73,7 +79,7 @@ private:
     int m_poiID;
     QNetworkAccessManager* m_manager;
     HousetrailModel* m_HouseTrailImages;
+    bool m_loading;
 };
 
 #endif // DIALOG
-

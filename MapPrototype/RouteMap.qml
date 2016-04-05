@@ -1,5 +1,6 @@
 import QtQuick 2.4
 import QtPositioning 5.5
+import QtLocation 5.4
 
 BaseView {
     property string searchFor:""
@@ -21,6 +22,8 @@ BaseView {
                 jsonObject.coord={ "latitude":jsonObject.lat, "longitude": jsonObject.lon}
 
                 model.append(jsonObject)
+
+                routeLine.addCoordinate(QtPositioning.coordinate(jsonObject.lat, jsonObject.lon));
             }
             // viewportTimer.restart()
             //routeMap.currentModel = model
@@ -29,6 +32,12 @@ BaseView {
             //routeMap.fitViewportToMapItems()
         }
         searchString: "http://baugeschichte.at/app/v1/getData.php?action=getRoutePoints&name="
+
+        onIsLoadingChanged: {
+            if (isLoading) {
+                routeLine.clear();
+            }
+        }
     }
 
     DensityHelpers {
@@ -56,5 +65,17 @@ BaseView {
             selectedPoi = ""
         }
         followMe: followMeActive
+
+        MapPolyline {
+            id: routeLine
+            line.width: 3
+            line.color: "green"
+
+            function clear() {
+                while (pathLength() > 0) {
+                    removeCoordinate(0);
+                }
+            }
+        }
     }
 }

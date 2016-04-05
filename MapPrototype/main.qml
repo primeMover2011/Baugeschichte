@@ -50,9 +50,7 @@ ApplicationWindow{
                 id: mapButton
                 source: "resources/Map-icon.svg"
                 onClicked: {
-                    while (uiStack.depth > 1) {
-                        uiStack.pop()
-                    }
+                    uiStack.pop(null);
                 }
             }
 
@@ -60,9 +58,7 @@ ApplicationWindow{
                 id: searchButton
                 source: "resources/System-search.svg"
                 onClicked: {
-                    if (uiStack.depth > 1) {
-                        uiStack.clear()
-                    }
+                    uiStack.pop(null);
                     uiStack.push({
                                      item: Qt.resolvedUrl("SearchPage.qml")
                                  })
@@ -73,9 +69,7 @@ ApplicationWindow{
                 id: categoriesButton
                 source: "resources/Edit-find-cats.svg"
                 onClicked: {
-                    if (uiStack.depth > 1) {
-                        uiStack.clear()
-                    }
+                    uiStack.pop(null);
                     uiStack.push({
                                      item: Qt.resolvedUrl("CategoryselectionView.qml")
                                  })

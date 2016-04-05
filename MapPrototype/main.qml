@@ -50,9 +50,7 @@ ApplicationWindow{
                 id: mapButton
                 source: "resources/Map-icon.svg"
                 onClicked: {
-                    while (uiStack.depth > 1) {
-                        uiStack.pop()
-                    }
+                    uiStack.pop(null);
                 }
             }
 
@@ -60,9 +58,7 @@ ApplicationWindow{
                 id: searchButton
                 source: "resources/System-search.svg"
                 onClicked: {
-                    if (uiStack.depth > 1) {
-                        uiStack.clear()
-                    }
+                    uiStack.pop(null);
                     uiStack.push({
                                      item: Qt.resolvedUrl("SearchPage.qml")
                                  })
@@ -73,9 +69,7 @@ ApplicationWindow{
                 id: categoriesButton
                 source: "resources/Edit-find-cats.svg"
                 onClicked: {
-                    if (uiStack.depth > 1) {
-                        uiStack.clear()
-                    }
+                    uiStack.pop(null);
                     uiStack.push({
                                      item: Qt.resolvedUrl("CategoryselectionView.qml")
                                  })
@@ -189,14 +183,11 @@ ApplicationWindow{
     }
 
     Rectangle {
+        id: background
         color: "#060606"
         anchors.fill: parent
-        //anchors.topMargin: toolBar.height
-//        anchors { right: parent.right; left:parent.left;
-//            top: toolBar.bottom; bottom: parent.bottom; /*margins: 10*/ }
 
         focus: true
-        z: 40000
         Keys.onReleased: {
             console.log("Keys.onrelease")
             console.log("uiStack Depth:" + uiStack.depth)
@@ -212,58 +203,51 @@ ApplicationWindow{
                 }
             }
         }
-        StackView {
-            id: uiStack
-            initialItem: loader_mapOfEurope
-            onDepthChanged: {
-                console.log("Depth changed:" + depth)
-            }
-            z: 35000
+    }
 
-            objectName: "theStackView"
-            anchors.fill: parent
+    StackView {
+        id: uiStack
+        anchors.fill: parent
+        objectName: "theStackView"
 
+        initialItem: loader_mapOfEurope
+        onDepthChanged: {
+            console.log("Depth changed:" + depth)
+        }
 
-            Component {
-                id: component_mapOfEurope
+        Component {
+            id: component_mapOfEurope
 
-                MapComponent {
-                    id: mapOfEurope
-                    Settings {
-                        id: settings
-                        property alias lastSeenLat: mapOfEurope.center.latitude
-                        property alias lastSeenLon: mapOfEurope.center.longitude
-                    }
-
-                    center: locationGraz
-                    z: 32000
-                    onSelectedPoiChanged: {
-                        console.log("SelectedPoiChanged Begin")
-                        if (selectedPoi === "")
-                            return
-                        uiStack.push({
-                                         item: Qt.resolvedUrl(
-                                                   "DetailsView.qml"),
-                                         properties: {
-                                             searchFor: selectedPoi
-                                         }
-                                     })
-                        //console.log("SelectedPoiChanged End")
-                        selectedPoi = ""
-                    }
-                    followMe: theFollowMeButton.isActive
+            MapComponent {
+                id: mapOfEurope
+                Settings {
+                    id: settings
+                    property alias lastSeenLat: mapOfEurope.center.latitude
+                    property alias lastSeenLon: mapOfEurope.center.longitude
                 }
-            }
-            Loader {
-                id: loader_mapOfEurope
-                property bool loading: false
 
-                sourceComponent: component_mapOfEurope
-                anchors.centerIn: parent
-                anchors.fill: parent
+                center: locationGraz
+                onSelectedPoiChanged: {
+                    console.log("SelectedPoiChanged Begin")
+                    if (selectedPoi === "")
+                        return
+                    uiStack.push({
+                                     item: Qt.resolvedUrl(
+                                               "DetailsView.qml"),
+                                     properties: {
+                                         searchFor: selectedPoi
+                                     }
+                                 })
+                    //console.log("SelectedPoiChanged End")
+                    selectedPoi = ""
+                }
+                followMe: theFollowMeButton.isActive
             }
-
+        }
+        Loader {
+            id: loader_mapOfEurope
+            sourceComponent: component_mapOfEurope
+            property bool loading: false
         }
     }
-    //Rectangle
 }

@@ -19,6 +19,11 @@ Map {
     property alias theItemModel: housetrailMapItems
 
     property int currentID: -1
+    onCurrentIDChanged: {
+        if (currentID < 0 && markerLabel) {
+            markerLabel.visible = false;
+        }
+    }
 
     zoomLevel: 16
 
@@ -214,6 +219,7 @@ Map {
                     height: localHelper.sp(50)
                     sourceSize: Qt.size(width, height)
                     fillMode: Image.PreserveAspectFit
+                    visible: false
                 }
                 ColorOverlay {
                     anchors.fill: image
@@ -238,6 +244,7 @@ Map {
                         mapOfEurope.markerLabel.coordinate = mqItem.coordinate
                         mapOfEurope.markerLabel.title = title
                         mapOfEurope.markerLabel.visible = true;
+                        mapOfEurope.currentID = dbId;
                     }
                 }
             }

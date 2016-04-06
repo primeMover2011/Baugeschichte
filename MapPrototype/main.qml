@@ -51,6 +51,8 @@ ApplicationWindow{
                 source: "resources/Map-icon.svg"
                 onClicked: {
                     uiStack.pop(null);
+                    filteredTrailModel.setFilterWildcard("");
+                    uiStack.currentItem.item.currentID = -1;
                 }
             }
 
@@ -228,7 +230,7 @@ ApplicationWindow{
 
                 center: locationGraz
                 onSelectedPoiChanged: {
-                    console.log("SelectedPoiChanged Begin")
+                    console.log("SelectedPoiChanged Begin: "+selectedPoi)
                     if (selectedPoi === "")
                         return
                     uiStack.push({

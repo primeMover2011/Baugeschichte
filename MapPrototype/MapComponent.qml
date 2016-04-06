@@ -1,5 +1,6 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.4
+import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.1
 import QtLocation 5.5
 import QtPositioning 5.5
@@ -16,6 +17,14 @@ Map {
     property variant currentModel: filteredTrailModel
     property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
     property alias theItemModel: housetrailMapItems
+
+    property int currentID: -1
+    onCurrentIDChanged: {
+        if (currentID < 0 && markerLabel) {
+            markerLabel.visible = false;
+        }
+    }
+
     zoomLevel: 16
 
     property bool loading: false
@@ -196,11 +205,9 @@ Map {
 
             anchorPoint.x: image.width * 0.5
             anchorPoint.y: image.height
-            z: 5
 
             sourceItem: Item {
                 id: theSourceItem
-                //property Item myBubble : bubble
                 width: image.width
                 height: image.height
 
@@ -212,29 +219,32 @@ Map {
                     height: localHelper.sp(50)
                     sourceSize: Qt.size(width, height)
                     fillMode: Image.PreserveAspectFit
-                    z: 9
-                    onZChanged: console.log("z:" + z)
+                    visible: false
+                }
+                ColorOverlay {
+                    anchors.fill: image
+                    source: image
+                    color: dbId == mapOfEurope.currentID ? "#ff0000ff" : "#ff000000"
+                }
+                MouseArea {
+                    anchors.fill: image
+                    onPressed: changeCurrentItem()
+                    onClicked: changeCurrentItem()
 
-                    MouseArea {
-                        anchors.fill: parent
-                        z: 4
-                        onPressed: changeCurrentItem()
-                        onClicked: changeCurrentItem()
-
-                        function changeCurrentItem() {
-                            if (!mapOfEurope.markerLabel)
-                            {
-                                var component = Qt.createComponent("MarkerLabel.qml");
-                                mapOfEurope.markerLabel = component.createObject(mapOfEurope);
-                                mapOfEurope.markerLabel.mapItem = mapOfEurope;
-                                mapOfEurope.addMapItem(mapOfEurope.markerLabel);
-                            }
-
-                            console.log("changing!!")
-                            mapOfEurope.markerLabel.coordinate = mqItem.coordinate
-                            mapOfEurope.markerLabel.title = title
-                            mapOfEurope.markerLabel.visible = true;
+                    function changeCurrentItem() {
+                        console.log("changing!!")
+                        if (!mapOfEurope.markerLabel)
+                        {
+                            var component = Qt.createComponent("MarkerLabel.qml");
+                            mapOfEurope.markerLabel = component.createObject(mapOfEurope);
+                            mapOfEurope.markerLabel.mapItem = mapOfEurope;
+                            mapOfEurope.addMapItem(mapOfEurope.markerLabel);
                         }
+
+                        mapOfEurope.markerLabel.coordinate = mqItem.coordinate
+                        mapOfEurope.markerLabel.title = title
+                        mapOfEurope.markerLabel.visible = true;
+                        mapOfEurope.currentID = dbId;
                     }
                 }
             }

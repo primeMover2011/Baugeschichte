@@ -23,9 +23,13 @@ BaseView {
                 var jsonObject = magneto.payload[key]
                 if (jsonObject.lat === 0) continue;
                 if (jsonObject.lon === 0) continue;
-                jsonObject.coord={ "latitude":jsonObject.lat, "longitude": jsonObject.lon}
 
-                model.append(jsonObject)
+                var modelObject = {
+                    "dbId": jsonObject.id,
+                    "title": jsonObject.title,
+                    "coord": {"latitude":jsonObject.lat, "longitude": jsonObject.lon}
+                }
+                model.append(modelObject)
 
                 routeMap.routeLine.addCoordinate(QtPositioning.coordinate(jsonObject.lat, jsonObject.lon));
             }

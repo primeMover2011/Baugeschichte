@@ -31,5 +31,6 @@
         <file>RouteMap.qml</file>
         <file>ToobalButton.qml</file>
         <file>BaseView.qml</file>
+        <file>MarkerLabel.qml</file>
     </qresource>
 </RCC>

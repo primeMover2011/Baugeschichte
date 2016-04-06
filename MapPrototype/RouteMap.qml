@@ -13,29 +13,30 @@ BaseView {
         id: simpleMapSearchModel
         shouldEncode: false //due to searchapi problems when encoding routes...
         onNewobject: {
-            var iCnt=0
+            routeMap.clearMapItems();
+            routeMap.routeLine = Qt.createQmlObject("import QtLocation 5.4; MapPolyline {}", routeMap);
+            routeMap.routeLine.line.width = 3;
+            routeMap.routeLine.line.color = "green";
+            routeMap.addMapItem(routeMap.routeLine);
+
             for (var key in magneto.payload) {
                 var jsonObject = magneto.payload[key]
                 if (jsonObject.lat === 0) continue;
                 if (jsonObject.lon === 0) continue;
-                iCnt++;
                 jsonObject.coord={ "latitude":jsonObject.lat, "longitude": jsonObject.lon}
 
                 model.append(jsonObject)
 
-                routeLine.addCoordinate(QtPositioning.coordinate(jsonObject.lat, jsonObject.lon));
+                routeMap.routeLine.addCoordinate(QtPositioning.coordinate(jsonObject.lat, jsonObject.lon));
             }
-            // viewportTimer.restart()
-            //routeMap.currentModel = model
-            var entryInTheMiddle = model.get(iCnt % 2)
-            routeMap.center = QtPositioning.coordinate(entryInTheMiddle.coord.latitude,entryInTheMiddle.coord.longitude)
-            //routeMap.fitViewportToMapItems()
+
+            routeMap.fitViewportToMapItems()
         }
         searchString: "http://baugeschichte.at/app/v1/getData.php?action=getRoutePoints&name="
 
         onIsLoadingChanged: {
             if (isLoading) {
-                routeLine.clear();
+                routeMap.clearMapItems();
             }
         }
     }
@@ -66,16 +67,6 @@ BaseView {
         }
         followMe: followMeActive
 
-        MapPolyline {
-            id: routeLine
-            line.width: 3
-            line.color: "green"
-
-            function clear() {
-                while (pathLength() > 0) {
-                    removeCoordinate(0);
-                }
-            }
-        }
+        property MapPolyline routeLine
     }
 }

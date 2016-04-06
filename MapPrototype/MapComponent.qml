@@ -1,5 +1,6 @@
-import QtQuick 2.5
+import QtQuick 2.4
 import QtQuick.Controls 1.4
+import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.1
 import QtLocation 5.5
 import QtPositioning 5.5
@@ -16,8 +17,19 @@ Map {
     property variant currentModel: filteredTrailModel
     property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
     property alias theItemModel: housetrailMapItems
-    z: 20000
+
+    property int currentID: -1
+    onCurrentIDChanged: {
+        if (currentID < 0 && markerLabel) {
+            markerLabel.visible = false;
+        }
+    }
+
     zoomLevel: 16
+
+    property bool loading: false
+
+    property MarkerLabel markerLabel
 
     Timer {
         id: scaleTimer
@@ -181,14 +193,11 @@ Map {
     MapItemView {
         id: housetrailMapItems
         model: currentModel //houseTrailModel
-        property Item currentItem
 
-        //z: 29000
         onModelChanged:{
             console.log("model changed")
         }
 
-        //onCurrentItemChanged:
         delegate: MapQuickItem {
             id: mqItem
             coordinate: QtPositioning.coordinate(coord.latitude,
@@ -196,47 +205,11 @@ Map {
 
             anchorPoint.x: image.width * 0.5
             anchorPoint.y: image.height
-            z: 5
 
             sourceItem: Item {
                 id: theSourceItem
-                //property Item myBubble : bubble
-                z: 10000
                 width: image.width
                 height: image.height
-
-                Rectangle {
-
-                    id: bubble
-                    color: "#cccccc"
-                    border.width: 1
-                    width: textItem.width * 1.2
-                    height: textItem.height * 1.5
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                    radius: 3
-                    z: 10
-
-                    onZChanged: console.log("z:" + z)
-                    visible: false
-                    Text {
-                        id: textItem
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: title
-                        font.pixelSize: localHelper.sp(24)
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onPressed: selectPoi(title)
-                        onClicked: selectPoi(title)
-                        function selectPoi(aTitle) {
-                            console.log("poi selected...")
-                            mapOfEurope.selectedPoi = aTitle
-                            bubble.visible = false
-                        }
-                    }
-                }
 
                 Image {
                     id: image
@@ -246,21 +219,32 @@ Map {
                     height: localHelper.sp(50)
                     sourceSize: Qt.size(width, height)
                     fillMode: Image.PreserveAspectFit
-                    z: 9
-                    onZChanged: console.log("z:" + z)
+                    visible: false
+                }
+                ColorOverlay {
+                    anchors.fill: image
+                    source: image
+                    color: dbId == mapOfEurope.currentID ? "#ff0000ff" : "#ff000000"
+                }
+                MouseArea {
+                    anchors.fill: image
+                    onPressed: changeCurrentItem()
+                    onClicked: changeCurrentItem()
 
-                    MouseArea {
-                        anchors.fill: parent
-                        z: 4
-                        onPressed: changeCurrentItem()
-                        onClicked: changeCurrentItem()
-
-                        function changeCurrentItem() {
-                            console.log("changing!!")
-                            tricksterRectangle.coordinate = mqItem.coordinate
-                            tricksterRectangle.title = title
-                            tricksterRectangle.visible = true
+                    function changeCurrentItem() {
+                        console.log("changing!!")
+                        if (!mapOfEurope.markerLabel)
+                        {
+                            var component = Qt.createComponent("MarkerLabel.qml");
+                            mapOfEurope.markerLabel = component.createObject(mapOfEurope);
+                            mapOfEurope.markerLabel.mapItem = mapOfEurope;
+                            mapOfEurope.addMapItem(mapOfEurope.markerLabel);
                         }
+
+                        mapOfEurope.markerLabel.coordinate = mqItem.coordinate
+                        mapOfEurope.markerLabel.title = title
+                        mapOfEurope.markerLabel.visible = true;
+                        mapOfEurope.currentID = dbId;
                     }
                 }
             }
@@ -315,7 +299,6 @@ Map {
             height: width
             radius: width/2
 
-
             SequentialAnimation on width {
                 loops: Animation.Infinite
                 NumberAnimation {
@@ -332,70 +315,6 @@ Map {
                 }
             }
         }//<--MapCircle
-
-
-    }
-
-    MapQuickItem {
-        id: tricksterRectangle
-        zoomLevel: 0.0
-        //coordinate: mqItem.coordinate
-        onCoordinateChanged: {
-            console.log("coordinate changed")
-        }
-        property string title: "NO Title"
-        onTitleChanged: {
-            textItem2.text = title
-        }
-
-        z: 20
-        anchorPoint.x: coco.width / 2
-        anchorPoint.y: coco.height * 1.9
-
-        sourceItem: Rectangle {
-            id: coco
-
-            color: "#ffffff"
-
-            border.width: 1
-            border.color: "#e02222"
-            width: textItem2.width * 1.2
-            height: textItem2.height * 1.5
-            //x: width/2
-            //y: height/2
-            //anchors.horizontalCenter: tricksterRectangle.horizontalCenter
-            //anchors.verticalCenter: tricksterRectangle.verticalCenter
-
-            //anchors.horizontalCenter: parent.horizontalCenter
-            //anchors.verticalCenter: parent.verticalCenter
-            radius: 3
-
-            //z: 10
-            onZChanged: console.log("z:" + z)
-            visible: true
-            Text {
-                id: textItem2
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                text: "Text"
-                font.pixelSize: localHelper.sp(24)
-                color: "#ff0000"
-                font.bold: true
-            }
-
-            MouseArea {
-                id: rectMouse
-                preventStealing: true
-                anchors.fill: parent
-                onPressed: selectPoi(tricksterRectangle.title)
-                onClicked: selectPoi(tricksterRectangle.title)
-                function selectPoi(aTitle) {
-                     console.log("textItem2 poi selected...")
-                    mapOfEurope.selectedPoi = aTitle
-                    tricksterRectangle.visible = false
-                }
-            }
-        }
     }
 
     /*==Mapitemview==*/
@@ -414,78 +333,5 @@ Map {
             mouse.accepted = false
         }
     }
-
-/*
-    RowLayout {
-        //        Layout.fillWidth: true
-        z: 10
-        anchors {
-            left: parent.left
-            right: parent.right
-            margins: 5
-        }
-        id: myLayout
-        property real sideLength: localHelper.dp(60)
-        height: 60
-
-/*        Rectangle {
-            id: cellLeft
-            color: "#444444"
-            height: myLayout.sideLength
-            Layout.preferredWidth: myLayout.sideLength
-            Layout.alignment: Qt.AlignLeft
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    console.log("cellLeft clicked")
-                    search()
-                }
-            }
-            Image {
-                source: "resources/icon-search.png"
-                anchors.right: parent.right
-                anchors.rightMargin: 12
-                anchors.verticalCenter: parent.verticalCenter
-            }
-        }SEARCH*/
-
-        /*Rectangle {
-            id: cellMiddle
-            color: "#444444"
-            Layout.preferredWidth: myLayout.sideLength
-            height: myLayout.sideLength
-            Layout.alignment: Qt.AlignHCenter
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    console.log("cellMiddle clicked")
-                    routes()
-                }
-            }
-        }ROUTES*/
-  /*      Rectangle {
-            id: followMeSwitch
-
-            property bool isRunning: false
-            visible: myPosition.valid
-
-            color: "#0000ff"
-            Layout.preferredWidth: myLayout.sideLength
-            opacity: isRunning ? 1 : 0.5
-            height: myLayout.sideLength
-            Layout.alignment: Qt.AlignRight
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    console.log("cellRight clicked")
-                    followMeSwitch.isRunning = !followMeSwitch.isRunning
-                    if (followMeSwitch === true)
-                        followMe()
-                }
-            }
-        }
-    }
-*/
-
-}//***RowLayout
+}
 

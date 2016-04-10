@@ -220,36 +220,63 @@ ApplicationWindow{
         Component {
             id: component_mapOfEurope
 
-            MapComponent {
-                id: mapOfEurope
-                Settings {
-                    id: settings
-                    property alias lastSeenLat: mapOfEurope.center.latitude
-                    property alias lastSeenLon: mapOfEurope.center.longitude
+            BaseView {
+                id: mapItem
+
+                property bool splitScreen: width > height
+
+                loading: details.loading
+
+                MapComponent {
+                    id: mapOfEurope
+
+                    width: splitScreen ? details.x : parent.width
+                    height: parent.height
+
+                    Settings {
+                        id: settings
+                        property alias lastSeenLat: mapOfEurope.center.latitude
+                        property alias lastSeenLon: mapOfEurope.center.longitude
+                    }
+
+                    center: locationGraz
+                    onSelectedPoiChanged: {
+                        console.log("SelectedPoiChanged Begin: "+selectedPoi)
+                        details.searchFor = selectedPoi;
+                        if (selectedPoi === "")
+                            return
+    //                    uiStack.push({
+    //                                     item: Qt.resolvedUrl(
+    //                                               "DetailsView.qml"),
+    //                                     properties: {
+    //                                         searchFor: selectedPoi
+    //                                     }
+    //                                 })
+    //                    //console.log("SelectedPoiChanged End")
+    //                    selectedPoi = ""
+                    }
+                    followMe: theFollowMeButton.isActive
+
+                    visible: parent.splitScreen || !details.visible
                 }
 
-                center: locationGraz
-                onSelectedPoiChanged: {
-                    console.log("SelectedPoiChanged Begin: "+selectedPoi)
-                    if (selectedPoi === "")
-                        return
-                    uiStack.push({
-                                     item: Qt.resolvedUrl(
-                                               "DetailsView.qml"),
-                                     properties: {
-                                         searchFor: selectedPoi
-                                     }
-                                 })
-                    //console.log("SelectedPoiChanged End")
-                    selectedPoi = ""
+                DetailsView {
+                    id: details
+
+                    x: visible ? (parent.splitScreen ? parent.width / 2 : 0) : parent.width
+                    width: parent.splitScreen ? parent.width / 2 : parent.width
+                    height: parent.height
+
+                    clip: true
+
+                    visible: searchFor != ""
                 }
-                followMe: theFollowMeButton.isActive
             }
         }
         Loader {
             id: loader_mapOfEurope
             sourceComponent: component_mapOfEurope
-            property bool loading: false
+            property bool loading: item ? item.loading : false
         }
     }
 }

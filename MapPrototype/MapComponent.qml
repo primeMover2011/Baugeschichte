@@ -232,13 +232,13 @@ Map {
                     height: localHelper.sp(50)
                     sourceSize: Qt.size(width, height)
                     fillMode: Image.PreserveAspectFit
-                    visible: false
+//                    visible: false
                 }
-                ColorOverlay {
-                    anchors.fill: image
-                    source: image
-                    color: dbId == mapOfEurope.currentID ? "#ff0000ff" : "#ff000000"
-                }
+//                ColorOverlay {
+//                    anchors.fill: image
+//                    source: image
+//                    color: dbId == mapOfEurope.currentID ? "#ff0000ff" : "#ff000000"
+//                }
                 MouseArea {
                     anchors.fill: image
                     onPressed: changeCurrentItem()

@@ -2,30 +2,22 @@
 
 #include <Geohash.hpp>
 
-HouseTrail::HouseTrail(QObject *parent)
-    : QObject(parent)
+HouseTrail::HouseTrail()
+    : m_dbId(-1)
 {
 }
 
-void HouseTrail::setDbId(int dbId)
+void HouseTrail::setDbId(qint64 dbId)
 {
-    if (m_dbId == dbId)
-        return;
-
     m_dbId = dbId;
-    emit dbIdChanged(dbId);
 }
 
-void HouseTrail::setHouseTitle(QString houseTitle)
+void HouseTrail::setHouseTitle(const QString& houseTitle)
 {
-    if (m_houseTitle == houseTitle)
-        return;
-
     m_houseTitle = houseTitle;
-    emit houseTitleChanged(houseTitle);
 }
 
-void HouseTrail::setTheLocation(QGeoCoordinate theLocation)
+void HouseTrail::setTheLocation(const QGeoCoordinate& theLocation)
 {
     if (m_theLocation == theLocation)
         return;
@@ -34,41 +26,38 @@ void HouseTrail::setTheLocation(QGeoCoordinate theLocation)
     std::string aGeoHash;
     GeographicLib::Geohash::Forward(m_theLocation.latitude(),m_theLocation.longitude(),12,aGeoHash);
     setGeoHash(QString::fromStdString(aGeoHash));
-
-    emit theLocationChanged(theLocation);
 }
 
-void HouseTrail::setCategories(QString categories)
+void HouseTrail::setCategories(const QString& categories)
 {
-    if (m_categories == categories)
-        return;
-
     m_categories = categories;
-    emit categoriesChanged(categories);
 }
 
-void HouseTrail::setGeoHash(QString geoHash)
+void HouseTrail::setGeoHash(const QString& geoHash)
 {
-    if (m_geoHash == geoHash)
-        return;
-
     m_geoHash = geoHash;
-    emit geoHashChanged(geoHash);
 }
 
 HousetrailModel::HousetrailModel(QObject *parent){
     Q_UNUSED(parent)
 }
 
-void HousetrailModel::append(HouseTrail *aHouseTrail)
+void HousetrailModel::append(const QVector<HouseTrail>& aHouseTrail)
 {
-    auto lat = aHouseTrail->theLocation().latitude();
-    auto lon = aHouseTrail->theLocation().longitude();
-    if (this->contains(lat,lon)) return;
-    QString theHash= getHash(lat,lon);
-    m_Contained[theHash]=aHouseTrail;
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
-    m_Housetrails.append(aHouseTrail);
+    QVector<HouseTrail> newHouses;
+
+    foreach (const HouseTrail& house, aHouseTrail) {
+        if (!this->contains(house.dbId())) {
+            newHouses.append(house);
+        }
+    }
+
+    beginInsertRows(QModelIndex(), rowCount(), rowCount()+newHouses.size()-1);
+    foreach (const HouseTrail& house, newHouses) {
+        HouseTrail* newHouse = new HouseTrail(house);
+        m_Contained[house.dbId()]=newHouse;
+        m_Housetrails.append(newHouse);
+    }
     endInsertRows();
 }
 
@@ -90,9 +79,8 @@ QString HousetrailModel::getHash(double lat, double lon)
     return QString("%1o%2").arg(lat,0,'f',7).arg(lon,0,'f',7);
 }
 
-bool HousetrailModel::contains(double lat, double lon) {
-    QString theHash= getHash(lat,lon);
-    return m_Contained.contains(theHash);
+bool HousetrailModel::contains(qint64 id) {
+    return m_Contained.contains(id);
 }
 
 QVariant HousetrailModel::data(const QModelIndex &index, int role) const

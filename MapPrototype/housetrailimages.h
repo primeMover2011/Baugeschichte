@@ -6,58 +6,43 @@
 #include <QStringList>
 #include <QGeoCoordinate>
 
-class HouseTrail: public QObject
+class HouseTrail
 {
-    Q_OBJECT
-    Q_PROPERTY(int dbId READ dbId WRITE setDbId NOTIFY dbIdChanged)
-    Q_PROPERTY(QString houseTitle READ houseTitle WRITE setHouseTitle NOTIFY houseTitleChanged)
-    Q_PROPERTY(QGeoCoordinate theLocation READ theLocation WRITE setTheLocation NOTIFY theLocationChanged)
-    Q_PROPERTY(QString categories READ categories WRITE setCategories NOTIFY categoriesChanged)
-    Q_PROPERTY(QString geoHash READ geoHash WRITE setGeoHash NOTIFY geoHashChanged)
-
 public:
-    explicit HouseTrail(QObject *parent = 0);
+    explicit HouseTrail();
 
-    int dbId() const
+    qint64 dbId() const
     {
         return m_dbId;
     }
-    QString houseTitle() const
+    const QString& houseTitle() const
     {
         return m_houseTitle;
     }
 
-    QGeoCoordinate theLocation() const
+    const QGeoCoordinate& theLocation() const
     {
         return m_theLocation;
     }
 
-    QString categories() const
+    const QString& categories() const
     {
         return m_categories;
     }
 
-    QString geoHash() const
+    const QString& geoHash() const
     {
         return m_geoHash;
     }
 
-public slots:
-    void setDbId(int dbId);
-    void setHouseTitle(QString houseTitle);
-    void setTheLocation(QGeoCoordinate theLocation);
-    void setCategories(QString categories);
-    void setGeoHash(QString geoHash);
-
-signals:
-    void dbIdChanged(int dbId);
-    void houseTitleChanged(QString houseTitle);
-    void theLocationChanged(QGeoCoordinate theLocation);
-    void categoriesChanged(QString categories);
-    void geoHashChanged(QString geoHash);
+    void setDbId(qint64 dbId);
+    void setHouseTitle(const QString& houseTitle);
+    void setTheLocation(const QGeoCoordinate& theLocation);
+    void setCategories(const QString& categories);
+    void setGeoHash(const QString& geoHash);
 
 protected:
-    int m_dbId;
+    qint64 m_dbId;
     QString m_houseTitle;
     QGeoCoordinate m_theLocation;
     QString m_categories;
@@ -78,14 +63,14 @@ public:
     };
 
     HousetrailModel(QObject *parent = 0);
-    void append(HouseTrail* aHouseTrail);
+    Q_SLOT void append(const QVector<HouseTrail>& aHouseTrail);
     Q_INVOKABLE void clear();
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
 
     QString getHash(double lat, double lon);
 
-    Q_INVOKABLE bool contains(double lat, double lon);
+    bool contains(qint64 id);
 
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
@@ -93,7 +78,7 @@ protected:
     QHash<int, QByteArray> roleNames() const;
 private:
     QList<HouseTrail*> m_Housetrails;
-    QHash<QString, HouseTrail*> m_Contained;
+    QHash<qint64, HouseTrail*> m_Contained;
 };
 
 

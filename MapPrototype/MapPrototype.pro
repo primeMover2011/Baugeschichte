@@ -7,7 +7,8 @@ SOURCES += main.cpp \
     dialog.cpp \
     housetrailimages.cpp \
     clusterproxy.cpp \
-    Geohash.cpp
+    Geohash.cpp \
+    houselocationfilter.cpp
 
 
 RESOURCES += qml.qrc
@@ -34,7 +35,8 @@ HEADERS += \
     clusterproxy.h \
     Geohash.hpp \
     Constants.hpp \
-    Utility.hpp
+    Utility.hpp \
+    houselocationfilter.h
 
 DISTFILES += \
     android/AndroidManifest.xml \

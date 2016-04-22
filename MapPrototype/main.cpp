@@ -1,8 +1,11 @@
 #include "dialog.h"
+#include "housetrailimages.h"
+#include "houselocationfilter.h"
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QtQml>
 #include <QSortFilterProxyModel>
 #include <QScreen>
 
@@ -12,6 +15,10 @@
 
 int main(int argc, char *argv[])
 {
+    qRegisterMetaType<HouseTrail>("HouseTrail");
+    qRegisterMetaType<QVector<HouseTrail> >("QVector<HouseTrail>");
+    qmlRegisterType<HouseLocationFilter>("Baugeschichte", 1, 0, "HouseLocationFilter");
+
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;

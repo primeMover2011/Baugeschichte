@@ -1,6 +1,8 @@
 #include "dialog.h"
 #include "Geohash.hpp"
 
+#include <QElapsedTimer>
+#include <QDateTime>
 #include <QDebug>
 #include <QJsonObject>
 #include <QJsonParseError>
@@ -22,12 +24,10 @@ Dialog::Dialog(HousetrailModel *aHouseTrails, QObject *parent)
                 this, SLOT(positionUpdated(QGeoPositionInfo)));
     }
 
-    //m_manager->setAtt
     connect(m_manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(poisFinished(QNetworkReply*)));
-    connect(this, SIGNAL(newHousetrail(HouseTrail*)),
-            this, SLOT(onNewHouseTrail(HouseTrail*)));
-    // m_manager->get(QNetworkRequest(QUrl("http://www.google.com")));
+    connect(this, SIGNAL(newHousetrail(QVector<HouseTrail>)),
+            m_HouseTrailImages, SLOT(append(QVector<HouseTrail>)));
 
     setPoiID(-1);
 }
@@ -92,21 +92,27 @@ bool Dialog::loading() const
 
 void Dialog::getAllPois()
 {
-    setLoading(true);
     QString theRequest4Pois("http://baugeschichte.at/app/v1/getData.php?action=getBuildingsBoxed&lat=47&lon=15&radius=1");
-    m_manager->get(QNetworkRequest(QUrl(theRequest4Pois)));
+    QNetworkRequest request1 = QNetworkRequest(QUrl(theRequest4Pois));
+    m_requests.append(request1);
+    m_manager->get(request1);
+
+    setLoading(!m_requests.isEmpty());
 }
 
 void Dialog::getPois(double lat, double lon, double radius, double zoomlevel)
 {
-    setLoading(true);
-    QString theRequest4Pois=QString("http://baugeschichte.at/app/v1/getData.php?action=getBuildingsBoxed&lat=%1&lon=%2&radius=%3")
+    QString locationRequest = QString("http://baugeschichte.at/app/v1/getData.php?action=getBuildingsBoxed&lat=%1&lon=%2&radius=%3")
             .arg(lat,0,'f',7)
-            .arg(lon,0,'f',7)
-            .arg(radius,0,'f',7);
+            .arg(lon,0,'f',7);
+    QString theRequest4Pois = locationRequest + QString::number(radius, 'f', 7);
     if (zoomlevel > 17)
         theRequest4Pois = theRequest4Pois % "&all=1";
-    m_manager->get(QNetworkRequest(QUrl(theRequest4Pois)));
+    QNetworkRequest request1 = QNetworkRequest(QUrl(theRequest4Pois));
+    m_requests.append(request1);
+    m_manager->get(request1);
+
+    setLoading(!m_requests.isEmpty());
 }
 
 QString Dialog::getGeoHashFromLocation(QGeoCoordinate theLocation, int thePrecision)
@@ -137,15 +143,6 @@ void Dialog::locateMe() const
     {
         m_source->startUpdates();
     }
-}
-
-void Dialog::onNewHouseTrail(HouseTrail *aNewHouseTrail)
-{
-    HouseTrail* aHouseTrail = new HouseTrail(m_HouseTrailImages);
-    aHouseTrail->setDbId(aNewHouseTrail->dbId());
-    aHouseTrail->setHouseTitle(aNewHouseTrail->houseTitle());
-    aHouseTrail->setTheLocation(aNewHouseTrail->theLocation());
-    m_HouseTrailImages->append(aNewHouseTrail);
 }
 
 void Dialog::slotError(QNetworkReply::NetworkError anError)
@@ -230,7 +227,17 @@ void Dialog::poiSelected(const int aPoiId)
 void Dialog::poisFinished(QNetworkReply *theReply)
 {
     QtConcurrent::run(this, &Dialog::createModelAsync, theReply);
+
+    const QNetworkRequest& request = theReply->request();
+    m_requests.removeOne(request);
+    if (!m_requests.empty())
+    {
+        m_manager->get(m_requests.first());
+    }
+
+    setLoading(!m_requests.isEmpty());
 }
+
 void Dialog::createModelAsync(QNetworkReply *theReply)
 {
     qDebug()<<"poisFinished";
@@ -239,8 +246,7 @@ void Dialog::createModelAsync(QNetworkReply *theReply)
     {
         if (theReply->error() == QNetworkReply::NoError)
         {
-            const int available = theReply->bytesAvailable();
-            QUrl theUrl = theReply->url();
+            const qint64 available = theReply->bytesAvailable();
             if (available > 0)
             {
                 const QByteArray buffer = QString::fromUtf8(theReply->readAll()).toLatin1();
@@ -260,22 +266,24 @@ void Dialog::createModelAsync(QNetworkReply *theReply)
                 {
                     QJsonObject anInfoObject=aDoc.object();
                     QJsonArray theValueArray = anInfoObject["payload"].toArray();
-                    //int i = 0;
+                    QVector<HouseTrail> markers;
+                    markers.reserve(theValueArray.size());
                     foreach (const QJsonValue& theValue, theValueArray) {
-                        //if (i++ > 30) break;
-                        HouseTrail* aHouseTrail = new HouseTrail();
+                        HouseTrail aHouseTrail;
                         QJsonObject anObj = theValue.toObject();
-                        aHouseTrail->setDbId(anObj["id"].toInt());
-                        aHouseTrail->setHouseTitle(anObj["title"].toString());
-                        aHouseTrail->setTheLocation(QGeoCoordinate(anObj["lat"].toDouble(),anObj["lon"].toDouble()));
+                        aHouseTrail.setDbId(anObj["id"].toInt());
+                        aHouseTrail.setHouseTitle(anObj["title"].toString());
+                        aHouseTrail.setTheLocation(QGeoCoordinate(anObj["lat"].toDouble(),anObj["lon"].toDouble()));
 
                         doc.setArray(anObj["cats"].toArray());
 
-                        aHouseTrail->setCategories(doc.toJson());
-                        emit newHousetrail(aHouseTrail);
+                        aHouseTrail.setCategories(doc.toJson());
+                        markers.push_back(aHouseTrail);
                     }
 
-                    /*             QJsonObject anInfoObject=aDoc.object();
+                    emit newHousetrail(markers);
+
+/*             QJsonObject anInfoObject=aDoc.object();
                     setInfotext(anInfoObject["title"].toString());
                     setDetailTitle(anInfoObject["text"].toString());
                     QJsonArray anImageArray = anInfoObject["images"].toArray();
@@ -311,8 +319,6 @@ void Dialog::createModelAsync(QNetworkReply *theReply)
                   " response: "<< theResponse;
         theReply->deleteLater();
     }
-
-    setLoading(false);
 }
 
 void Dialog::httpReadyRead(QNetworkReply *reply){

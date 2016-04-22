@@ -258,35 +258,6 @@ Map {
         }
     }
 
-    MapCircle {
-        id: point
-        visible: myPosition.active
-        radius: 100
-        color: "blue" //#46a2da"
-        border.color: "#190a33"
-        border.width: 2
-        smooth: true
-        opacity: 0.4
-
-        center: myPosition.position.coordinate
-
-        SequentialAnimation on radius {
-            loops: Animation.Infinite
-            NumberAnimation {
-                from: point.radius
-                to: point.radius * 1.8
-                duration: 800
-                easing.type: Easing.InOutQuad
-            }
-            NumberAnimation {
-                from: point.radius * 1.8
-                to: point.radius
-                duration: 1000
-                easing.type: Easing.InOutQuad
-            }
-        }
-    }//<--MapCircle
-
     MapQuickItem {
         id: myPositionCircle
         visible: myPosition.active
@@ -301,7 +272,7 @@ Map {
             border.color: "#190a33"
             border.width: 2
             smooth: true
-            opacity: 0.4
+            opacity: 0.5
             width: localHelper.dp(90)
             height: width
             radius: width/2

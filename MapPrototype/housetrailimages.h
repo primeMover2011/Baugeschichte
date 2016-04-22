@@ -5,107 +5,48 @@
 #include <QAbstractListModel>
 #include <QStringList>
 #include <QGeoCoordinate>
-#include <Geohash.hpp>
 
-class HouseTrail: public QObject
+class HouseTrail
 {
-    Q_OBJECT
-    Q_PROPERTY(int dbId READ dbId WRITE setDbId NOTIFY dbIdChanged)
-    Q_PROPERTY(QString houseTitle READ houseTitle WRITE setHouseTitle NOTIFY houseTitleChanged)
-    Q_PROPERTY(QGeoCoordinate theLocation READ theLocation WRITE setTheLocation NOTIFY theLocationChanged)
-    Q_PROPERTY(QString categories READ categories WRITE setCategories NOTIFY categoriesChanged)
-    Q_PROPERTY(QString geoHash READ geoHash WRITE setGeoHash NOTIFY geoHashChanged)
+public:
+    explicit HouseTrail();
+
+    qint64 dbId() const
+    {
+        return m_dbId;
+    }
+    const QString& houseTitle() const
+    {
+        return m_houseTitle;
+    }
+
+    const QGeoCoordinate& theLocation() const
+    {
+        return m_theLocation;
+    }
+
+    const QString& categories() const
+    {
+        return m_categories;
+    }
+
+    const QString& geoHash() const
+    {
+        return m_geoHash;
+    }
+
+    void setDbId(qint64 dbId);
+    void setHouseTitle(const QString& houseTitle);
+    void setTheLocation(const QGeoCoordinate& theLocation);
+    void setCategories(const QString& categories);
+    void setGeoHash(const QString& geoHash);
 
 protected:
-    int m_dbId;
+    qint64 m_dbId;
     QString m_houseTitle;
     QGeoCoordinate m_theLocation;
     QString m_categories;
     QString m_geoHash;
-
-public:
-
-    explicit HouseTrail(QObject *parent = 0): QObject(parent) {}
-
-int dbId() const
-{
-    return m_dbId;
-}
-QString houseTitle() const
-{
-    return m_houseTitle;
-}
-
-QGeoCoordinate theLocation() const
-{
-    return m_theLocation;
-}
-
-QString categories() const
-{
-    return m_categories;
-}
-
-QString geoHash() const
-{
-    return m_geoHash;
-}
-
-public slots:
-void setDbId(int dbId)
-{
-    if (m_dbId == dbId)
-        return;
-
-    m_dbId = dbId;
-    emit dbIdChanged(dbId);
-}
-void setHouseTitle(QString houseTitle)
-{
-    if (m_houseTitle == houseTitle)
-        return;
-
-    m_houseTitle = houseTitle;
-    emit houseTitleChanged(houseTitle);
-}
-
-void setTheLocation(QGeoCoordinate theLocation)
-{
-    if (m_theLocation == theLocation)
-        return;
-
-    m_theLocation = theLocation;
-    std::string aGeoHash;
-    GeographicLib::Geohash::Forward(m_theLocation.latitude(),m_theLocation.longitude(),12,aGeoHash);
-    setGeoHash(QString::fromStdString(aGeoHash));
-
-    emit theLocationChanged(theLocation);
-}
-
-void setCategories(QString categories)
-{
-    if (m_categories == categories)
-        return;
-
-    m_categories = categories;
-    emit categoriesChanged(categories);
-}
-
-void setGeoHash(QString geoHash)
-{
-    if (m_geoHash == geoHash)
-        return;
-
-    m_geoHash = geoHash;
-    emit geoHashChanged(geoHash);
-}
-
-signals:
-void dbIdChanged(int dbId);
-void houseTitleChanged(QString houseTitle);
-void theLocationChanged(QGeoCoordinate theLocation);
-void categoriesChanged(QString categories);
-void geoHashChanged(QString geoHash);
 };
 
 class HousetrailModel : public QAbstractListModel
@@ -120,78 +61,24 @@ public:
         GeohashRole,
 
     };
-    HousetrailModel(QObject *parent = 0){
-        Q_UNUSED(parent)
 
-    }
-    void append(HouseTrail* aHouseTrail)
-    {
-        auto lat = aHouseTrail->theLocation().latitude();
-        auto lon = aHouseTrail->theLocation().longitude();
-        if (this->contains(lat,lon)) return;
-        QString theHash= getHash(lat,lon);
-        m_Contained[theHash]=aHouseTrail;
-        beginInsertRows(QModelIndex(), rowCount(), rowCount());
-        m_Housetrails.append(aHouseTrail);
-        endInsertRows();
-    }
-    Q_INVOKABLE void clear()
-    {
-        beginRemoveRows(QModelIndex(),0,m_Housetrails.count());
-        m_Housetrails.clear();
-        endRemoveRows();
-    }
+    HousetrailModel(QObject *parent = 0);
+    Q_SLOT void append(const QVector<HouseTrail>& aHouseTrail);
+    Q_INVOKABLE void clear();
 
-    int rowCount(const QModelIndex & parent = QModelIndex()) const
-    {
-        Q_UNUSED(parent);
-        return m_Housetrails.count();
-    }
+    int rowCount(const QModelIndex & parent = QModelIndex()) const;
 
-    QString getHash(double lat, double lon)
-    {
-        return QString("%1o%2").arg(lat,0,'f',7).arg(lon,0,'f',7);
-    }
+    QString getHash(double lat, double lon);
 
-    Q_INVOKABLE bool contains(double lat, double lon) {
-        QString theHash= getHash(lat,lon);
-        return m_Contained.contains(theHash);
-    }
+    bool contains(qint64 id);
 
-
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const
-    {
-        if (index.row() < 0 || index.row() >= m_Housetrails.count())
-            return QVariant();
-
-        HouseTrail* aHousetrail = m_Housetrails[index.row()];
-        if (role == DbIdRole)
-            return aHousetrail->dbId();
-        else if (role == HouseTitleRole)
-            return aHousetrail->houseTitle();
-        else if (role == CoordinateRole)
-            return QVariant::fromValue(aHousetrail->theLocation());
-        else if (role == CategoryRole)
-            return aHousetrail->categories();
-        else if (role == GeohashRole)
-            return aHousetrail->geoHash();
-        return QVariant();
-    }
+    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
 protected:
-    QHash<int, QByteArray> roleNames() const
-    {
-        QHash<int, QByteArray> roles;
-        roles[DbIdRole] = "dbId";
-        roles[HouseTitleRole] = "title";
-        roles[CoordinateRole] = "coord";
-        roles[CategoryRole] = "category";
-        roles[GeohashRole] = "geohash";
-        return roles;
-    }
+    QHash<int, QByteArray> roleNames() const;
 private:
     QList<HouseTrail*> m_Housetrails;
-    QHash<QString, HouseTrail*> m_Contained;
+    QHash<qint64, HouseTrail*> m_Contained;
 };
 
 

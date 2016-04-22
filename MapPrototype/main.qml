@@ -8,7 +8,15 @@ import Qt.labs.settings 1.0
 import QtQuick.Dialogs 1.2
 import "./"
 
-ApplicationWindow {
+ApplicationWindow{
+    id: root
+
+    width: 1024
+    height: 800
+
+    visible: true
+
+    readonly property bool loading: uiStack.currentItem.loading || dialog.loading
 
     onClosing: {
         close.accepted = false
@@ -16,7 +24,6 @@ ApplicationWindow {
     ExclusiveGroup {
           id: categoryGroup
     }
-
 
     PositionSource {
         id: thePosition
@@ -35,155 +42,80 @@ ApplicationWindow {
         anchors.right: parent.right
         opacity: 0.5
         height: localHelper.dp(50)
-        width: parent.width
 
         RowLayout {
             anchors.fill: parent
-            //Map
-            Rectangle {
-                width: localHelper.dp(50)
-                height: localHelper.dp(50)
-                Image {
-                    source: "resources/Map-icon.svg"
-                    width: parent.width
-                    height: parent.height
-                }
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-
-                        //                              uiStack.push({item: Qt.resolvedUrl("SearchPage.qml"), properties: {searchFor:selectedPoi}})
-                        while (uiStack.depth > 1) {
-                            uiStack.pop()
-                            //in
-                        }
-                    }
+            ToobalButton {
+                id: mapButton
+                source: "resources/Map-icon.svg"
+                onClicked: {
+                    uiStack.pop(null);
+                    filteredTrailModel.setFilterWildcard("");
+                    uiStack.currentItem.item.currentID = -1;
                 }
             }
-            //<-- Map
 
-            //Search
-            Rectangle {
-                width: localHelper.dp(50)
-                height: localHelper.dp(50)
-                Image {
-                    source: "resources/System-search.svg"
-                    width: parent.width
-                    height: parent.height
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-
-                        //                              uiStack.push({item: Qt.resolvedUrl("SearchPage.qml"), properties: {searchFor:selectedPoi}})
-                        if (uiStack.depth > 1) {
-                            uiStack.clear()
-                        }
-                        uiStack.push({
-                                         item: Qt.resolvedUrl("SearchPage.qml")
-                                     })
-                    }
+            ToobalButton {
+                id: searchButton
+                source: "resources/System-search.svg"
+                onClicked: {
+                    uiStack.pop(null);
+                    uiStack.push({
+                                     item: Qt.resolvedUrl("SearchPage.qml")
+                                 })
                 }
             }
-            //<-- Search
 
-            //Categories
-            Rectangle {
-                width: localHelper.dp(50)
-                height: localHelper.dp(50)
-                //opacity: 0.5
-                Image {
-                    source: "resources/Edit-find-cats.svg"
-                    width: parent.width
-                    height: parent.height
-                }
-                MouseArea {
-                    id:catMouse
-                    anchors.fill: parent
-                    onClicked: {
-                        if (uiStack.depth > 1) {
-                            uiStack.clear()
-                        }
-                        uiStack.push({
-                                         item: Qt.resolvedUrl("CategoryselectionView.qml")
-                                     })
-                    }
+            ToobalButton {
+                id: categoriesButton
+                source: "resources/Edit-find-cats.svg"
+                onClicked: {
+                    uiStack.pop(null);
+                    uiStack.push({
+                                     item: Qt.resolvedUrl("CategoryselectionView.qml")
+                                 })
                 }
             }
-            //<--Categories
 
-            //FollowMe
-            Rectangle {
+            ToobalButton {
                 id: theFollowMeButton
-                property bool isEnabled: thePosition.valid
+                source: "qrc:/resources/Ic_gps_" + (isActive ? "not_fixed" : "off") + "_48px.svg"
+                enabled: thePosition.valid
+
                 property bool isActive: false
-                width: localHelper.dp(50)
-                height: localHelper.dp(50)
-                opacity: isEnabled ? 1 : 0.3
-                Image {
-                    id: theFollowMeImage
-                    source: "resources/Ic_gps_off_48px.svg"
-                    width: parent.width
-                    height: parent.height
-                }
-                MouseArea {
-                    id:mouseFollowMe
-                    anchors.fill: parent
-                    enabled: thePosition.valid
 
-                    onClicked: {
-                        parent.isActive = !parent.isActive
-                        if (parent.isActive)
-                            theFollowMeImage.source = "qrc:/resources/Ic_gps_not_fixed_48px.svg"
-                        else
-                            theFollowMeImage.source = "qrc:/resources/Ic_gps_off_48px.svg"
-                    }
+                onClicked: {
+                    isActive = !isActive;
                 }
             }
-            //FollowMe
 
-            //Routes
-            Rectangle {
-                width: localHelper.dp(50)
-                height: localHelper.dp(50)
-                Image {
-                    source: "resources/Edit-check-sheet.svg"
-                    width: parent.width
-                    height: parent.height
-                }
-                //                                uiStack.push({item: Qt.resolvedUrl("RouteView.qml")})
-                MouseArea {
-                    anchors.fill: parent
-                    //enabled: parent.isEnabled
-                    onClicked: {
-                        uiStack.push({
-                                         item: Qt.resolvedUrl("RouteView.qml")
-                                     })
-                    }
+            ToobalButton {
+                id: routesButton
+                source: "resources/Edit-check-sheet.svg"
+                onClicked: {
+                    uiStack.push({
+                                     item: Qt.resolvedUrl("RouteView.qml")
+                                 })
                 }
             }
-            //<--Routes
+        }
+
+        BusyIndicator {
+            width: height
+            height: parent.height * 0.8
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+
+            running: root.loading
         }
     }
 
-    visible: true
     //    PositionSource
     property variant locationGraz: QtPositioning.coordinate(47.0666667, 15.45)
     Component.onCompleted: {
-
         //dialog.getAllPois();
     }
-    /*    Connections {
-            target: mapOfEurope
-                    onSelectedPoiChanged: {
-                                console.log("Poi:", mapOfEurope.selectedPoi)
-                                        }
-
-                                            }
-                                                */
-    width: 1024
-    height: 800
 
 /*    menuBar: MenuBar {
         id: mainMenuBar
@@ -217,8 +149,6 @@ ApplicationWindow {
                 })
             }
         }
-
-
     }//<--menuBar
 */
 
@@ -239,7 +169,6 @@ ApplicationWindow {
                     categoryModel.append(jsonObject)
                 }
             }
-
             //categoryMenu.createMenu()
         }
     }
@@ -249,21 +178,18 @@ ApplicationWindow {
         icon: StandardIcon.Question
         standardButtons: StandardButton.Yes | StandardButton.No
         modality: Qt.WindowModal
-        title: "Baugeschichte App beenden?"
+        title: qsTr("Baugeschichte App beenden?")
         onButtonClicked: console.log("clicked button " + clickedButton)
         onYes: Qt.quit()
         onNo: visible = false
     }
 
     Rectangle {
+        id: background
         color: "#060606"
         anchors.fill: parent
-        //anchors.topMargin: toolBar.height
-//        anchors { right: parent.right; left:parent.left;
-//            top: toolBar.bottom; bottom: parent.bottom; /*margins: 10*/ }
 
         focus: true
-        z: 40000
         Keys.onReleased: {
             console.log("Keys.onrelease")
             console.log("uiStack Depth:" + uiStack.depth)
@@ -279,57 +205,51 @@ ApplicationWindow {
                 }
             }
         }
-        StackView {
-            id: uiStack
-            initialItem: loader_mapOfEurope
-            onDepthChanged: {
-                console.log("Depth changed:" + depth)
-            }
-            z: 35000
+    }
 
-            objectName: "theStackView"
-            anchors.fill: parent
+    StackView {
+        id: uiStack
+        anchors.fill: parent
+        objectName: "theStackView"
 
+        initialItem: loader_mapOfEurope
+        onDepthChanged: {
+            console.log("Depth changed:" + depth)
+        }
 
-            Component {
-                id: component_mapOfEurope
+        Component {
+            id: component_mapOfEurope
 
-                MapComponent {
-                    id: mapOfEurope
-                    Settings {
-                        id: settings
-                        property alias lastSeenLat: mapOfEurope.center.latitude
-                        property alias lastSeenLon: mapOfEurope.center.longitude
-                    }
-
-                    center: locationGraz
-                    z: 32000
-                    onSelectedPoiChanged: {
-                        console.log("SelectedPoiChanged Begin")
-                        if (selectedPoi === "")
-                            return
-                        uiStack.push({
-                                         item: Qt.resolvedUrl(
-                                                   "DetailsView.qml"),
-                                         properties: {
-                                             searchFor: selectedPoi
-                                         }
-                                     })
-                        //console.log("SelectedPoiChanged End")
-                        selectedPoi = ""
-                    }
-                    followMe: theFollowMeButton.isActive
+            MapComponent {
+                id: mapOfEurope
+                Settings {
+                    id: settings
+                    property alias lastSeenLat: mapOfEurope.center.latitude
+                    property alias lastSeenLon: mapOfEurope.center.longitude
                 }
-            }
-            Loader {
-                id: loader_mapOfEurope
 
-                sourceComponent: component_mapOfEurope
-                anchors.centerIn: parent
-                anchors.fill: parent
+                center: locationGraz
+                onSelectedPoiChanged: {
+                    console.log("SelectedPoiChanged Begin: "+selectedPoi)
+                    if (selectedPoi === "")
+                        return
+                    uiStack.push({
+                                     item: Qt.resolvedUrl(
+                                               "DetailsView.qml"),
+                                     properties: {
+                                         searchFor: selectedPoi
+                                     }
+                                 })
+                    //console.log("SelectedPoiChanged End")
+                    selectedPoi = ""
+                }
+                followMe: theFollowMeButton.isActive
             }
-
+        }
+        Loader {
+            id: loader_mapOfEurope
+            sourceComponent: component_mapOfEurope
+            property bool loading: false
         }
     }
-    //Rectangle
 }

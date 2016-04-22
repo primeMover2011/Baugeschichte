@@ -1,15 +1,24 @@
+#include "dialog.h"
+#include "housetrailimages.h"
+#include "houselocationfilter.h"
+
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <QtQml/QQmlContext>
+#include <QQmlContext>
+#include <QtQml>
 #include <QSortFilterProxyModel>
-#include "dialog.h"
 #include <QScreen>
+
 #if defined(Q_OS_ANDROID)
     #include <QAndroidJniObject>
 #endif
 
 int main(int argc, char *argv[])
 {
+    qRegisterMetaType<HouseTrail>("HouseTrail");
+    qRegisterMetaType<QVector<HouseTrail> >("QVector<HouseTrail>");
+    qmlRegisterType<HouseLocationFilter>("Baugeschichte", 1, 0, "HouseLocationFilter");
+
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
@@ -22,7 +31,6 @@ int main(int argc, char *argv[])
 //                MyViewModel::MyViewModel_Roles::MyViewModel_Roles_Details);
     //detailsProxyModel->setFilterRegExp( "^\\S+$" );
     detailsProxyModel.setSourceModel(&aHouseTrailImages);
-
 
      qreal dpi;
      #if defined(Q_OS_ANDROID)
@@ -38,16 +46,12 @@ int main(int argc, char *argv[])
          dpi = app.primaryScreen()->physicalDotsPerInch() * app.devicePixelRatio();
     #endif
 
-
-//    channel.registerObject(QStringLiteral("dialog"), &dialog);
     context->setContextProperty(QStringLiteral("dialog"), &dialog);
     context->setContextProperty(QStringLiteral("houseTrailModel"), &aHouseTrailImages);
     context->setContextProperty(QStringLiteral("filteredTrailModel"), &detailsProxyModel);
     context->setContextProperty(QStringLiteral("screenDpi"), dpi);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-
-
 
     return app.exec();
 }

@@ -38,18 +38,20 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.2
+import QtQuick 2.4
 import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
-import QtQml.Models 2.2
-import QtQuick.Window 2.0
 import "./"
 
-Item {
+BaseView {
+    id: root
+
     property real itemSize: width / 3
     property string searchFor: ""
     property string poiName: ""
+
+    loading: theDetails.isLoading
+
     DensityHelpers {
         id:localHelper
     }
@@ -65,14 +67,21 @@ Item {
                 jsonObject.detailText=jsonObject.text
                 jsonObject.text = ""
                 model.append(jsonObject);
-
             }
         }
-
-
-
     }
 
+    Rectangle {
+        id: initialTextbackground
+        width: parent.width
+        height:  parent.height / 2
+        anchors.bottom: parent.bottom
+
+        color: "#FFFCF2"
+        border.color: "#8E8E8E"
+
+        visible: mainListView.count === 0
+    }
 
     ListView {
         id:                     mainListView
@@ -86,15 +95,10 @@ Item {
         delegate:               Item {
             width:      mainListView.width
             height:     mainListView.height
-            anchors.top: parent.top
-//            anchors.fill: parent
-        //+++ColumnLayout+++
-            ColumnLayout {
-                anchors.fill: parent
 
-                SplitView{
-                    anchors.fill: parent
-                    orientation: Qt.Vertical
+            SplitView{
+                anchors.fill: parent
+                orientation: Qt.Vertical
                 PathView {
                     id: imagePathView
                     focus: true
@@ -105,11 +109,11 @@ Item {
                     Keys.onRightPressed: incrementCurrentIndex()
                     flickDeceleration: 390
 
-                    Layout.fillWidth:           true
+                    width: parent.width
+                    height: parent.height / 2
                     Layout.fillHeight: true
-//                    Layout.preferredHeight:     parent.height / 3
-                    Layout.preferredHeight:     parent.height / 4
-                    //anchors.top : parent.top
+                    Layout.maximumHeight: parent.height * 0.75
+                    Layout.minimumHeight: parent.height * 0.25
                     pathItemCount:              3
                     preferredHighlightBegin:    0.5
                     preferredHighlightEnd:      0.5
@@ -147,100 +151,69 @@ Item {
                         PathAttribute {name: "zOrder"; value: 1}
                     }
 
-
-
-
                     delegate:
                         Item{
-                                id: imageContainer
-                                property real tmpAngle : PathView.rotateY
-                                property real scaleValue: PathView.scalePic
-                                width: parent.width
-                                height: parent.height
-                                visible: PathView.onPath
-                                z: PathView.zOrder
-                                anchors.top:parent.top
+                        id: imageContainer
+                        property real tmpAngle : PathView.rotateY
+                        property real scaleValue: PathView.scalePic
+                        width: parent.width
+                        height: parent.height
+                        visible: PathView.onPath
+                        z: PathView.zOrder
+                        anchors.top:parent.top
 
-                                Image{
-                                    id:myImage
-                                    width: parent.width
-                                    height: parent.height
-                                    source: "http://baugeschichte.at/"+imageName
-                                    fillMode: Image.PreserveAspectFit
-                                    anchors.top: parent.top
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    smooth: true
-                                }
-                                Rectangle {
-                                    id: textRect
-                                    width: textItem.width
-                                    height: textItem.height
-                                    anchors.bottom: myImage.bottom
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    color: "#ffffff"
-                                    smooth: true
-                                    Text {
-                                        id: textItem
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        //anchors.verticalCenter: parent.verticalCenter
-                                        text: imageDescription
-                                        smooth: true
-                                        font.pixelSize: localHelper.sp(24)
+                        Image{
+                            id:myImage
+                            width: parent.width
+                            height: parent.height
+                            source: "http://baugeschichte.at/"+imageName
+                            fillMode: Image.PreserveAspectFit
+                            anchors.top: parent.top
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            smooth: true
+                        }
+                        Rectangle {
+                            id: textRect
+                            width: textItem.width
+                            height: textItem.height
+                            anchors.bottom: myImage.bottom
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            color: "#ffffff"
+                            smooth: true
+                            Text {
+                                id: textItem
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                //anchors.verticalCenter: parent.verticalCenter
+                                text: imageDescription
+                                smooth: true
+                                font.pixelSize: localHelper.sp(24)
+                            }
+                        }
 
-                                    }
-                                }
-
-
-                                /*Image {
-                                    id: subImage
-                                    width: myImage.width
-                                    height: myImage.height
-                                    source: "http://baugeschichte.at/"+imageName
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    smooth: true
-                                    transform: Rotation { origin.x: 0; origin.y: parent.height; axis { x: 1; y: 0; z: 0 } angle: 180 }
-                                }
-                                Rectangle{
-                                    y: myImage.height;
-                                    x: -1
-                                    width: myImage.width + 1
-                                    height: myImage.height
-                                    gradient: Gradient {
-                                        GradientStop { position: 0.0; color: Qt.rgba(0,0,0, 0.7) }
-                                    }
-                                }*/
-
-                                transform:[
-                                    Rotation{
-                                        angle: tmpAngle
-                                        origin.x: myImage.width/2
-                                        axis { x: 0; y: 1; z: 0 }
-                                    },
-                                    Scale {
-                                        xScale:scaleValue; yScale:scaleValue
-                                        origin.x: myImage.width/2;   origin.y: myImage.height/2
-                                    }
-                                ]
-
-
-
-
+                        transform:[
+                            Rotation{
+                                angle: tmpAngle
+                                origin.x: myImage.width/2
+                                axis { x: 0; y: 1; z: 0 }
+                            },
+                            Scale {
+                                xScale:scaleValue; yScale:scaleValue
+                                origin.x: myImage.width/2;   origin.y: myImage.height/2
+                            }
+                        ]
+                    }
                 }
-                }
-
-
 
                 Rectangle {
                     id: textBase
 
-                    Layout.fillWidth:   true
+                    width: parent.width
+                    height: parent.height / 2
                     Layout.maximumHeight: parent.height * 0.75
                     Layout.minimumHeight: parent.height * 0.25
-                    height: parent.height / 2
-                    anchors.bottom: parent.bottom
 
-                    color:          "#FFFCF2"
-                    border.color:   "#8E8E8E"
+                    color: initialTextbackground.color
+                    border.color: initialTextbackground.border.color
 
                     Text {
                         id: titleText
@@ -254,7 +227,7 @@ Item {
                     }
 
                     TextArea {
-                        anchors             { top: titleText.bottom;
+                        anchors { top: titleText.bottom;
                             bottom: parent.bottom; left: parent.left;
                             right: parent.right; margins: 5 }
                         readOnly:           true
@@ -266,38 +239,34 @@ Item {
                         //color:              "#333333"
                     }
 
-
-
                     Keys.onLeftPressed: console.log("onLeft Details")
                     Keys.onRightPressed: console.log("onLeft Details")
-
                 }
-
-                }//SplitView
-            }
-        //---ColumnLayout---
+            }//SplitView
         }
     }
 
-   Image{
-            id:prevImage
-            anchors { left: parent.left; bottom: parent.bottom; margins: 10 }
-            source: "resources/Go-previous.svg"
-            fillMode: Image.PreserveAspectFit
-            smooth: true
-            width: localHelper.dp(100)
-            height: localHelper.dp(100)
-            MouseArea {
-                anchors.fill: parent
+    Image {
+        id:prevImage
+        anchors { left: parent.left; bottom: parent.bottom; margins: 10 }
+        source: "resources/Go-previous.svg"
+        fillMode: Image.PreserveAspectFit
+        smooth: true
+        width: localHelper.dp(100)
+        height: localHelper.dp(100)
+        MouseArea {
+            anchors.fill: parent
 
-                onClicked: {
-                    if ( mainListView.currentIndex != 0 ) {
-                        mainListView.decrementCurrentIndex()
-                    } else mainListView.currentIndex = mainListView.count - 1
+            onClicked: {
+                if ( mainListView.currentIndex != 0 ) {
+                    mainListView.decrementCurrentIndex()
+                } else {
+                    mainListView.currentIndex = mainListView.count - 1
                 }
             }
         }
-    Image{
+    }
+    Image {
         id:nextImage
         anchors { right: parent.right; bottom: parent.bottom; margins: 10 }
         width: localHelper.dp(100)
@@ -305,7 +274,6 @@ Item {
 
         source: "resources/Go-next.svg"
         fillMode: Image.PreserveAspectFit
-        //anchors.centerIn: parent
         smooth: true
 
         MouseArea {
@@ -313,7 +281,9 @@ Item {
             onClicked: {
                 if ( mainListView.currentIndex != mainListView.count - 1 ) {
                     mainListView.incrementCurrentIndex()
-                } else mainListView.currentIndex = 0
+                } else {
+                    mainListView.currentIndex = 0
+                }
             }
         }
     }

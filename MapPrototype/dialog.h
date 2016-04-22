@@ -4,7 +4,9 @@
 #include <QObject>
 #include <QGeoCoordinate>
 #include <QGeoPositionInfoSource>
+#include <QList>
 #include <QNetworkReply>
+#include <QVector>
 #include "housetrailimages.h"
 
 class Dialog : public QObject
@@ -49,14 +51,10 @@ signals:
     void locationChanged(double, double);
     void poiIDChanged(int);
     void detailTitleChanged(const QString& aDetailTitle);
-    void newHousetrail(HouseTrail* aNewHouseTrail);
+    void newHousetrail(QVector<HouseTrail> aNewHouseTrail);
     void loadingChanged(bool loading);
 
 public slots:
-    /*!
-        This slot is invoked from the HTML client side and the text displayed on the server side.
-    */
-    void onNewHouseTrail(HouseTrail* aNewHouseTrail);
     void slotError(QNetworkReply::NetworkError anError);
     void httpFinished();
     void replyFinished(QNetworkReply* theReply);
@@ -80,6 +78,8 @@ private:
     QNetworkAccessManager* m_manager;
     HousetrailModel* m_HouseTrailImages;
     bool m_loading;
+
+    QList<QNetworkRequest> m_requests;
 };
 
 #endif // DIALOG

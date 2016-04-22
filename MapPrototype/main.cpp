@@ -1,4 +1,5 @@
 #include "dialog.h"
+#include "housetrailimages.h"
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
@@ -12,6 +13,9 @@
 
 int main(int argc, char *argv[])
 {
+    qRegisterMetaType<HouseTrail>("HouseTrail");
+    qRegisterMetaType<QVector<HouseTrail> >("QVector<HouseTrail>");
+
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;

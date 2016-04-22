@@ -227,18 +227,12 @@ Map {
                 Image {
                     id: image
                     antialiasing: true
-                    source: "resources/marker-2.svg"
+                    source: dbId == mapOfEurope.currentID ? "resources/marker-2-blue.svg" : "resources/marker-2.svg"
                     width: localHelper.sp(50)
                     height: localHelper.sp(50)
                     sourceSize: Qt.size(width, height)
                     fillMode: Image.PreserveAspectFit
-//                    visible: false
                 }
-//                ColorOverlay {
-//                    anchors.fill: image
-//                    source: image
-//                    color: dbId == mapOfEurope.currentID ? "#ff0000ff" : "#ff000000"
-//                }
                 MouseArea {
                     anchors.fill: image
                     onPressed: changeCurrentItem()

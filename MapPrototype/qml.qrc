@@ -12,6 +12,7 @@
         <file>resources/Map-icon.svg</file>
         <file>resources/marker.png</file>
         <file>resources/marker-2.svg</file>
+        <file>resources/marker-2-blue.svg</file>
         <file>resources/navigation_next_item.png</file>
         <file>resources/System-search.svg</file>
         <file>main.qml</file>

@@ -19,7 +19,6 @@ Map {
     property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
     property alias theItemModel: housetrailMapItems
     property double radius: 100
-    onRadiusChanged: console.log("radius: "+radius)
 
     property int currentID: -1
     onCurrentIDChanged: {
@@ -97,7 +96,8 @@ Map {
         var dist = (dist1 > dist2) ? dist1 : dist2;
         var radius = dist / 2.0;
         dialog.getPois(mapOfEurope.center.latitude,mapOfEurope.center.longitude, radius, mapOfEurope.zoomLevel);
-        mapOfEurope.radius = radius * 100000;
+
+        mapOfEurope.radius = mapOfEurope.center.distanceTo(coord1);
     }
 
     function calculateScale() {

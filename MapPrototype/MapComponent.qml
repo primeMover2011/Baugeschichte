@@ -6,6 +6,7 @@ import QtLocation 5.5
 import QtPositioning 5.5
 import "./Helper.js" as Helper
 import "./"
+import Baugeschichte 1.0
 
 Map {
     id: mapOfEurope
@@ -14,9 +15,11 @@ Map {
     signal routes
     property bool followMe:false
     property bool autoUpdatePois:true
-    property variant currentModel: filteredTrailModel
+    property variant currentModel: locationFilter
     property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
     property alias theItemModel: housetrailMapItems
+    property double radius: 100
+    onRadiusChanged: console.log("radius: "+radius)
 
     property int currentID: -1
     onCurrentIDChanged: {
@@ -30,6 +33,13 @@ Map {
     property bool loading: false
 
     property MarkerLabel markerLabel
+
+    HouseLocationFilter {
+        id: locationFilter
+        sourceModel: filteredTrailModel
+        location: mapOfEurope.center
+        radius: mapOfEurope.radius
+    }
 
     Timer {
         id: scaleTimer
@@ -86,7 +96,8 @@ Map {
         var dist2 = Math.abs(coord1.longitude - coord2.longitude)
         var dist = (dist1 > dist2) ? dist1 : dist2;
         var radius = dist / 2.0;
-        dialog.getPois(mapOfEurope.center.latitude,mapOfEurope.center.longitude, dist, mapOfEurope.zoomLevel);
+        dialog.getPois(mapOfEurope.center.latitude,mapOfEurope.center.longitude, radius, mapOfEurope.zoomLevel);
+        mapOfEurope.radius = radius * 100000;
     }
 
     function calculateScale() {

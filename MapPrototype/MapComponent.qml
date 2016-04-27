@@ -2,8 +2,8 @@ import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.1
-import QtLocation 5.5
-import QtPositioning 5.5
+import QtLocation 5.6
+import QtPositioning 5.6
 import "./Helper.js" as Helper
 import "./"
 import Baugeschichte 1.0
@@ -20,8 +20,10 @@ Map {
     property alias theItemModel: housetrailMapItems
     property double radius: 100
 
+    property string selectedPoi: ""
     property int currentID: -1
     onCurrentIDChanged: {
+        console.log("currentID: "+currentID)
         if (currentID < 0 && markerLabel) {
             markerLabel.visible = false;
         }
@@ -69,6 +71,15 @@ Map {
 
     onHeightChanged: {
         scaleTimer.restart()
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        propagateComposedEvents: true
+        onClicked: {
+            mapOfEurope.currentID = -1;
+            mapOfEurope.selectedPoi = "";
+        }
     }
 
     Slider {
@@ -201,7 +212,6 @@ Map {
         }
     }
     center: QtPositioning.coordinate(47.0666667, 15.45)
-    property string selectedPoi: ""
 
     MapItemView {
         id: housetrailMapItems
@@ -249,6 +259,7 @@ Map {
                         }
 
                         mapOfEurope.markerLabel.coordinate = mqItem.coordinate
+                        mapOfEurope.markerLabel.id = dbId;
                         mapOfEurope.markerLabel.title = title
                         mapOfEurope.markerLabel.visible = true;
                         mapOfEurope.currentID = dbId;
@@ -294,22 +305,4 @@ Map {
             }
         }//<--MapCircle
     }
-
-    /*==Mapitemview==*/
-    MouseArea {
-        //workaround for QTBUG-46388
-        anchors.fill: parent
-        propagateComposedEvents: true
-        onClicked: {
-            //to prevent swallowing of events
-            console.log("workaround for QTBUG-46388")
-            mouse.accepted = false
-        }
-        onPressed: {
-            //to prevent swallowing of events
-            console.log("workaround for onpressed QTBUG-46388")
-            mouse.accepted = false
-        }
-    }
 }
-

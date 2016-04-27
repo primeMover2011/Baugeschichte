@@ -8,6 +8,7 @@ MapQuickItem {
     id: root
 
     property alias title: textItem.text
+    property int id: -1
     property Map mapItem
     
     z: 20
@@ -40,9 +41,11 @@ MapQuickItem {
             anchors.fill: parent
             onPressed: selectPoi(root.title)
             onClicked: selectPoi(root.title)
+
             function selectPoi(aTitle) {
                 console.log("textItem poi selected...")
                 mapItem.selectedPoi = aTitle
+                mapItem.currentID = root.id;
                 root.visible = false
             }
         }

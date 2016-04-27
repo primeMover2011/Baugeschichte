@@ -243,21 +243,10 @@ ApplicationWindow{
                     onSelectedPoiChanged: {
                         console.log("SelectedPoiChanged Begin: "+selectedPoi)
                         details.searchFor = selectedPoi;
-                        if (selectedPoi === "")
-                            return
-    //                    uiStack.push({
-    //                                     item: Qt.resolvedUrl(
-    //                                               "DetailsView.qml"),
-    //                                     properties: {
-    //                                         searchFor: selectedPoi
-    //                                     }
-    //                                 })
-    //                    //console.log("SelectedPoiChanged End")
-    //                    selectedPoi = ""
-                    }
-                    followMe: theFollowMeButton.isActive
+                        followMe: theFollowMeButton.isActive
 
-                    visible: parent.splitScreen || !details.visible
+                        visible: parent.splitScreen || !details.visible
+                    }
                 }
 
                 DetailsView {

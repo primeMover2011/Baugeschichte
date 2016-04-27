@@ -52,10 +52,10 @@ ApplicationWindow{
                 id: mapButton
                 source: "resources/Map-icon.svg"
                 onClicked: {
-                    uiStack.pop(null);
                     filteredTrailModel.setFilterWildcard("");
                     mainMap.resetToMainModel();
                     mainMap.currentID = -1;
+                    uiStack.pop(null);
                 }
             }
 
@@ -63,6 +63,7 @@ ApplicationWindow{
                 id: searchButton
                 source: "resources/System-search.svg"
                 onClicked: {
+                    mainMap.currentID = -1;
                     uiStack.pop(null);
                     uiStack.push({
                                      item: Qt.resolvedUrl("SearchPage.qml")
@@ -74,6 +75,7 @@ ApplicationWindow{
                 id: categoriesButton
                 source: "resources/Edit-find-cats.svg"
                 onClicked: {
+                    mainMap.currentID = -1;
                     uiStack.pop(null);
                     uiStack.push({
                                      item: Qt.resolvedUrl("CategoryselectionView.qml")
@@ -97,6 +99,7 @@ ApplicationWindow{
                 id: routesButton
                 source: "resources/Edit-check-sheet.svg"
                 onClicked: {
+                    mainMap.currentID = -1;
                     uiStack.push({
                                      item: Qt.resolvedUrl("RouteView.qml")
                                  })

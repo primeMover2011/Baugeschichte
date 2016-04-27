@@ -72,6 +72,12 @@ BaseView {
     }
 
     Rectangle {
+        id: background
+        anchors.fill: parent
+        color: "black"
+    }
+
+    Rectangle {
         id: initialTextbackground
         width: parent.width
         height:  parent.height / 2

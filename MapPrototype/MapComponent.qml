@@ -26,7 +26,7 @@ Map {
         if (currentID < 0) {
             selectedPoi = "";
             if (markerLabel) {
-                markerLabel.visible = false;
+                markerLabel.destroy();
             }
         }
     }

@@ -56,14 +56,14 @@ HousetrailModel::~HousetrailModel()
 
 void HousetrailModel::append(const QVector<HouseTrail>& aHouseTrail)
 {
+    limitSize();
+
     std::set<HouseTrail> newHouses; // use a set to eliminate duplicates
     foreach (const HouseTrail& house, aHouseTrail) {
         if (!this->contains(house.dbId())) {
             newHouses.insert(house);
         }
     }
-
-    limitSize();
 
     int insertEnd = rowCount() + static_cast<int>(newHouses.size()) - 1;
     beginInsertRows(QModelIndex(), rowCount(), insertEnd);

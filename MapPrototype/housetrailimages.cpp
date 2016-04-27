@@ -2,6 +2,10 @@
 
 #include <Geohash.hpp>
 
+#include <QDebug>
+
+#include <set>
+
 HouseTrail::HouseTrail()
     : m_dbId(-1)
 {
@@ -38,24 +42,34 @@ void HouseTrail::setGeoHash(const QString& geoHash)
     m_geoHash = geoHash;
 }
 
-HousetrailModel::HousetrailModel(QObject *parent){
-    Q_UNUSED(parent)
+
+HousetrailModel::HousetrailModel(QObject *parent)
+    : QAbstractListModel(parent)
+    , m_maxSize(1000)
+{
+}
+
+HousetrailModel::~HousetrailModel()
+{
+    clear();
 }
 
 void HousetrailModel::append(const QVector<HouseTrail>& aHouseTrail)
 {
-    QVector<HouseTrail> newHouses;
-
+    std::set<HouseTrail> newHouses; // use a set to eliminate duplicates
     foreach (const HouseTrail& house, aHouseTrail) {
         if (!this->contains(house.dbId())) {
-            newHouses.append(house);
+            newHouses.insert(house);
         }
     }
 
-    beginInsertRows(QModelIndex(), rowCount(), rowCount()+newHouses.size()-1);
+    limitSize();
+
+    int insertEnd = rowCount() + static_cast<int>(newHouses.size()) - 1;
+    beginInsertRows(QModelIndex(), rowCount(), insertEnd);
     foreach (const HouseTrail& house, newHouses) {
         HouseTrail* newHouse = new HouseTrail(house);
-        m_Contained[house.dbId()]=newHouse;
+        m_Contained.insert(house.dbId(), newHouse);
         m_Housetrails.append(newHouse);
     }
     endInsertRows();
@@ -64,7 +78,9 @@ void HousetrailModel::append(const QVector<HouseTrail>& aHouseTrail)
 void HousetrailModel::clear()
 {
     beginRemoveRows(QModelIndex(),0,m_Housetrails.count());
+    qDeleteAll(m_Housetrails);
     m_Housetrails.clear();
+    m_Contained.clear();
     endRemoveRows();
 }
 
@@ -72,11 +88,6 @@ int HousetrailModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return m_Housetrails.count();
-}
-
-QString HousetrailModel::getHash(double lat, double lon)
-{
-    return QString("%1o%2").arg(lat,0,'f',7).arg(lon,0,'f',7);
 }
 
 bool HousetrailModel::contains(qint64 id) {
@@ -111,6 +122,23 @@ QHash<int, QByteArray> HousetrailModel::roleNames() const
     roles[CategoryRole] = "category";
     roles[GeohashRole] = "geohash";
     return roles;
+}
+
+void HousetrailModel::limitSize()
+{
+    int size = m_Housetrails.size();
+    if (size > m_maxSize) {
+        beginRemoveRows(QModelIndex(), 0, size-m_maxSize-1);
+        while (m_Housetrails.size() > m_maxSize) {
+            int i = m_Contained.remove(m_Housetrails[0]->dbId());
+            if (i != 1) {
+                qWarning() << "m_Contained.remove returned" << i << "but should be 1";
+            }
+            delete m_Housetrails[0];
+            m_Housetrails.removeFirst();
+        }
+        endRemoveRows();
+    }
 }
 
 /*

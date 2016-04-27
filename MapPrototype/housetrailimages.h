@@ -49,6 +49,11 @@ protected:
     QString m_geoHash;
 };
 
+inline bool operator< (const HouseTrail& lhs, const HouseTrail& rhs)
+{
+    return  lhs.dbId() < rhs.dbId();
+}
+
 class HousetrailModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -63,12 +68,12 @@ public:
     };
 
     HousetrailModel(QObject *parent = 0);
+    ~HousetrailModel();
+
     Q_SLOT void append(const QVector<HouseTrail>& aHouseTrail);
     Q_INVOKABLE void clear();
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
-
-    QString getHash(double lat, double lon);
 
     bool contains(qint64 id);
 
@@ -76,9 +81,17 @@ public:
 
 protected:
     QHash<int, QByteArray> roleNames() const;
+
 private:
+    /**
+     * Removes the first (oldes) entries, so that only m_maxSize items are left in the container
+     */
+    void limitSize();
+
     QList<HouseTrail*> m_Housetrails;
     QHash<qint64, HouseTrail*> m_Contained;
+
+    int m_maxSize;
 };
 
 

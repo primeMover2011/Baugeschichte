@@ -5,6 +5,8 @@ import QtLocation 5.4
 BaseView {
     property string searchFor:""
     property bool followMeActive: false
+    property bool splitScreen: width > height
+
     onSearchForChanged: simpleMapSearchModel.phrase = searchFor//" "
 
     loading: simpleMapSearchModel.isLoading
@@ -51,26 +53,31 @@ BaseView {
 
     MapComponent {
         id:routeMap
-        anchors.fill: parent
+        width: splitScreen ? details.x : parent.width
+        height: parent.height
+
         center: locationGraz
         autoUpdatePois: false
         currentModel: simpleMapSearchModel.model
         onSelectedPoiChanged: {
             console.log("SelectedPoiChanged Begin")
-            if (selectedPoi === "")
-                return
-            uiStack.push({
-                             item: Qt.resolvedUrl(
-                                       "DetailsView.qml"),
-                             properties: {
-                                 searchFor: selectedPoi
-                             }
-                         })
-            //console.log("SelectedPoiChanged End")
-            selectedPoi = ""
+            details.searchFor = selectedPoi;
+            visible: parent.splitScreen || !details.visible
         }
         followMe: followMeActive
 
         property MapPolyline routeLine
+    }
+
+    DetailsView {
+        id: details
+
+        x: visible ? (parent.splitScreen ? parent.width / 2 : 0) : parent.width
+        width: parent.splitScreen ? parent.width / 2 : parent.width
+        height: parent.height
+
+        clip: true
+
+        visible: searchFor != ""
     }
 }

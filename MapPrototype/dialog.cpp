@@ -102,15 +102,17 @@ void Dialog::getAllPois()
 
 void Dialog::getPois(double lat, double lon, double radius, double zoomlevel)
 {
-    QString locationRequest = QString("http://baugeschichte.at/app/v1/getData.php?action=getBuildingsBoxed&lat=%1&lon=%2&radius=%3")
+    QString locationRequest = QString("http://baugeschichte.at/app/v1/getData.php?action=getBuildingsBoxed&lat=%1&lon=%2&radius=")
             .arg(lat,0,'f',7)
             .arg(lon,0,'f',7);
     QString theRequest4Pois = locationRequest + QString::number(radius, 'f', 7);
     if (zoomlevel > 17)
         theRequest4Pois = theRequest4Pois % "&all=1";
-    QNetworkRequest request1 = QNetworkRequest(QUrl(theRequest4Pois));
-    m_requests.append(request1);
-    m_manager->get(request1);
+
+//    qDebug() << theRequest4Pois;
+    QNetworkRequest request = QNetworkRequest(QUrl(theRequest4Pois));
+    m_requests.append(request);
+    m_manager->get(request);
 
     setLoading(!m_requests.isEmpty());
 }

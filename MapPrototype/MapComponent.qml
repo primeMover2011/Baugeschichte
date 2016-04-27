@@ -42,6 +42,7 @@ Map {
         sourceModel: filteredTrailModel
         location: mapOfEurope.center
         radius: mapOfEurope.radius
+        minDistanceFactor: mapOfEurope.zoomLevel > 17 ? 1e-9 : 0.04
     }
 
     Timer {

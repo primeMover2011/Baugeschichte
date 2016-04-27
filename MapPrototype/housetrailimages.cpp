@@ -45,7 +45,7 @@ void HouseTrail::setGeoHash(const QString& geoHash)
 
 HousetrailModel::HousetrailModel(QObject *parent)
     : QAbstractListModel(parent)
-    , m_maxSize(1000)
+    , m_maxSize(10000)
 {
 }
 

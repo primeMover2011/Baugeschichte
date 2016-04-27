@@ -18,6 +18,8 @@ ApplicationWindow{
 
     readonly property bool loading: uiStack.currentItem.loading || dialog.loading
 
+    property MapComponent mainMap: null
+
     onClosing: {
         close.accepted = false
     }
@@ -52,7 +54,8 @@ ApplicationWindow{
                 onClicked: {
                     uiStack.pop(null);
                     filteredTrailModel.setFilterWildcard("");
-                    uiStack.currentItem.item.currentID = -1;
+                    mainMap.resetToMainModel();
+                    mainMap.currentID = -1;
                 }
             }
 
@@ -198,8 +201,7 @@ ApplicationWindow{
                 if (uiStack.depth > 1) {
                     console.log("pop")
                     uiStack.pop()
-                    loader_mapOfEurope.item.selectedPoi = ""
-                    //mapOfEurope.selectedPoi = ""
+                    loader_mapOfEurope.item.currentID = -1;
                 } else {
                     shutDownDialog.visible = true
                 }
@@ -246,6 +248,10 @@ ApplicationWindow{
                         followMe: theFollowMeButton.isActive
 
                         visible: parent.splitScreen || !details.visible
+                    }
+
+                    Component.onCompleted: {
+                        root.mainMap = mapOfEurope;
                     }
                 }
 

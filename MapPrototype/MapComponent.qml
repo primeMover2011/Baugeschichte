@@ -23,9 +23,11 @@ Map {
     property string selectedPoi: ""
     property int currentID: -1
     onCurrentIDChanged: {
-        console.log("currentID: "+currentID)
-        if (currentID < 0 && markerLabel) {
-            markerLabel.visible = false;
+        if (currentID < 0) {
+            selectedPoi = "";
+            if (markerLabel) {
+                markerLabel.visible = false;
+            }
         }
     }
 
@@ -78,7 +80,6 @@ Map {
         propagateComposedEvents: true
         onClicked: {
             mapOfEurope.currentID = -1;
-            mapOfEurope.selectedPoi = "";
         }
     }
 
@@ -139,6 +140,11 @@ Map {
         text = Helper.formatDistance(dist)
         scaleImage.width = (scaleImage.sourceSize.width * f) - 2 * scaleImageLeft.sourceSize.width
         scaleText.text = text
+    }
+
+    function resetToMainModel()
+    {
+        mapOfEurope.currentModel = locationFilter;
     }
 
     Item {

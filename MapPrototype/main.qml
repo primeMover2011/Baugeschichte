@@ -238,6 +238,9 @@ ApplicationWindow{
                     width: splitScreen ? details.x : parent.width
                     height: parent.height
 
+                    followMe: theFollowMeButton.isActive
+                    visible: parent.splitScreen || !details.visible
+
                     Settings {
                         id: settings
                         property alias lastSeenLat: mapOfEurope.center.latitude
@@ -248,9 +251,6 @@ ApplicationWindow{
                     onSelectedPoiChanged: {
                         console.log("SelectedPoiChanged Begin: "+selectedPoi)
                         details.searchFor = selectedPoi;
-                        followMe: theFollowMeButton.isActive
-
-                        visible: parent.splitScreen || !details.visible
                     }
 
                     Component.onCompleted: {

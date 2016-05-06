@@ -59,10 +59,12 @@ BaseView {
         center: locationGraz
         autoUpdatePois: false
         currentModel: simpleMapSearchModel.model
+
+        visible: parent.splitScreen || !details.visible
+
         onSelectedPoiChanged: {
             console.log("SelectedPoiChanged Begin")
             details.searchFor = selectedPoi;
-            visible: parent.splitScreen || !details.visible
         }
         followMe: followMeActive
 

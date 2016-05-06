@@ -11,7 +11,7 @@ MapQuickItem {
     property int id: -1
     property Map mapItem
     
-    z: 20
+    z: 2000
     anchorPoint.x: coco.width / 2
     anchorPoint.y: coco.height * 1.9
     
@@ -47,6 +47,11 @@ MapQuickItem {
                 mapItem.selectedPoi = aTitle
                 mapItem.currentID = root.id;
                 root.visible = false
+
+                mapItem.center = root.coordinate;
+                if (mapItem.zoomLevel < 18) {
+                    mapItem.zoomLevel = 19;
+                }
             }
         }
     }

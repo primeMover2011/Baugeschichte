@@ -253,19 +253,21 @@ Map {
                 MouseArea {
                     anchors.fill: image
                     onPressed: changeCurrentItem()
-                    onClicked: changeCurrentItem()
 
                     function changeCurrentItem() {
                         console.log("changing!!")
-                        if (!mapOfEurope.markerLabel)
-                        {
-                            var component = Qt.createComponent("MarkerLabel.qml");
-                            mapOfEurope.markerLabel = component.createObject(mapOfEurope);
-                            mapOfEurope.markerLabel.mapItem = mapOfEurope;
-                            mapOfEurope.addMapItem(mapOfEurope.markerLabel);
+
+                        if (mapOfEurope.markerLabel) {
+                            mapOfEurope.markerLabel.destroy();
                         }
 
+                        var component = Qt.createComponent("MarkerLabel.qml");
+                        mapOfEurope.markerLabel = component.createObject(mapOfEurope);
+                        mapOfEurope.markerLabel.mapItem = mapOfEurope;
+                        mapOfEurope.addMapItem(mapOfEurope.markerLabel);
+
                         mapOfEurope.markerLabel.coordinate = mqItem.coordinate
+                        mapOfEurope.markerLabel.z = 9999;
                         mapOfEurope.markerLabel.id = dbId;
                         mapOfEurope.markerLabel.title = title
                         mapOfEurope.markerLabel.visible = true;

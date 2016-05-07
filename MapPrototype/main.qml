@@ -2,6 +2,7 @@ import QtQuick 2.4
 import QtQuick.Window 2.2
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.4
+import QtQuick.Controls.Styles 1.4
 import QtPositioning 5.5
 import QtLocation 5.5
 import Qt.labs.settings 1.0
@@ -37,13 +38,18 @@ ApplicationWindow{
         id: localHelper
     }
 
-    toolBar: Rectangle {
+    toolBar: Item {
         id: theTool
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        opacity: 0.5
         height: localHelper.dp(50)
+
+        Rectangle {
+            id: toolBarBackground
+            anchors.fill: parent
+            color: "#f8f8f8"
+        }
 
         RowLayout {
             anchors.fill: parent
@@ -107,13 +113,33 @@ ApplicationWindow{
             }
         }
 
-        BusyIndicator {
+        Item {
+            id: loadingIndicator
             width: height
-            height: parent.height * 0.8
-            anchors.right: parent.right
-            anchors.verticalCenter: parent.verticalCenter
+            height: theTool.height
 
-            running: root.loading
+            anchors.right: parent.right
+            anchors.top: parent.top
+
+            BusyIndicator {
+                anchors.fill: parent
+                anchors.margins: theTool.height * 0.1
+
+                running: root.loading
+
+                style: BusyIndicatorStyle {
+                    indicator: Image {
+                        visible: control.running
+                        source: "resources/spinner.png"
+                        RotationAnimator on rotation {
+                            running: control.running
+                            loops: Animation.Infinite
+                            duration: 1000
+                            from: 0 ; to: 360
+                        }
+                    }
+                }
+            }
         }
     }
 

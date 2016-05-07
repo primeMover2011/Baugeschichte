@@ -33,5 +33,6 @@
         <file>ToobalButton.qml</file>
         <file>BaseView.qml</file>
         <file>MarkerLabel.qml</file>
+        <file>resources/spinner.png</file>
     </qresource>
 </RCC>

@@ -3,14 +3,13 @@ import QtQuick 2.4
 Item {
     id: root
     width: parent.width
-    height: 88
+    height: textitem.height * 2.2
 
     property alias text: textitem.text
     signal selected(string wot)
 
     Rectangle {
         anchors.fill: parent
-//        color: "#11ffffff"
         color: "#d6d6d6"
         visible: mouse.pressed
     }
@@ -18,7 +17,7 @@ Item {
     Text {
         id: textitem
         color: "white"
-        font.pixelSize: 32
+        font.pixelSize: localHelper.largeFontSize
         text: modelData
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
@@ -45,8 +44,10 @@ Item {
         anchors.fill: parent
         onClicked: {
             selected(textitem.text)
-            //uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor:textitem.text}})
         }
+    }
 
+    DensityHelpers {
+        id: localHelper
     }
 }

@@ -1,8 +1,5 @@
 import QtQuick 2.4
 import QtLocation 5.5
-import QtPositioning 5.5
-import "./Helper.js" as Helper
-import "./"
 
 MapQuickItem {
     id: root
@@ -29,7 +26,7 @@ MapQuickItem {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             text: "Text"
-            font.pixelSize: localHelper.sp(24)
+            font.pixelSize: localHelper.defaultFontSize
             color: "#ff0000"
             font.bold: true
         }

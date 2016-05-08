@@ -189,10 +189,12 @@ BaseView {
                             Text {
                                 id: textItem
                                 anchors.horizontalCenter: parent.horizontalCenter
-                                //anchors.verticalCenter: parent.verticalCenter
+                                width: Math.min(implicitWidth, imageContainer.width)
                                 text: imageDescription
                                 smooth: true
-                                font.pixelSize: localHelper.sp(24)
+                                font.pixelSize: localHelper.smallFontSize
+                                horizontalAlignment: Text.AlignHCenter
+                                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                             }
                         }
 
@@ -223,13 +225,14 @@ BaseView {
 
                     Text {
                         id: titleText
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.margins: localHelper.dp(5)
-                        //anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        horizontalAlignment: Text.AlignHCenter
                         text: poiName + ": " + title
                         smooth: true
-                        font.pixelSize: localHelper.sp(24)
-
+                        font.pixelSize: localHelper.defaultFontSize
+                        anchors.margins: localHelper.dp(5)
+                        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     }
 
                     TextArea {
@@ -240,9 +243,8 @@ BaseView {
                         verticalScrollBarPolicy: Qt.ScrollBarAsNeeded
                         horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
                         wrapMode:           TextEdit.WordWrap
-                        text:               (detailText.length > 0) ? detailText : "Kein Text"
-                        font.pixelSize:     localHelper.sp(20)
-                        //color:              "#333333"
+                        text:               (detailText.length > 0) ? detailText : qsTr("Kein Text")
+                        font.pixelSize:     localHelper.smallFontSize
                     }
 
                     Keys.onLeftPressed: console.log("onLeft Details")
@@ -258,8 +260,8 @@ BaseView {
         source: "resources/Go-previous.svg"
         fillMode: Image.PreserveAspectFit
         smooth: true
-        width: localHelper.dp(100)
-        height: localHelper.dp(100)
+        width: localHelper.dp(50)
+        height: localHelper.dp(50)
         MouseArea {
             anchors.fill: parent
 
@@ -275,8 +277,8 @@ BaseView {
     Image {
         id:nextImage
         anchors { right: parent.right; bottom: parent.bottom; margins: 10 }
-        width: localHelper.dp(100)
-        height: localHelper.dp(100)
+        width: localHelper.dp(50)
+        height: localHelper.dp(50)
 
         source: "resources/Go-next.svg"
         fillMode: Image.PreserveAspectFit

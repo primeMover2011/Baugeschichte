@@ -245,8 +245,8 @@ Map {
                     id: image
                     antialiasing: true
                     source: dbId == mapOfEurope.currentID ? "resources/marker-2-blue.svg" : "resources/marker-2.svg"
-                    width: localHelper.sp(50)
-                    height: localHelper.sp(50)
+                    width: localHelper.dp(50)
+                    height: localHelper.dp(50)
                     sourceSize: Qt.size(width, height)
                     fillMode: Image.PreserveAspectFit
                 }

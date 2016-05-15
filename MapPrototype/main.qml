@@ -227,12 +227,15 @@ ApplicationWindow{
             console.log("uiStack Depth:" + uiStack.depth)
             if (event.key === Qt.Key_Back) {
                 event.accepted = true
-                if (uiStack.depth > 1) {
-                    console.log("pop")
-                    uiStack.pop()
-                    loader_mapOfEurope.item.currentID = -1;
+                if (uiStack.currentItem.detailsOpen) {
+                    uiStack.currentItem.closeDetails();
                 } else {
-                    shutDownDialog.visible = true
+                    if (uiStack.depth > 1) {
+                        uiStack.pop()
+                        loader_mapOfEurope.item.currentID = -1;
+                    } else {
+                        shutDownDialog.visible = true
+                    }
                 }
             }
         }
@@ -255,6 +258,11 @@ ApplicationWindow{
                 id: mapItem
 
                 property bool splitScreen: width > height
+                readonly property bool detailsOpen: details.visible
+
+                function closeDetails() {
+                    mapOfEurope.selectedPoi = "";
+                }
 
                 loading: details.loading
 
@@ -300,7 +308,14 @@ ApplicationWindow{
         Loader {
             id: loader_mapOfEurope
             sourceComponent: component_mapOfEurope
-            property bool loading: item ? item.loading : false
+            readonly property bool loading: item ? item.loading : false
+            readonly property bool detailsOpen: item ? item.detailsOpen : false
+
+            function closeDetails() {
+                if (item) {
+                    item.closeDetails();
+                }
+            }
         }
     }
 }

@@ -5,7 +5,12 @@ import QtLocation 5.4
 BaseView {
     property string searchFor:""
     property bool followMeActive: false
-    property bool splitScreen: width > height
+    readonly property bool detailsOpen: details.visible
+    readonly property bool splitScreen: width > height
+
+    function closeDetails() {
+        routeMap.selectedPoi = "";
+    }
 
     onSearchForChanged: simpleMapSearchModel.phrase = searchFor//" "
 

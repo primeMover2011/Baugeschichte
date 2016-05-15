@@ -64,8 +64,15 @@ BaseView {
             poiName = magneto.title
             for (var key in magneto.payload) {
                 var jsonObject = magneto.payload[key];
-                jsonObject.detailText=jsonObject.text
+                jsonObject.detailText = jsonObject.text
                 jsonObject.text = ""
+                model.append(jsonObject);
+            }
+        }
+        onErrorChanged: {
+            if (error !== "") {
+                console.log("Error: " + error);
+                var jsonObject = {"detailText": error, "title": qsTr("Load error")};
                 model.append(jsonObject);
             }
         }
@@ -228,7 +235,7 @@ BaseView {
                         anchors.left: parent.left
                         anchors.right: parent.right
                         horizontalAlignment: Text.AlignHCenter
-                        text: poiName + ": " + title
+                        text: (poiName !== "") ? (poiName + ": " + title) : title
                         smooth: true
                         font.pixelSize: localHelper.defaultFontSize
                         anchors.margins: localHelper.dp(5)

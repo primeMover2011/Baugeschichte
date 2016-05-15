@@ -26,6 +26,9 @@ BaseView {
             routeMap.routeLine.line.color = "green";
             routeMap.addMapItem(routeMap.routeLine);
 
+            // disabled direct line connection for route visualisation for now
+            routeMap.routeLine.visible = false;
+
             for (var key in magneto.payload) {
                 var jsonObject = magneto.payload[key]
                 if (jsonObject.lat === 0) continue;

@@ -60,7 +60,7 @@ ApplicationWindow{
                 onClicked: {
                     filteredTrailModel.setFilterWildcard("");
                     mainMap.resetToMainModel();
-                    mainMap.currentID = -1;
+                    uiStack.currentItem.closeDetails();
                     uiStack.pop(null);
                 }
             }
@@ -312,7 +312,7 @@ ApplicationWindow{
             readonly property bool detailsOpen: item ? item.detailsOpen : false
 
             function closeDetails() {
-                if (item) {
+                if (detailsOpen) {
                     item.closeDetails();
                 }
             }

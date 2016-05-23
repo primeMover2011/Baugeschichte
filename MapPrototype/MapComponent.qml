@@ -208,16 +208,20 @@ Map {
     }
 
     plugin: Plugin {
-        name: "mapbox"
-        PluginParameter {
-            name: "mapbox.map_id"
-            value: "primemover.c5fe94e8"
-        }
-        PluginParameter {
-            name: "mapbox.access_token"
-            value: "pk.eyJ1IjoicHJpbWVtb3ZlciIsImEiOiIzNjFlYWNjZmZhMjAyNGFhMWQ0NDM0ZDIyMTE4YmEyMCJ9.d5wi3uI5VayKiniPnkxojg"
-        }
+        name: "osm"
     }
+//    Plugin {
+//        name: "mapbox"
+//        PluginParameter {
+//            name: "mapbox.map_id"
+//            value: "primemover.c5fe94e8"
+//        }
+//        PluginParameter {
+//            name: "mapbox.access_token"
+//            value: "pk.eyJ1IjoicHJpbWVtb3ZlciIsImEiOiIzNjFlYWNjZmZhMjAyNGFhMWQ0NDM0ZDIyMTE4YmEyMCJ9.d5wi3uI5VayKiniPnkxojg"
+//        }
+//    }
+
     center: QtPositioning.coordinate(47.0666667, 15.45)
 
     MapItemView {

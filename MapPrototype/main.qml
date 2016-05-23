@@ -54,7 +54,7 @@ ApplicationWindow{
         RowLayout {
             anchors.fill: parent
 
-            ToobarButton {
+            ToolbarButton {
                 id: mapButton
                 source: "resources/Map-icon.svg"
                 onClicked: {
@@ -65,7 +65,7 @@ ApplicationWindow{
                 }
             }
 
-            ToobarButton {
+            ToolbarButton {
                 id: searchButton
                 source: "resources/System-search.svg"
                 onClicked: {
@@ -77,7 +77,7 @@ ApplicationWindow{
                 }
             }
 
-            ToobarButton {
+            ToolbarButton {
                 id: categoriesButton
                 source: "resources/Edit-find-cats.svg"
                 onClicked: {
@@ -89,7 +89,7 @@ ApplicationWindow{
                 }
             }
 
-            ToobarButton {
+            ToolbarButton {
                 id: theFollowMeButton
                 source: "qrc:/resources/Ic_gps_" + (isActive ? "not_fixed" : "off") + "_48px.svg"
                 enabled: thePosition.valid
@@ -101,7 +101,7 @@ ApplicationWindow{
                 }
             }
 
-            ToobarButton {
+            ToolbarButton {
                 id: routesButton
                 source: "resources/Edit-check-sheet.svg"
                 onClicked: {

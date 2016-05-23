@@ -60,8 +60,8 @@ ApplicationWindow{
                 onClicked: {
                     filteredTrailModel.setFilterWildcard("");
                     mainMap.resetToMainModel();
-                    uiStack.currentItem.closeDetails();
                     uiStack.pop(null);
+                    uiStack.currentItem.closeDetails();
                 }
             }
 

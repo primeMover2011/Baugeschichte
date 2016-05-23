@@ -1,6 +1,6 @@
 import QtQuick 2.4
 
-Rectangle {
+Item {
     id: root
 
     property alias source: icon.source

@@ -184,6 +184,7 @@ BaseView {
                             anchors.top: parent.top
                             anchors.horizontalCenter: parent.horizontalCenter
                             smooth: true
+                            asynchronous: true
                         }
                         Rectangle {
                             id: textRect

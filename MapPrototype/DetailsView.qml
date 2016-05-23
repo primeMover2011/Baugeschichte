@@ -179,7 +179,8 @@ BaseView {
                             id:myImage
                             width: parent.width
                             height: parent.height
-                            source: "http://baugeschichte.at/"+imageName
+                            source: (imageName.substring(0, 4) === "http") ?
+                                        imageName : "http://baugeschichte.at/"+imageName
                             fillMode: Image.PreserveAspectFit
                             anchors.top: parent.top
                             anchors.horizontalCenter: parent.horizontalCenter

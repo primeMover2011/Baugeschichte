@@ -9,7 +9,7 @@ import Qt.labs.settings 1.0
 import QtQuick.Dialogs 1.2
 import "./"
 
-ApplicationWindow{
+Item {
     id: root
 
     width: 1024
@@ -21,9 +21,6 @@ ApplicationWindow{
 
     property MapComponent mainMap: null
 
-    onClosing: {
-        close.accepted = false
-    }
     ExclusiveGroup {
           id: categoryGroup
     }
@@ -38,8 +35,16 @@ ApplicationWindow{
         id: localHelper
     }
 
-    toolBar: Item {
-        id: theTool
+    Action {
+        id: resloadAction
+        shortcut: "Ctrl+R"
+        onTriggered: {
+            appCore.reloadUI();
+        }
+    }
+
+    Item {
+        id: toolBar
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
@@ -116,14 +121,14 @@ ApplicationWindow{
         Item {
             id: loadingIndicator
             width: height
-            height: theTool.height
+            height: toolBar.height
 
             anchors.right: parent.right
             anchors.top: parent.top
 
             BusyIndicator {
                 anchors.fill: parent
-                anchors.margins: theTool.height * 0.1
+                anchors.margins: toolBar.height * 0.1
 
                 running: root.loading
 
@@ -220,6 +225,7 @@ ApplicationWindow{
         id: background
         color: "#060606"
         anchors.fill: parent
+        anchors.topMargin: toolBar.height
 
         focus: true
         Keys.onReleased: {
@@ -243,7 +249,7 @@ ApplicationWindow{
 
     StackView {
         id: uiStack
-        anchors.fill: parent
+        anchors.fill: background
         objectName: "theStackView"
 
         initialItem: loader_mapOfEurope

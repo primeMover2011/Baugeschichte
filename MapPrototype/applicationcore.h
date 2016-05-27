@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class Dialog;
+class MarkerLoader;
 class HousetrailModel;
 
 //class QQmlApplicationEngine;
@@ -34,7 +34,7 @@ private:
 
     QQuickView* m_view;
     HousetrailModel* m_houseTrailModel;
-    Dialog* m_dialog;
+    MarkerLoader* m_markerLoader;
     QSortFilterProxyModel* m_detailsProxyModel;
     int m_screenDpi;
 };

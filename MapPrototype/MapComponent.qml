@@ -9,12 +9,12 @@ import "./"
 import Baugeschichte 1.0
 
 Map {
-    id: mapOfEurope
+    id: root
     signal search
     signal categories
     signal routes
     property bool followMe:false
-    property bool autoUpdatePois:true
+    property bool autoUpdatePois: true
     property variant currentModel: locationFilter
     property variant scaleLengths: [5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000]
     property alias theItemModel: housetrailMapItems
@@ -40,84 +40,76 @@ Map {
     HouseLocationFilter {
         id: locationFilter
         sourceModel: filteredTrailModel
-        location: mapOfEurope.center
-        radius: mapOfEurope.radius
-        minDistanceFactor: mapOfEurope.zoomLevel > 17 ? 1e-9 : localHelper.dp(0.06)
-    }
-
-    Timer {
-        id: scaleTimer
-        interval: 100
-        running: false
-        repeat: false
-        onTriggered: {
-            mapOfEurope.calculateScale()
-            if (autoUpdatePois)
-            updatePois()
-        }
+        location: root.center
+        radius: root.radius
+        minDistanceFactor: root.zoomLevel > 18 ? 1e-9 : localHelper.dp(0.06)
     }
 
     onCenterChanged: {
-        scaleTimer.restart()
-        //   if (mapOfEurope.followme)
-        //if (mapOfEurope.center !== positionSource.position.coordinate) mapOfEurope.followme = false
+        if (autoUpdatePois) {
+            markerLoader.setLocation(center.latitude, center.longitude);
+        }
     }
 
     onZoomLevelChanged: {
-        scaleTimer.restart()
-        //   if (mapOfEurope.followme) mapOfEurope.center = positionSource.position.coordinate
+        updateRadius();
     }
 
     onWidthChanged: {
-        scaleTimer.restart()
+        updateRadius();
     }
 
     onHeightChanged: {
-        scaleTimer.restart()
+        updateRadius();
     }
 
     MouseArea {
         anchors.fill: parent
         propagateComposedEvents: true
         onClicked: {
-            mapOfEurope.currentID = -1;
+            root.currentID = -1;
         }
     }
 
     Slider {
         id: zoomSlider
-        z: mapOfEurope.z + 3
-        minimumValue: mapOfEurope.minimumZoomLevel
-        maximumValue: mapOfEurope.maximumZoomLevel
+        z: root.z + 3
+        minimumValue: root.minimumZoomLevel
+        maximumValue: root.maximumZoomLevel
         anchors.margins: 10
         anchors.bottom: scale.top
         anchors.top: parent.top
         anchors.right: parent.right
         orientation: Qt.Vertical
-        value: mapOfEurope.zoomLevel
+        value: root.zoomLevel
         onValueChanged: {
-            mapOfEurope.zoomLevel = value
+            root.zoomLevel = value
             //console.log("Zoomlevel: " + mapOfEurope.zoomLevel)
         }
     }
 
-    function updatePois() {
-        var coord1 = mapOfEurope.toCoordinate(Qt.point(0, 0))
-        var coord2 = mapOfEurope.toCoordinate(Qt.point(mapOfEurope.width-1, mapOfEurope.height-1))
-        var dist1 = Math.abs(coord1.latitude - coord2.latitude)
-        var dist2 = Math.abs(coord1.longitude - coord2.longitude)
-        var dist = (dist1 > dist2) ? dist1 : dist2;
-        var radius = dist / 2.0;
-        dialog.getPois(mapOfEurope.center.latitude,mapOfEurope.center.longitude, radius, mapOfEurope.zoomLevel);
+    function updateRadius() {
+        root.calculateScale();
+        if (autoUpdatePois) {
+            var coord1 = root.toCoordinate(Qt.point(0, 0))
+            var coord2 = root.toCoordinate(Qt.point(root.width-1, root.height-1))
+            var dist1 = Math.abs(coord1.latitude - coord2.latitude)
+            var dist2 = Math.abs(coord1.longitude - coord2.longitude)
+            var dist = (dist1 > dist2) ? dist1 : dist2;
+            var radius = dist / 2.0;
 
-        mapOfEurope.radius = mapOfEurope.center.distanceTo(coord1);
+            markerLoader.radius = radius;
+            root.radius = root.center.distanceTo(coord1);
+
+            markerLoader.loadAll = root.zoomLevel > 17;
+        }
     }
 
     function calculateScale() {
         var coord1, coord2, dist, text, f
         f = 0
-        coord1 = mapOfEurope.toCoordinate(Qt.point(0, scale.y))
-        coord2 = mapOfEurope.toCoordinate(
+        coord1 = root.toCoordinate(Qt.point(0, scale.y))
+        coord2 = root.toCoordinate(
                     Qt.point(0 + scaleImage.sourceSize.width, scale.y))
         dist = Math.round(coord1.distanceTo(coord2))
 
@@ -145,12 +137,12 @@ Map {
 
     function resetToMainModel()
     {
-        mapOfEurope.currentModel = locationFilter;
+        root.currentModel = locationFilter;
     }
 
     Item {
         id: scale
-        z: mapOfEurope.z + 3
+        z: root.z + 3
         visible: scaleText.text != "0 m"
         anchors.bottom: parent.bottom
         anchors.right: parent.right
@@ -182,9 +174,6 @@ Map {
             anchors.centerIn: parent
             text: "0 m"
         }
-        Component.onCompleted: {
-            mapOfEurope.calculateScale()
-        }
     }
 
     DensityHelpers {
@@ -198,7 +187,7 @@ Map {
         active: followMe
         updateInterval: 1500
         onPositionChanged: {
-            mapOfEurope.center = myPosition.position.coordinate
+            root.center = myPosition.position.coordinate
             //mapOfEurope.zoomLevel = 12
         }
         onActiveChanged:
@@ -248,7 +237,7 @@ Map {
                 Image {
                     id: image
                     antialiasing: true
-                    source: dbId == mapOfEurope.currentID ? "resources/marker-2-blue.svg" : "resources/marker-2.svg"
+                    source: dbId == root.currentID ? "resources/marker-2-blue.svg" : "resources/marker-2.svg"
                     width: localHelper.dp(50)
                     height: localHelper.dp(50)
                     sourceSize: Qt.size(width, height)
@@ -261,21 +250,21 @@ Map {
                     function changeCurrentItem() {
                         console.log("changing!!")
 
-                        if (mapOfEurope.markerLabel) {
-                            mapOfEurope.markerLabel.destroy();
+                        if (root.markerLabel) {
+                            root.markerLabel.destroy();
                         }
 
                         var component = Qt.createComponent("MarkerLabel.qml");
-                        mapOfEurope.markerLabel = component.createObject(mapOfEurope);
-                        mapOfEurope.markerLabel.mapItem = mapOfEurope;
-                        mapOfEurope.addMapItem(mapOfEurope.markerLabel);
+                        root.markerLabel = component.createObject(root);
+                        root.markerLabel.mapItem = root;
+                        root.addMapItem(root.markerLabel);
 
-                        mapOfEurope.markerLabel.coordinate = mqItem.coordinate
-                        mapOfEurope.markerLabel.z = 9999;
-                        mapOfEurope.markerLabel.id = dbId;
-                        mapOfEurope.markerLabel.title = title
-                        mapOfEurope.markerLabel.visible = true;
-                        mapOfEurope.currentID = dbId;
+                        root.markerLabel.coordinate = mqItem.coordinate
+                        root.markerLabel.z = 9999;
+                        root.markerLabel.id = dbId;
+                        root.markerLabel.title = title
+                        root.markerLabel.visible = true;
+                        root.currentID = dbId;
                     }
                 }
             }
@@ -317,5 +306,9 @@ Map {
                 }
             }
         }//<--MapCircle
+    }
+
+    Component.onCompleted: {
+        root.updateRadius();
     }
 }

@@ -1,5 +1,5 @@
 #include "applicationcore.h"
-#include "dialog.h"
+#include "markerloader.h"
 #include "houselocationfilter.h"
 #include "housetrailimages.h"
 
@@ -12,6 +12,7 @@
 #include <QQuickView>
 #include <QScreen>
 #include <QSortFilterProxyModel>
+#include <QVector>
 
 #if defined(Q_OS_ANDROID)
     #include <QAndroidJniObject>
@@ -23,7 +24,7 @@ ApplicationCore::ApplicationCore(QObject *parent)
     : QObject(parent)
     , m_view(new QQuickView())
     , m_houseTrailModel(new HousetrailModel(this))
-    , m_dialog(new Dialog(m_houseTrailModel, this))
+    , m_markerLoader(new MarkerLoader(this))
     , m_detailsProxyModel(new QSortFilterProxyModel(this))
     , m_screenDpi(calculateScreenDpi())
 {
@@ -41,10 +42,13 @@ ApplicationCore::ApplicationCore(QObject *parent)
     QQmlEngine* engine = m_view->engine();
     QQmlContext *context = engine->rootContext();
     context->setContextProperty(QStringLiteral("appCore"), this);
-    context->setContextProperty(QStringLiteral("dialog"), m_dialog);
+    context->setContextProperty(QStringLiteral("markerLoader"), m_markerLoader);
     context->setContextProperty(QStringLiteral("houseTrailModel"), m_houseTrailModel);
     context->setContextProperty(QStringLiteral("filteredTrailModel"), m_detailsProxyModel);
     context->setContextProperty(QStringLiteral("screenDpi"), m_screenDpi);
+
+    connect(m_markerLoader, SIGNAL(newHousetrail(QVector<HouseTrail>)),
+            m_houseTrailModel, SLOT(append(QVector<HouseTrail>)));
 }
 
 ApplicationCore::~ApplicationCore()

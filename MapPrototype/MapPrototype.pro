@@ -4,12 +4,12 @@ QT += qml quick positioning concurrent svg xml
 android: QT += androidextras
 
 SOURCES += main.cpp \
-    dialog.cpp \
     housetrailimages.cpp \
     clusterproxy.cpp \
     Geohash.cpp \
     houselocationfilter.cpp \
-    applicationcore.cpp
+    applicationcore.cpp \
+    markerloader.cpp
 
 
 RESOURCES += qml.qrc
@@ -31,14 +31,14 @@ INCLUDE_PATH += OPENCV3_PATH_INCLUDE
 include(deployment.pri)
 
 HEADERS += \
-    dialog.h \
     housetrailimages.h \
     clusterproxy.h \
     Geohash.hpp \
     Constants.hpp \
     Utility.hpp \
     houselocationfilter.h \
-    applicationcore.h
+    applicationcore.h \
+    markerloader.h
 
 DISTFILES += \
     android/AndroidManifest.xml \

@@ -17,7 +17,7 @@ Item {
 
     visible: true
 
-    readonly property bool loading: uiStack.currentItem.loading || dialog.loading
+    readonly property bool loading: uiStack.currentItem.loading || markerLoader.loading
 
     property MapComponent mainMap: null
 
@@ -150,9 +150,6 @@ Item {
 
     //    PositionSource
     property variant locationGraz: QtPositioning.coordinate(47.0666667, 15.45)
-    Component.onCompleted: {
-        //dialog.getAllPois();
-    }
 
 /*    menuBar: MenuBar {
         id: mainMenuBar

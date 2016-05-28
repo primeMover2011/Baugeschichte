@@ -175,17 +175,38 @@ BaseView {
                         z: PathView.zOrder
                         anchors.top:parent.top
 
-                        Image{
+                        Image {
                             id:myImage
                             width: parent.width
                             height: parent.height
-                            source: (imageName.substring(0, 4) === "http") ?
-                                        imageName : "http://baugeschichte.at/"+imageName
+                            source: imageUrl(imageName)
                             fillMode: Image.PreserveAspectFit
                             anchors.top: parent.top
                             anchors.horizontalCenter: parent.horizontalCenter
                             smooth: true
                             asynchronous: true
+
+                            function imageUrl(imageName) {
+                                var isRemote = imageName.substring(0, 4) === "http";
+                                if (isRemote) {
+                                    return imageName;
+                                } else {
+                                    var url = "http://baugeschichte.at/" + imageName;
+                                    url += "?iiurlwidth=640"; // load in 640px resolution
+                                    return url;
+                                }
+                            }
+
+                            Text {
+                                id: loadError
+                                width: parent.width
+                                anchors.verticalCenter: parent.verticalCenter
+                                color: "red"
+                                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                                horizontalAlignment: Text.AlignHCenter
+                                text:qsTr("Failure loading iamge from\n") + myImage.source
+                                visible: myImage.status === Image.Error
+                            }
                         }
                         Rectangle {
                             id: textRect

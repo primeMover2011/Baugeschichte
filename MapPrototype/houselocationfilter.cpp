@@ -7,7 +7,7 @@ HouseLocationFilter::HouseLocationFilter(QObject* parent)
     : QSortFilterProxyModel(parent)
     , m_location()
     , m_radius(200.0)
-    , m_minDistanceFactor(0.04)
+    , m_minDistance(100.0)
 {
     setDynamicSortFilter(true);
 }
@@ -22,9 +22,9 @@ double HouseLocationFilter::radius() const
     return m_radius;
 }
 
-double HouseLocationFilter::minDistanceFactor() const
+double HouseLocationFilter::minDistance() const
 {
-    return m_minDistanceFactor;
+    return m_minDistance;
 }
 
 void HouseLocationFilter::setLocation(const QGeoCoordinate& location)
@@ -50,14 +50,14 @@ void HouseLocationFilter::setRadius(double radius)
     invalidateFilter();
 }
 
-void HouseLocationFilter::setMinDistanceFactor(double minDistanceFactor)
+void HouseLocationFilter::setMinDistance(double minDistance)
 {
-    if (std::fabs(minDistanceFactor - m_minDistanceFactor) < 1e-9) {
+    if (std::fabs(minDistance - m_minDistance) < 1e-9) {
         return;
     }
 
-    m_minDistanceFactor = minDistanceFactor;
-    emit minDistanceFactorChanged(minDistanceFactor);
+    m_minDistance = minDistance;
+    emit minDistanceChanged(minDistance);
     m_usedCoordinates.clear();
     invalidateFilter();
 }
@@ -86,9 +86,8 @@ bool HouseLocationFilter::filterAcceptsRow(int source_row, const QModelIndex& so
 
 bool HouseLocationFilter::isCloseToOtherPosition(const QGeoCoordinate& coord) const
 {
-    double minDistance = m_radius * m_minDistanceFactor;
     Q_FOREACH(const QGeoCoordinate& usedCoord, m_usedCoordinates) {
-        if (coord.distanceTo(usedCoord) < minDistance) {
+        if (coord.distanceTo(usedCoord) < m_minDistance) {
             return true;
         }
     }

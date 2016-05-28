@@ -14,14 +14,14 @@ class HouseLocationFilter : public QSortFilterProxyModel
 
     Q_PROPERTY(QGeoCoordinate location READ location WRITE setLocation NOTIFY locationChanged)
     Q_PROPERTY(double radius READ radius WRITE setRadius NOTIFY radiusChanged)
-    Q_PROPERTY(double minDistanceFactor READ minDistanceFactor WRITE setMinDistanceFactor NOTIFY minDistanceFactorChanged)
+    Q_PROPERTY(double minDistance READ minDistance WRITE setMinDistance NOTIFY minDistanceChanged)
 
 public:
     HouseLocationFilter(QObject* parent = nullptr);
 
     const QGeoCoordinate& location() const;
     double radius() const;
-    double minDistanceFactor() const;
+    double minDistance() const;
 
 public slots:
     /**
@@ -30,16 +30,15 @@ public slots:
     void setLocation(const QGeoCoordinate& location);
     void setRadius(double radius);
     /**
-     * Sets the minimal distance between markers.
-     * The distance is this factor * radius
+     * Sets the minimal distance between markers in meters
      */
-    void setMinDistanceFactor(double minDistanceFactor);
+    void setMinDistance(double minDistance);
 
 
 signals:
     void radiusChanged(double radius);
     void locationChanged(const QGeoCoordinate& location);
-    void minDistanceFactorChanged(double minDistanceFactor);
+    void minDistanceChanged(double minDistance);
 
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
@@ -49,7 +48,7 @@ private:
 
     QGeoCoordinate m_location;
     double m_radius;
-    double m_minDistanceFactor;
+    double m_minDistance;
 
     mutable QList<QGeoCoordinate> m_usedCoordinates;
 };

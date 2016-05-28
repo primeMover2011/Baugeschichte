@@ -10,9 +10,11 @@ import Baugeschichte 1.0
 
 Map {
     id: root
+
     signal search
     signal categories
     signal routes
+
     property bool followMe:false
     property bool autoUpdatePois: true
     property variant currentModel: locationFilter
@@ -31,19 +33,15 @@ Map {
         }
     }
 
-    zoomLevel: 16
-
     property bool loading: false
 
     property MarkerLabel markerLabel
 
-    HouseLocationFilter {
-        id: locationFilter
-        sourceModel: filteredTrailModel
-        location: root.center
-        radius: root.radius
-        minDistanceFactor: root.zoomLevel > 18 ? 1e-9 : localHelper.dp(0.06)
-    }
+    readonly property int markerSize: localHelper.dp(50)
+
+    center: QtPositioning.coordinate(47.0666667, 15.45)
+
+    zoomLevel: 16
 
     onCenterChanged: {
         if (autoUpdatePois) {
@@ -61,6 +59,72 @@ Map {
 
     onHeightChanged: {
         updateRadius();
+    }
+
+    function updateRadius() {
+        root.calculateScale();
+        if (autoUpdatePois) {
+            var coord1 = root.toCoordinate(Qt.point(0, 0))
+            var coord2 = root.toCoordinate(Qt.point(root.width-1, root.height-1))
+            var dist1 = Math.abs(coord1.latitude - coord2.latitude)
+            var dist2 = Math.abs(coord1.longitude - coord2.longitude)
+            var dist = (dist1 > dist2) ? dist1 : dist2;
+            var radius = dist / 2.0;
+
+            markerLoader.radius = radius;
+            root.radius = root.center.distanceTo(coord1);
+
+            markerLoader.loadAll = root.zoomLevel > 17;
+
+            if (root.zoomLevel < 18) {
+                var coord3 = root.toCoordinate(Qt.point(root.markerSize, 0))
+                var markerDist = coord1.distanceTo(coord3)
+                locationFilter.minDistance = markerDist;
+            } else {
+                locationFilter.minDistance = 1e-3
+            }
+        }
+    }
+
+    function calculateScale() {
+        var coord1, coord2, dist, text, f
+        f = 0
+        coord1 = root.toCoordinate(Qt.point(0, scale.y))
+        coord2 = root.toCoordinate(
+                    Qt.point(0 + scaleImage.sourceSize.width, scale.y))
+        dist = Math.round(coord1.distanceTo(coord2))
+
+        if (dist === 0) {
+            // not visible
+        } else {
+            for (var i = 0; i < scaleLengths.length - 1; i++) {
+                if (dist < (scaleLengths[i] + scaleLengths[i + 1]) / 2) {
+                    f = scaleLengths[i] / dist
+                    dist = scaleLengths[i]
+                    break
+                }
+            }
+            if (f === 0) {
+                f = dist / scaleLengths[i]
+                dist = scaleLengths[i]
+            }
+        }
+
+        text = Helper.formatDistance(dist)
+        scaleImage.width = (scaleImage.sourceSize.width * f) - 2 * scaleImageLeft.sourceSize.width
+        scaleText.text = text
+    }
+
+    function resetToMainModel()
+    {
+        root.currentModel = locationFilter;
+    }
+
+    HouseLocationFilter {
+        id: locationFilter
+        sourceModel: filteredTrailModel
+        location: root.center
+        radius: root.radius
     }
 
     MouseArea {
@@ -86,58 +150,6 @@ Map {
             root.zoomLevel = value
             //console.log("Zoomlevel: " + mapOfEurope.zoomLevel)
         }
-    }
-
-    function updateRadius() {
-        root.calculateScale();
-        if (autoUpdatePois) {
-            var coord1 = root.toCoordinate(Qt.point(0, 0))
-            var coord2 = root.toCoordinate(Qt.point(root.width-1, root.height-1))
-            var dist1 = Math.abs(coord1.latitude - coord2.latitude)
-            var dist2 = Math.abs(coord1.longitude - coord2.longitude)
-            var dist = (dist1 > dist2) ? dist1 : dist2;
-            var radius = dist / 2.0;
-
-            markerLoader.radius = radius;
-            root.radius = root.center.distanceTo(coord1);
-
-            markerLoader.loadAll = root.zoomLevel > 17;
-        }
-    }
-
-    function calculateScale() {
-        var coord1, coord2, dist, text, f
-        f = 0
-        coord1 = root.toCoordinate(Qt.point(0, scale.y))
-        coord2 = root.toCoordinate(
-                    Qt.point(0 + scaleImage.sourceSize.width, scale.y))
-        dist = Math.round(coord1.distanceTo(coord2))
-
-        if (dist === 0) {
-
-            // not visible
-        } else {
-            for (var i = 0; i < scaleLengths.length - 1; i++) {
-                if (dist < (scaleLengths[i] + scaleLengths[i + 1]) / 2) {
-                    f = scaleLengths[i] / dist
-                    dist = scaleLengths[i]
-                    break
-                }
-            }
-            if (f === 0) {
-                f = dist / scaleLengths[i]
-                dist = scaleLengths[i]
-            }
-        }
-
-        text = Helper.formatDistance(dist)
-        scaleImage.width = (scaleImage.sourceSize.width * f) - 2 * scaleImageLeft.sourceSize.width
-        scaleText.text = text
-    }
-
-    function resetToMainModel()
-    {
-        root.currentModel = locationFilter;
     }
 
     Item {
@@ -211,8 +223,6 @@ Map {
 //        }
 //    }
 
-    center: QtPositioning.coordinate(47.0666667, 15.45)
-
     MapItemView {
         id: housetrailMapItems
         model: currentModel //houseTrailModel
@@ -238,8 +248,8 @@ Map {
                     id: image
                     antialiasing: true
                     source: dbId == root.currentID ? "resources/marker-2-blue.svg" : "resources/marker-2.svg"
-                    width: localHelper.dp(50)
-                    height: localHelper.dp(50)
+                    width: root.markerSize
+                    height: root.markerSize
                     sourceSize: Qt.size(width, height)
                     fillMode: Image.PreserveAspectFit
                 }

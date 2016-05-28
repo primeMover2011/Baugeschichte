@@ -27,6 +27,7 @@ ApplicationCore::ApplicationCore(QObject *parent)
     , m_markerLoader(new MarkerLoader(this))
     , m_detailsProxyModel(new QSortFilterProxyModel(this))
     , m_screenDpi(calculateScreenDpi())
+    , m_mapProvider("osm")
 {
     qRegisterMetaType<HouseTrail>("HouseTrail");
     qRegisterMetaType<QVector<HouseTrail> >("QVector<HouseTrail>");
@@ -65,6 +66,21 @@ void ApplicationCore::showView()
 void ApplicationCore::reloadUI()
 {
     QMetaObject::invokeMethod(this, "doReloadUI", Qt::QueuedConnection);
+}
+
+QString ApplicationCore::mapProvider() const
+{
+    return m_mapProvider;
+}
+
+void ApplicationCore::setMapProvider(QString mapProvider)
+{
+    if (mapProvider == m_mapProvider) {
+        return;
+    }
+
+    m_mapProvider = mapProvider;
+    emit mapProviderChanged(m_mapProvider);
 }
 
 void ApplicationCore::doReloadUI()

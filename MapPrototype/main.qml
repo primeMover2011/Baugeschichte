@@ -36,10 +36,19 @@ Item {
     }
 
     Action {
-        id: resloadAction
+        id: reloadAction
         shortcut: "Ctrl+R"
         onTriggered: {
             appCore.reloadUI();
+        }
+    }
+    Action {
+        id: settingsMenuAction
+        shortcut: "Ctrl+M"
+        onTriggered: {
+            uiStack.push({
+                             item: Qt.resolvedUrl("SettingsView.qml")
+                         });
         }
     }
 
@@ -241,6 +250,12 @@ Item {
                     }
                 }
             }
+            if (event.key === Qt.Key_Menu) {
+                event.accepted = true;
+                uiStack.push({
+                                 item: Qt.resolvedUrl("SettingsView.qml")
+                             });
+            }
         }
     }
 
@@ -282,6 +297,7 @@ Item {
                         id: settings
                         property alias lastSeenLat: mapOfEurope.center.latitude
                         property alias lastSeenLon: mapOfEurope.center.longitude
+                        property alias lastZoomLevel: mapOfEurope.zoomLevel
                     }
 
                     center: locationGraz
@@ -317,6 +333,18 @@ Item {
             function closeDetails() {
                 if (detailsOpen) {
                     item.closeDetails();
+                }
+            }
+
+            function reloadMapItem() {
+                loader_mapOfEurope.sourceComponent = undefined;
+                loader_mapOfEurope.sourceComponent = component_mapOfEurope;
+            }
+
+            Connections {
+                target: appCore
+                onMapProviderChanged: {
+                    loader_mapOfEurope.reloadMapItem();
                 }
             }
         }

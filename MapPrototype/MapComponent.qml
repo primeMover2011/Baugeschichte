@@ -38,10 +38,11 @@ Map {
     property MarkerLabel markerLabel
 
     readonly property int markerSize: localHelper.dp(50)
+    readonly property real defaultZoomLevel: 16
 
     center: QtPositioning.coordinate(47.0666667, 15.45)
 
-    zoomLevel: 16
+    zoomLevel: defaultZoomLevel
 
     onCenterChanged: {
         if (autoUpdatePois) {
@@ -208,20 +209,26 @@ Map {
         }
     }
 
-    plugin: Plugin {
+    plugin: initPlugin()
+    function initPlugin() {
+        return appCore.mapProvider === "osm" ? osmPlugin : mapBoxPlugin;
+    }
+    Plugin {
+        id: osmPlugin
         name: "osm"
     }
-//    Plugin {
-//        name: "mapbox"
-//        PluginParameter {
-//            name: "mapbox.map_id"
-//            value: "primemover.c5fe94e8"
-//        }
-//        PluginParameter {
-//            name: "mapbox.access_token"
-//            value: "pk.eyJ1IjoicHJpbWVtb3ZlciIsImEiOiIzNjFlYWNjZmZhMjAyNGFhMWQ0NDM0ZDIyMTE4YmEyMCJ9.d5wi3uI5VayKiniPnkxojg"
-//        }
-//    }
+    Plugin {
+        id: mapBoxPlugin
+        name: "mapbox"
+        PluginParameter {
+            name: "mapbox.map_id"
+            value: "primemover.c5fe94e8"
+        }
+        PluginParameter {
+            name: "mapbox.access_token"
+            value: "pk.eyJ1IjoicHJpbWVtb3ZlciIsImEiOiIzNjFlYWNjZmZhMjAyNGFhMWQ0NDM0ZDIyMTE4YmEyMCJ9.d5wi3uI5VayKiniPnkxojg"
+        }
+    }
 
     MapItemView {
         id: housetrailMapItems
@@ -320,5 +327,6 @@ Map {
 
     Component.onCompleted: {
         root.updateRadius();
+        zoomLevel = defaultZoomLevel;
     }
 }

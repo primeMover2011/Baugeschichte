@@ -3,6 +3,8 @@
 
 #include <QDebug>
 
+#include <cmath>
+
 HouseLocationFilter::HouseLocationFilter(QObject* parent)
     : QSortFilterProxyModel(parent)
     , m_location()
@@ -41,7 +43,7 @@ void HouseLocationFilter::setLocation(const QGeoCoordinate& location)
 
 void HouseLocationFilter::setRadius(double radius)
 {
-    if (std::fabs(m_radius - radius) < 1e-9)
+    if (std::abs(m_radius - radius) < 1e-9)
         return;
 
     m_radius = radius;
@@ -52,7 +54,7 @@ void HouseLocationFilter::setRadius(double radius)
 
 void HouseLocationFilter::setMinDistance(double minDistance)
 {
-    if (std::fabs(minDistance - m_minDistance) < 1e-9) {
+    if (std::abs(minDistance - m_minDistance) < 1e-9) {
         return;
     }
 

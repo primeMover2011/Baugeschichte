@@ -4,6 +4,9 @@ lessThan(QT_VERSION, "5.6.0") {
 
 TEMPLATE = subdirs
 
-SUBDIRS += \
-    src \
-    tests
+SUBDIRS = src
+
+android: {
+} else {
+SUBDIRS += tests
+}

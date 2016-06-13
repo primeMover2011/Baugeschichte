@@ -35,5 +35,6 @@
         <file>MarkerLabel.qml</file>
         <file>resources/spinner.png</file>
         <file>SettingsView.qml</file>
+        <file>RouteLine.qml</file>
     </qresource>
 </RCC>

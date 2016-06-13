@@ -21,13 +21,6 @@ BaseView {
         shouldEncode: false //due to searchapi problems when encoding routes...
         onNewobject: {
             routeMap.clearMapItems();
-            routeMap.routeLine = Qt.createQmlObject("import QtLocation 5.4; MapPolyline {}", routeMap);
-            routeMap.routeLine.line.width = 3;
-            routeMap.routeLine.line.color = "green";
-            routeMap.addMapItem(routeMap.routeLine);
-
-            // disabled direct line connection for route visualisation for now
-            routeMap.routeLine.visible = false;
 
             for (var key in magneto.payload) {
                 var jsonObject = magneto.payload[key]
@@ -40,11 +33,11 @@ BaseView {
                     "coord": {"latitude":jsonObject.lat, "longitude": jsonObject.lon}
                 }
                 model.append(modelObject)
-
-                routeMap.routeLine.addCoordinate(QtPositioning.coordinate(jsonObject.lat, jsonObject.lon));
             }
 
-            routeMap.fitViewportToMapItems()
+            routeMap.routeLine = Qt.createQmlObject("import QtLocation 5.6; RouteLine {}", routeMap);
+            routeMap.addMapItem(routeMap.routeLine);
+            routeMap.routeLine.source = "http://baugeschichte.at/" + magneto.kml;
         }
         searchString: "http://baugeschichte.at/app/v1/getData.php?action=getRoutePoints&name="
 
@@ -60,7 +53,7 @@ BaseView {
     }
 
     MapComponent {
-        id:routeMap
+        id: routeMap
         width: splitScreen ? details.x : parent.width
         height: parent.height
 
@@ -76,7 +69,15 @@ BaseView {
         }
         followMe: followMeActive
 
-        property MapPolyline routeLine
+        property RouteLine routeLine
+        Connections {
+            target: routeMap.routeLine
+            onLoadingChanged: {
+                if (!loading) {
+                    routeMap.fitViewportToMapItems();
+                }
+            }
+        }
     }
 
     DetailsView {

@@ -1,16 +1,9 @@
 TEMPLATE = app
 
+TARGET = Baugeschichte
+
 QT += qml quick positioning concurrent svg xml
 android: QT += androidextras
-
-SOURCES += main.cpp \
-    housetrailimages.cpp \
-    clusterproxy.cpp \
-    Geohash.cpp \
-    houselocationfilter.cpp \
-    applicationcore.cpp \
-    markerloader.cpp
-
 
 RESOURCES += qml.qrc
 CONFIG += c++11
@@ -27,8 +20,13 @@ OPENCV3_PATH_LIBS =
 
 INCLUDE_PATH += OPENCV3_PATH_INCLUDE
 
-
-include(deployment.pri)
+SOURCES += main.cpp \
+    housetrailimages.cpp \
+    clusterproxy.cpp \
+    Geohash.cpp \
+    houselocationfilter.cpp \
+    applicationcore.cpp \
+    markerloader.cpp
 
 HEADERS += \
     housetrailimages.h \
@@ -50,4 +48,6 @@ DISTFILES += \
     android/gradlew.bat
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+include(deployment.pri)
 

@@ -49,12 +49,25 @@ FocusScope {
     property alias prefix: prefix.text
 
     signal accepted
+
+    height: localHelper.dp(60)
+
     DensityHelpers {
         id:localHelper
     }
 
     Rectangle {
+        id: background
         anchors.fill: parent
+        color: "#999999"
+
+        Rectangle { color: "#c1c1c1"; width: parent.width; height: 1 }
+        Rectangle { color: "#707070"; width: parent.width; height: 1; anchors.bottom: parent.bottom }
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        anchors { fill: parent; margins: 6 }
         border.color: "#707070"
         color: "#c1c1c1"
         radius: 4
@@ -85,7 +98,14 @@ FocusScope {
             verticalAlignment: Text.AlignVCenter
             font.pixelSize: localHelper.largeFontSize
             color: "#707070"
-            onAccepted: wrapper.accepted()
+            onAccepted: {
+                if (Qt.inputMethod.visible) {
+                    Qt.inputMethod.hide()
+                }
+                console.log("accepted")
+
+                wrapper.accepted();
+            }
         }
 
         Image {

@@ -116,7 +116,7 @@ void ApplicationCore::doReloadUI()
 
 QString ApplicationCore::mainQMLFile() const
 {
-    QFileInfo mainFile(QStringLiteral("../Baugeschichte/MapPrototype/main.qml"));
+    QFileInfo mainFile(QStringLiteral("../../Baugeschichte/MapPrototype/src/main.qml"));
     if (mainFile.exists()) {
         qDebug() << "Load UI from" << mainFile.absoluteFilePath();
         return mainFile.absoluteFilePath();

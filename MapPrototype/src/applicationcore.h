@@ -28,6 +28,9 @@ public:
     QString mapProvider() const;
     void setMapProvider(QString mapProvider);
 
+public slots:
+    void handleApplicationStateChange(Qt::ApplicationState state);
+
 signals:
     void mapProviderChanged(QString mapProvider);
 
@@ -37,6 +40,8 @@ private slots:
 private:
     QString mainQMLFile() const;
     int calculateScreenDpi() const;
+    void saveMarkers();
+    void loadMarkers();
 
     QQuickView* m_view;
     HousetrailModel* m_houseTrailModel;

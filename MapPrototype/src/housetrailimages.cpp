@@ -113,6 +113,11 @@ QVariant HousetrailModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+const HouseTrail* HousetrailModel::get(int idx) const
+{
+    return m_Housetrails.at(idx);
+}
+
 QHash<int, QByteArray> HousetrailModel::roleNames() const
 {
     QHash<int, QByteArray> roles;

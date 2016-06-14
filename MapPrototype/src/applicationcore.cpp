@@ -5,13 +5,19 @@
 
 #include <QDebug>
 #include <QGuiApplication>
+#include <QFile>
 #include <QFileInfo>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QDir>
 #include <QtQml>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickView>
 #include <QScreen>
 #include <QSortFilterProxyModel>
+#include <QStandardPaths>
 #include <QVector>
 
 #if defined(Q_OS_ANDROID)
@@ -50,10 +56,13 @@ ApplicationCore::ApplicationCore(QObject *parent)
 
     connect(m_markerLoader, SIGNAL(newHousetrail(QVector<HouseTrail>)),
             m_houseTrailModel, SLOT(append(QVector<HouseTrail>)));
+
+    loadMarkers();
 }
 
 ApplicationCore::~ApplicationCore()
 {
+    saveMarkers();
     delete(m_view);
 }
 
@@ -81,6 +90,21 @@ void ApplicationCore::setMapProvider(QString mapProvider)
 
     m_mapProvider = mapProvider;
     emit mapProviderChanged(m_mapProvider);
+}
+
+void ApplicationCore::handleApplicationStateChange(Qt::ApplicationState state)
+{
+    switch (state) {
+    case Qt::ApplicationHidden:
+    case Qt::ApplicationInactive:
+        saveMarkers();
+        break;
+    case Qt::ApplicationActive:
+        loadMarkers();
+        break;
+    default:
+        break;
+    }
 }
 
 void ApplicationCore::doReloadUI()
@@ -119,4 +143,72 @@ int ApplicationCore::calculateScreenDpi() const
         return 96;
     }
 #endif
+}
+
+void ApplicationCore::saveMarkers()
+{
+    if (m_houseTrailModel->rowCount() == 0) {
+        return;
+    }
+
+    QJsonArray markerArray;
+    for (int i=0; i< m_houseTrailModel->rowCount(); ++i) {
+        QJsonObject object;
+        object["dbId"] = m_houseTrailModel->get(i)->dbId();
+        object["title"] = m_houseTrailModel->get(i)->houseTitle();
+        object["coord_lat"] = m_houseTrailModel->get(i)->theLocation().latitude();
+        object["coord_lon"] = m_houseTrailModel->get(i)->theLocation().longitude();
+        object["category"] = m_houseTrailModel->get(i)->categories();
+        object["geohash"] = m_houseTrailModel->get(i)->geoHash();
+        markerArray.append(object);
+    }
+
+    QString markerFile = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    QDir dir;
+    dir.mkpath(markerFile);
+    markerFile += QStringLiteral("/markers.json");
+
+    QJsonDocument doc(markerArray);
+    QFile file(markerFile);
+    file.open(QIODevice::WriteOnly);
+    if (!file.isOpen()) {
+        qWarning() << Q_FUNC_INFO << "unable to open file" << markerFile;
+    }
+    file.write(doc.toJson());
+}
+
+void ApplicationCore::loadMarkers()
+{
+    QString markerFile = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    markerFile += QStringLiteral("/markers.json");
+
+    QFile file(markerFile);
+    if (!file.exists()) {
+        qWarning() << Q_FUNC_INFO << "file does not exist" << markerFile;
+        return;
+    }
+    file.open(QIODevice::ReadOnly);
+    if (!file.isOpen()) {
+        qWarning() << Q_FUNC_INFO << "unable to open file" << markerFile;
+        return;
+    }
+
+    QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+    QJsonArray array = doc.array();
+
+    QVector<HouseTrail> houses;
+    houses.reserve(array.size());
+    Q_FOREACH(const QJsonValue& value, array) {
+        QJsonObject object = value.toObject();
+        HouseTrail house;
+        house.setDbId(object["dbId"].toInt());
+        house.setHouseTitle(object["title"].toString());
+        QGeoCoordinate coord(object["coord_lat"].toDouble(), object["coord_lon"].toDouble());
+        house.setTheLocation(coord);
+        house.setCategories(object["category"].toString());
+        house.setGeoHash(object["geohash"].toString());
+        houses.push_back(house);
+    }
+
+    m_houseTrailModel->append(houses);
 }

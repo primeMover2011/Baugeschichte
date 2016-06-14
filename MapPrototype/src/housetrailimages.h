@@ -73,11 +73,13 @@ public:
     Q_SLOT void append(const QVector<HouseTrail>& aHouseTrail);
     Q_INVOKABLE void clear();
 
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
     bool contains(qint64 id);
 
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+
+    const HouseTrail* get(int idx) const;
 
 protected:
     QHash<int, QByteArray> roleNames() const;

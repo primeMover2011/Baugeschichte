@@ -83,7 +83,7 @@ Item {
                 id: searchButton
                 source: "resources/System-search.svg"
                 onClicked: {
-                    mainMap.currentID = -1;
+                    appCore.selectedHouseId = -1;
                     uiStack.pop(null);
                     uiStack.push({
                                      item: Qt.resolvedUrl("SearchPage.qml")
@@ -95,7 +95,7 @@ Item {
                 id: categoriesButton
                 source: "resources/Edit-find-cats.svg"
                 onClicked: {
-                    mainMap.currentID = -1;
+                    appCore.selectedHouseId = -1;
                     uiStack.pop(null);
                     uiStack.push({
                                      item: Qt.resolvedUrl("CategoryselectionView.qml")
@@ -119,7 +119,7 @@ Item {
                 id: routesButton
                 source: "resources/Edit-check-sheet.svg"
                 onClicked: {
-                    mainMap.currentID = -1;
+                    appCore.selectedHouseId = -1;
                     uiStack.push({
                                      item: Qt.resolvedUrl("RouteView.qml")
                                  })
@@ -244,7 +244,7 @@ Item {
                 } else {
                     if (uiStack.depth > 1) {
                         uiStack.pop()
-                        loader_mapOfEurope.item.currentID = -1;
+                        lappCore.selectedHouseId = -1;
                     } else {
                         shutDownDialog.visible = true
                     }
@@ -305,7 +305,6 @@ Item {
                         console.log("SelectedPoiChanged Begin: "+selectedPoi)
                         details.searchFor = selectedPoi;
                     }
-
                     Component.onCompleted: {
                         root.mainMap = mapOfEurope;
                     }
@@ -321,6 +320,13 @@ Item {
                     clip: true
 
                     visible: searchFor != ""
+
+                    Connections {
+                        target: appCore
+                        onSelectedHouseIdChanged: {
+                            details.searchFor = houseTrailModel.getHouseTitleById(appCore.selectedHouseId);
+                        }
+                    }
                 }
             }
         }

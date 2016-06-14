@@ -14,9 +14,6 @@ BaseView {
             }
         }
         searchString: "http://baugeschichte.at/api.php?action=query&list=search&srwhat=text&format=json&srsearch="
-        onIsLoaded: {
-            console.debug("Reload searchModel")
-        }
     }
 
     LineInput {
@@ -45,6 +42,10 @@ BaseView {
             text: title
             //onClicked: stackView.push(Qt.resolvedUrl(page))
             onSelected: uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor: wot/*textitem.text*/}})
+//            onSelected: {
+//                appCore.selectedHouseId = ???;
+//                uiStack.pop(null);
+//            }
         }
     }
 

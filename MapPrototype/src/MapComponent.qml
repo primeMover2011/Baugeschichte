@@ -23,12 +23,14 @@ Map {
     property double radius: 100
 
     property string selectedPoi: ""
-    property int currentID: -1
-    onCurrentIDChanged: {
-        if (currentID < 0) {
-            selectedPoi = "";
-            if (markerLabel) {
-                markerLabel.destroy();
+    Connections {
+        target: appCore
+        onSelectedHouseIdChanged: {
+            if (appCore.selectedHouseId < 0) {
+                selectedPoi = "";
+                if (markerLabel) {
+                    markerLabel.destroy();
+                }
             }
         }
     }
@@ -132,7 +134,7 @@ Map {
         anchors.fill: parent
         propagateComposedEvents: true
         onClicked: {
-            root.currentID = -1;
+            appCore.selectedHouseId = -1;
         }
     }
 
@@ -254,7 +256,8 @@ Map {
                 Image {
                     id: image
                     antialiasing: true
-                    source: dbId == root.currentID ? "resources/marker-2-blue.svg" : "resources/marker-2.svg"
+                    source: dbId == appCore.selectedHouseId ? "resources/marker-2-blue.svg" :
+                                                              "resources/marker-2.svg"
                     width: root.markerSize
                     height: root.markerSize
                     sourceSize: Qt.size(width, height)
@@ -281,7 +284,7 @@ Map {
                         root.markerLabel.id = dbId;
                         root.markerLabel.title = title
                         root.markerLabel.visible = true;
-                        root.currentID = dbId;
+                        appCore.selectedHouseId = dbId;
                     }
                 }
             }

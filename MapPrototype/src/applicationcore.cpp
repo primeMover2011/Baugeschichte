@@ -34,6 +34,7 @@ ApplicationCore::ApplicationCore(QObject *parent)
     , m_detailsProxyModel(new QSortFilterProxyModel(this))
     , m_screenDpi(calculateScreenDpi())
     , m_mapProvider("osm")
+    , m_selectedHouseId(-1)
 {
     qRegisterMetaType<HouseTrail>("HouseTrail");
     qRegisterMetaType<QVector<HouseTrail> >("QVector<HouseTrail>");
@@ -92,6 +93,11 @@ void ApplicationCore::setMapProvider(QString mapProvider)
     emit mapProviderChanged(m_mapProvider);
 }
 
+qint64 ApplicationCore::selectedHouseId() const
+{
+    return m_selectedHouseId;
+}
+
 void ApplicationCore::handleApplicationStateChange(Qt::ApplicationState state)
 {
     switch (state) {
@@ -105,6 +111,16 @@ void ApplicationCore::handleApplicationStateChange(Qt::ApplicationState state)
     default:
         break;
     }
+}
+
+void ApplicationCore::setSelectedHouseId(qint64 selectedHouseId)
+{
+    if (m_selectedHouseId == selectedHouseId) {
+        return;
+    }
+
+    m_selectedHouseId = selectedHouseId;
+    emit selectedHouseIdChanged(selectedHouseId);
 }
 
 void ApplicationCore::doReloadUI()

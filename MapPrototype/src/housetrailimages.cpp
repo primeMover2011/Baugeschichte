@@ -90,7 +90,8 @@ int HousetrailModel::rowCount(const QModelIndex &parent) const
     return m_Housetrails.count();
 }
 
-bool HousetrailModel::contains(qint64 id) {
+bool HousetrailModel::contains(qint64 id) const
+{
     return m_Contained.contains(id);
 }
 
@@ -116,6 +117,16 @@ QVariant HousetrailModel::data(const QModelIndex &index, int role) const
 const HouseTrail* HousetrailModel::get(int idx) const
 {
     return m_Housetrails.at(idx);
+}
+
+QString HousetrailModel::getHouseTitleById(qint64 id) const
+{
+    if (!contains(id)) {
+        return QString();
+    }
+
+    HouseTrail* house = m_Contained.value(id);
+    return house->houseTitle();
 }
 
 QHash<int, QByteArray> HousetrailModel::roleNames() const

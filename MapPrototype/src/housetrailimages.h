@@ -75,11 +75,12 @@ public:
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
-    bool contains(qint64 id);
+    bool contains(qint64 id) const;
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
     const HouseTrail* get(int idx) const;
+    Q_INVOKABLE QString getHouseTitleById(qint64 id) const;
 
 protected:
     QHash<int, QByteArray> roleNames() const;

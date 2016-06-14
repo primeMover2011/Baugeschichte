@@ -17,6 +17,7 @@ class QSortFilterProxyModel;
 class ApplicationCore : public QObject
 {
     Q_PROPERTY(QString mapProvider READ mapProvider WRITE setMapProvider NOTIFY mapProviderChanged)
+    Q_PROPERTY(qint64 selectedHouseId READ selectedHouseId WRITE setSelectedHouseId NOTIFY selectedHouseIdChanged)
     Q_OBJECT
 public:
     explicit ApplicationCore(QObject *parent = 0);
@@ -28,11 +29,17 @@ public:
     QString mapProvider() const;
     void setMapProvider(QString mapProvider);
 
+    qint64 selectedHouseId() const;
+
 public slots:
     void handleApplicationStateChange(Qt::ApplicationState state);
 
+    void setSelectedHouseId(qint64 selectedHouseId);
+
 signals:
     void mapProviderChanged(QString mapProvider);
+
+    void selectedHouseIdChanged(qint64 selectedHouseId);
 
 private slots:
     void doReloadUI();
@@ -49,6 +56,7 @@ private:
     QSortFilterProxyModel* m_detailsProxyModel;
     int m_screenDpi;
     QString m_mapProvider;
+    qint64 m_selectedHouseId;
 };
 
 #endif // APPLICATIONCORE_H

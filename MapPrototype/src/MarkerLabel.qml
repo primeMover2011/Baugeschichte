@@ -40,7 +40,7 @@ MapQuickItem {
             function selectPoi(aTitle) {
                 console.log("textItem poi selected...")
                 mapItem.selectedPoi = aTitle
-                mapItem.currentID = root.id;
+                appCore.selectedHouseId = root.id;
 
                 mapItem.center = root.coordinate;
                 if (mapItem.zoomLevel < 18) {

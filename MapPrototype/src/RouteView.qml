@@ -62,7 +62,7 @@ BaseView {
 
         text: searchModel.error
         color: "red"
-        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+        wrapMode: Text.Wrap
     }
 }
 

@@ -202,7 +202,7 @@ BaseView {
                                 width: parent.width
                                 anchors.verticalCenter: parent.verticalCenter
                                 color: "red"
-                                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                                wrapMode: Text.Wrap
                                 horizontalAlignment: Text.AlignHCenter
                                 text:qsTr("Failure loading iamge from\n") + myImage.source
                                 visible: myImage.status === Image.Error
@@ -224,7 +224,7 @@ BaseView {
                                 smooth: true
                                 font.pixelSize: localHelper.smallFontSize
                                 horizontalAlignment: Text.AlignHCenter
-                                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                                wrapMode: Text.Wrap
                             }
                         }
 
@@ -262,7 +262,7 @@ BaseView {
                         smooth: true
                         font.pixelSize: localHelper.defaultFontSize
                         anchors.margins: localHelper.dp(5)
-                        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                        wrapMode: Text.Wrap
                     }
 
                     TextArea {

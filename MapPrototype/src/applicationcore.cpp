@@ -3,21 +3,24 @@
 #include "houselocationfilter.h"
 #include "housetrailimages.h"
 
-#include <QDebug>
 #include <QGuiApplication>
+#include <QDebug>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QDir>
-#include <QtQml>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickView>
 #include <QScreen>
 #include <QSortFilterProxyModel>
 #include <QStandardPaths>
+#include <QtQml>
 #include <QVector>
 
 #if defined(Q_OS_ANDROID)
@@ -34,7 +37,10 @@ ApplicationCore::ApplicationCore(QObject *parent)
     , m_detailsProxyModel(new QSortFilterProxyModel(this))
     , m_screenDpi(calculateScreenDpi())
     , m_mapProvider("osm")
-    , m_selectedHouseId(-1)
+    , m_selectedHouse("")
+    , m_currentMapPosition(-1.0, -1.0)
+    , m_showDetails(false)
+    , m_housePositionLoader(new QNetworkAccessManager(this))
 {
     qRegisterMetaType<HouseTrail>("HouseTrail");
     qRegisterMetaType<QVector<HouseTrail> >("QVector<HouseTrail>");
@@ -57,6 +63,9 @@ ApplicationCore::ApplicationCore(QObject *parent)
 
     connect(m_markerLoader, SIGNAL(newHousetrail(QVector<HouseTrail>)),
             m_houseTrailModel, SLOT(append(QVector<HouseTrail>)));
+
+    connect(m_housePositionLoader, &QNetworkAccessManager::finished,
+            this, &ApplicationCore::handleLoadedHouseCoordinates);
 
     loadMarkers();
 }
@@ -93,9 +102,33 @@ void ApplicationCore::setMapProvider(QString mapProvider)
     emit mapProviderChanged(m_mapProvider);
 }
 
-qint64 ApplicationCore::selectedHouseId() const
+QString ApplicationCore::selectedHouse() const
 {
-    return m_selectedHouseId;
+    return m_selectedHouse;
+}
+
+const QGeoCoordinate&ApplicationCore::currentMapPosition() const
+{
+    return m_currentMapPosition;
+}
+
+bool ApplicationCore::showDetails() const
+{
+    return m_showDetails;
+}
+
+void ApplicationCore::centerSelectedHouse()
+{
+    HouseTrail * house = m_houseTrailModel->getHouseByTitle(m_selectedHouse);
+    if (house != nullptr) {
+        setCurrentMapPosition(house->theLocation());
+        emit requestFullZoomIn();
+    } else {
+        QString requestString = QString("http://baugeschichte.at/api.php?action=ask&query=[[%1]]|%3FKoordinaten|%3FPostleitzahl&format=json")
+                .arg(m_selectedHouse);
+        QNetworkRequest request = QNetworkRequest(QUrl(requestString));
+        m_housePositionLoader->get(request);
+    }
 }
 
 void ApplicationCore::handleApplicationStateChange(Qt::ApplicationState state)
@@ -113,14 +146,38 @@ void ApplicationCore::handleApplicationStateChange(Qt::ApplicationState state)
     }
 }
 
-void ApplicationCore::setSelectedHouseId(qint64 selectedHouseId)
+void ApplicationCore::setSelectedHouse(const QString& selectedHouse)
 {
-    if (m_selectedHouseId == selectedHouseId) {
+    if (m_selectedHouse == selectedHouse) {
         return;
     }
 
-    m_selectedHouseId = selectedHouseId;
-    emit selectedHouseIdChanged(selectedHouseId);
+    m_selectedHouse = selectedHouse;
+    emit selectedHouseChanged(selectedHouse);
+
+    if (m_selectedHouse.isEmpty()) {
+        setShowDetails(false);
+    }
+}
+
+void ApplicationCore::setCurrentMapPosition(const QGeoCoordinate& currentMapPosition)
+{
+    if (m_currentMapPosition == currentMapPosition) {
+        return;
+    }
+
+    m_currentMapPosition = currentMapPosition;
+    emit currentMapPositionChanged(currentMapPosition);
+}
+
+void ApplicationCore::setShowDetails(bool showDetails)
+{
+    if (m_showDetails == showDetails) {
+        return;
+    }
+
+    m_showDetails = showDetails;
+    emit showDetailsChanged(showDetails);
 }
 
 void ApplicationCore::doReloadUI()
@@ -128,6 +185,65 @@ void ApplicationCore::doReloadUI()
     QQmlEngine* engine = m_view->engine();
     engine->clearComponentCache();
     m_view->setSource(mainQMLFile());
+}
+
+void ApplicationCore::handleLoadedHouseCoordinates(QNetworkReply* reply)
+{
+    if (reply == nullptr) {
+        return;
+    }
+
+    if (reply->error() != QNetworkReply::NoError)
+    {
+        qDebug() << Q_FUNC_INFO << "network error";
+        reply->deleteLater();
+        return;
+    }
+
+    const qint64 available = reply->bytesAvailable();
+    if (available <= 0)
+    {
+        qDebug() << Q_FUNC_INFO << "No data in network reply";
+        reply->deleteLater();
+        return;
+    }
+
+    const QByteArray buffer = QString::fromUtf8(reply->readAll()).toLatin1();
+    reply->deleteLater();
+    QJsonParseError parseError;
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(buffer, &parseError);
+    if (QJsonParseError::NoError != parseError.error)
+    {
+        qDebug() << Q_FUNC_INFO << parseError.errorString();
+        return;
+    }
+    if (!jsonDoc.isObject())
+    {
+        qDebug() << Q_FUNC_INFO << "no object..." << jsonDoc.toVariant();
+        return;
+    }
+
+    QJsonObject infoObject = jsonDoc.object();
+
+    QJsonObject resultsObject = infoObject["query"].toObject()["results"].toObject();
+    if (resultsObject.isEmpty()) {
+        qDebug() << Q_FUNC_INFO << "Error parsing the JSON object";
+        return;
+    }
+    QJsonObject mainObject = (*resultsObject.begin()).toObject();
+    QJsonObject printoutsObject = mainObject["printouts"].toObject();
+    QJsonArray coordsArray = printoutsObject["Koordinaten"].toArray();
+
+    if (coordsArray.isEmpty()) {
+        qDebug() << Q_FUNC_INFO << "Error parsing the JSON object coords";
+        return;
+    }
+
+    QJsonObject coordObject = coordsArray.at(0).toObject();
+    QGeoCoordinate coord(coordObject["lat"].toDouble(), coordObject["lon"].toDouble());
+
+    setCurrentMapPosition(coord);
+    emit requestFullZoomIn();
 }
 
 QString ApplicationCore::mainQMLFile() const

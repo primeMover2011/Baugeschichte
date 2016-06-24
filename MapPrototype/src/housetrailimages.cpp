@@ -4,6 +4,7 @@
 
 #include <QDebug>
 
+#include <algorithm>
 #include <set>
 
 HouseTrail::HouseTrail()
@@ -127,6 +128,16 @@ QString HousetrailModel::getHouseTitleById(qint64 id) const
 
     HouseTrail* house = m_Contained.value(id);
     return house->houseTitle();
+}
+
+HouseTrail* HousetrailModel::getHouseByTitle(const QString& title) const
+{
+    for (auto house : m_Housetrails) {
+        if (house->houseTitle() == title) {
+            return house;
+        }
+    }
+    return nullptr;
 }
 
 QHash<int, QByteArray> HousetrailModel::roleNames() const

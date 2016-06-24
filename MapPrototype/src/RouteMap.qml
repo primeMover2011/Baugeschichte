@@ -8,10 +8,6 @@ BaseView {
     readonly property bool detailsOpen: details.visible
     readonly property bool splitScreen: width > height
 
-    function closeDetails() {
-        routeMap.selectedPoi = "";
-    }
-
     onSearchForChanged: simpleMapSearchModel.phrase = searchFor//" "
 
     loading: simpleMapSearchModel.isLoading
@@ -63,10 +59,6 @@ BaseView {
 
         visible: parent.splitScreen || !details.visible
 
-        onSelectedPoiChanged: {
-            console.log("SelectedPoiChanged Begin")
-            details.searchFor = selectedPoi;
-        }
         followMe: followMeActive
 
         property RouteLine routeLine
@@ -89,6 +81,7 @@ BaseView {
 
         clip: true
 
-        visible: searchFor != ""
+        visible: appCore.showDetails
+        searchFor: appCore.selectedHouse
     }
 }

@@ -75,7 +75,7 @@ Item {
                     filteredTrailModel.setFilterWildcard("");
                     mainMap.resetToMainModel();
                     uiStack.pop(null);
-                    uiStack.currentItem.closeDetails();
+                    appCore.showDetails = false;
                 }
             }
 
@@ -83,7 +83,7 @@ Item {
                 id: searchButton
                 source: "resources/System-search.svg"
                 onClicked: {
-                    appCore.selectedHouseId = -1;
+                    appCore.selectedHouse = "";
                     uiStack.pop(null);
                     uiStack.push({
                                      item: Qt.resolvedUrl("SearchPage.qml")
@@ -95,7 +95,7 @@ Item {
                 id: categoriesButton
                 source: "resources/Edit-find-cats.svg"
                 onClicked: {
-                    appCore.selectedHouseId = -1;
+                    appCore.selectedHouse = "";
                     uiStack.pop(null);
                     uiStack.push({
                                      item: Qt.resolvedUrl("CategoryselectionView.qml")
@@ -119,7 +119,7 @@ Item {
                 id: routesButton
                 source: "resources/Edit-check-sheet.svg"
                 onClicked: {
-                    appCore.selectedHouseId = -1;
+                    appCore.selectedHouse = "";
                     uiStack.push({
                                      item: Qt.resolvedUrl("RouteView.qml")
                                  })
@@ -240,11 +240,10 @@ Item {
             if (event.key === Qt.Key_Back) {
                 event.accepted = true
                 if (uiStack.currentItem.detailsOpen) {
-                    uiStack.currentItem.closeDetails();
+                    appCore.showDetails = false;
                 } else {
                     if (uiStack.depth > 1) {
                         uiStack.pop()
-                        lappCore.selectedHouseId = -1;
                     } else {
                         shutDownDialog.visible = true
                     }
@@ -278,10 +277,6 @@ Item {
                 property bool splitScreen: width > height
                 readonly property bool detailsOpen: details.visible
 
-                function closeDetails() {
-                    mapOfEurope.selectedPoi = "";
-                }
-
                 loading: details.loading
 
                 MapComponent {
@@ -301,10 +296,6 @@ Item {
                     }
 
                     center: locationGraz
-                    onSelectedPoiChanged: {
-                        console.log("SelectedPoiChanged Begin: "+selectedPoi)
-                        details.searchFor = selectedPoi;
-                    }
                     Component.onCompleted: {
                         root.mainMap = mapOfEurope;
                     }
@@ -318,15 +309,8 @@ Item {
                     height: parent.height
 
                     clip: true
-
-                    visible: searchFor != ""
-
-                    Connections {
-                        target: appCore
-                        onSelectedHouseIdChanged: {
-                            details.searchFor = houseTrailModel.getHouseTitleById(appCore.selectedHouseId);
-                        }
-                    }
+                    visible: appCore.showDetails
+                    searchFor: appCore.selectedHouse
                 }
             }
         }
@@ -335,12 +319,6 @@ Item {
             sourceComponent: component_mapOfEurope
             readonly property bool loading: item ? item.loading : false
             readonly property bool detailsOpen: item ? item.detailsOpen : false
-
-            function closeDetails() {
-                if (detailsOpen) {
-                    item.closeDetails();
-                }
-            }
 
             function reloadMapItem() {
                 loader_mapOfEurope.sourceComponent = undefined;

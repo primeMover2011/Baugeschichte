@@ -35,18 +35,12 @@ MapQuickItem {
             id: rectMouse
             preventStealing: true
             anchors.fill: parent
-            onClicked: selectPoi(root.title)
+            onClicked: selectPoi()
 
-            function selectPoi(aTitle) {
-                console.log("textItem poi selected...")
-                mapItem.selectedPoi = aTitle
-                appCore.selectedHouseId = root.id;
-
-                mapItem.center = root.coordinate;
-                if (mapItem.zoomLevel < 18) {
-                    mapItem.zoomLevel = 19;
-                }
-
+            function selectPoi() {
+                appCore.selectedHouse = root.title;
+                appCore.showDetails = true;
+                appCore.centerSelectedHouse();
                 root.destroy();
             }
         }

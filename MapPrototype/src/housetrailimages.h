@@ -81,6 +81,7 @@ public:
 
     const HouseTrail* get(int idx) const;
     Q_INVOKABLE QString getHouseTitleById(qint64 id) const;
+    HouseTrail* getHouseByTitle(const QString& title) const;
 
 protected:
     QHash<int, QByteArray> roleNames() const;

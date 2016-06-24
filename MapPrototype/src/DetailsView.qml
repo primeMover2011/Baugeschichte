@@ -58,7 +58,7 @@ BaseView {
 
     JsonModel {
         id: theDetails
-        phrase: searchFor
+        phrase: root.visible ? root.searchFor : ""
         searchString: "http://baugeschichte.at/app/v1/getData.php?action=getBuildingDetail&name="
         onNewobject: {
             poiName = magneto.title

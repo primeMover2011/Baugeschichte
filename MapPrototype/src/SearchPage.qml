@@ -40,12 +40,12 @@ BaseView {
 
         delegate: SearchResultDelegate {
             text: title
-            //onClicked: stackView.push(Qt.resolvedUrl(page))
-            onSelected: uiStack.push({item: Qt.resolvedUrl("DetailsView.qml"), properties: {searchFor: wot/*textitem.text*/}})
-//            onSelected: {
-//                appCore.selectedHouseId = ???;
-//                uiStack.pop(null);
-//            }
+            onSelected: {
+                appCore.selectedHouse = title;
+                appCore.showDetails = true;
+                appCore.centerSelectedHouse();
+                uiStack.pop(null);
+            }
         }
     }
 

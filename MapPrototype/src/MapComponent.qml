@@ -22,15 +22,21 @@ Map {
     property alias theItemModel: housetrailMapItems
     property double radius: 100
 
-    property string selectedPoi: ""
     Connections {
         target: appCore
-        onSelectedHouseIdChanged: {
-            if (appCore.selectedHouseId < 0) {
-                selectedPoi = "";
-                if (markerLabel) {
-                    markerLabel.destroy();
-                }
+        onSelectedHouseChanged: {
+            if (appCore.selectedHouse === "" && markerLabel) {
+                markerLabel.destroy();
+            }
+        }
+        onCurrentMapPositionChanged: {
+            if (root.center !== appCore.currentMapPosition) {
+                root.center = appCore.currentMapPosition;
+            }
+        }
+        onRequestFullZoomIn: {
+            if (root.zoomLevel < 18) {
+                root.zoomLevel = 19;
             }
         }
     }
@@ -43,14 +49,14 @@ Map {
     readonly property real defaultZoomLevel: 16
 
     center: QtPositioning.coordinate(47.0666667, 15.45)
-
-    zoomLevel: defaultZoomLevel
-
     onCenterChanged: {
         if (autoUpdatePois) {
             markerLoader.setLocation(center.latitude, center.longitude);
         }
+        appCore.currentMapPosition = center;
     }
+
+    zoomLevel: defaultZoomLevel
 
     onZoomLevelChanged: {
         updateRadius();
@@ -134,7 +140,7 @@ Map {
         anchors.fill: parent
         propagateComposedEvents: true
         onClicked: {
-            appCore.selectedHouseId = -1;
+            appCore.selectedHouse = "";
         }
     }
 
@@ -256,7 +262,7 @@ Map {
                 Image {
                     id: image
                     antialiasing: true
-                    source: dbId == appCore.selectedHouseId ? "resources/marker-2-blue.svg" :
+                    source: title === appCore.selectedHouse ? "resources/marker-2-blue.svg" :
                                                               "resources/marker-2.svg"
                     width: root.markerSize
                     height: root.markerSize
@@ -268,8 +274,6 @@ Map {
                     onPressed: changeCurrentItem()
 
                     function changeCurrentItem() {
-                        console.log("changing!!")
-
                         if (root.markerLabel) {
                             root.markerLabel.destroy();
                         }
@@ -279,12 +283,13 @@ Map {
                         root.markerLabel.mapItem = root;
                         root.addMapItem(root.markerLabel);
 
-                        root.markerLabel.coordinate = mqItem.coordinate
+                        root.markerLabel.coordinate = mqItem.coordinate;
                         root.markerLabel.z = 9999;
                         root.markerLabel.id = dbId;
                         root.markerLabel.title = title
                         root.markerLabel.visible = true;
-                        appCore.selectedHouseId = dbId;
+
+                        appCore.selectedHouse = title;
                     }
                 }
             }

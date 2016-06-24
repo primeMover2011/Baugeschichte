@@ -10,6 +10,7 @@ HouseLocationFilter::HouseLocationFilter(QObject* parent)
     , m_location()
     , m_radius(200.0)
     , m_minDistance(100.0)
+    , m_unfilteredHouseTitle("")
 {
     setDynamicSortFilter(true);
 }
@@ -27,6 +28,22 @@ double HouseLocationFilter::radius() const
 double HouseLocationFilter::minDistance() const
 {
     return m_minDistance;
+}
+
+QString HouseLocationFilter::unfilteredHouseTitle() const
+{
+    return m_unfilteredHouseTitle;
+}
+
+void HouseLocationFilter::setUnfilteredHouseTitle(const QString& houseTitle)
+{
+    if (houseTitle == m_unfilteredHouseTitle) {
+        return;
+    }
+
+    m_unfilteredHouseTitle = houseTitle;
+    emit unfilteredHouseTitleChanged(m_unfilteredHouseTitle);
+    invalidateFilter();
 }
 
 void HouseLocationFilter::setLocation(const QGeoCoordinate& location)
@@ -66,8 +83,15 @@ void HouseLocationFilter::setMinDistance(double minDistance)
 
 bool HouseLocationFilter::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
 {
-    QVariant variant = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HousetrailModel::CoordinateRole);
+    QVariant titleVariant = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HousetrailModel::HouseTitleRole);
+    if (titleVariant.canConvert<QString>()) {
+        QString title = titleVariant.value<QString>();
+        if (title == m_unfilteredHouseTitle) {
+            return true;
+        }
+    }
 
+    QVariant variant = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HousetrailModel::CoordinateRole);
     if (!variant.canConvert<QGeoCoordinate>()) {
         return false;
     }

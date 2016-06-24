@@ -134,6 +134,7 @@ Map {
         sourceModel: filteredTrailModel
         location: root.center
         radius: root.radius
+        unfilteredHouseTitle: appCore.selectedHouse
     }
 
     MouseArea {

@@ -29,12 +29,13 @@
         <file>Helper.js</file>
         <file>CategoryselectionView.qml</file>
         <file>resources/Edit-check-sheet.svg</file>
-        <file>RouteMap.qml</file>
+        <file>RouteLoader.qml</file>
         <file>ToolbarButton.qml</file>
         <file>BaseView.qml</file>
         <file>MarkerLabel.qml</file>
         <file>resources/spinner.png</file>
         <file>SettingsView.qml</file>
         <file>RouteLine.qml</file>
+        <file>resources/marker-2-red.svg</file>
     </qresource>
 </RCC>

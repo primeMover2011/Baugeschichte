@@ -11,6 +11,11 @@ MapPolyline {
 
     // Url for the KML file to show
     property url source
+    onSourceChanged: {
+        if (source == "") {
+            clear();
+        }
+    }
 
     property bool loading: false
 
@@ -82,7 +87,10 @@ MapPolyline {
 
     function clear()
     {
-        root.path = [];
+        while (root.pathLength() > 0) {
+            root.removeCoordinate(0);
+        }
+        root.visible = false;
     }
 
     function parseKML()
@@ -114,6 +122,7 @@ MapPolyline {
         }
 
         checkLoading();
+        root.visible = true;
     }
 
     function checkLoading() {

@@ -131,6 +131,11 @@ void ApplicationCore::centerSelectedHouse()
     }
 }
 
+QString ApplicationCore::routeKML() const
+{
+    return m_routeKML;
+}
+
 void ApplicationCore::handleApplicationStateChange(Qt::ApplicationState state)
 {
     switch (state) {
@@ -178,6 +183,16 @@ void ApplicationCore::setShowDetails(bool showDetails)
 
     m_showDetails = showDetails;
     emit showDetailsChanged(showDetails);
+}
+
+void ApplicationCore::setRouteKML(const QString& routeKML)
+{
+    if (m_routeKML == routeKML) {
+        return;
+    }
+
+    m_routeKML = routeKML;
+    emit routeKMLChanged(routeKML);
 }
 
 void ApplicationCore::doReloadUI()

@@ -2,6 +2,8 @@
 #include "housetrailimages.h"
 
 #include <QDebug>
+#include <QJsonObject>
+#include <QJSValue>
 
 #include <cmath>
 
@@ -35,6 +37,22 @@ QString HouseLocationFilter::unfilteredHouseTitle() const
     return m_unfilteredHouseTitle;
 }
 
+void HouseLocationFilter::setRouteHouses(QVariant variant)
+{
+    m_routeHouses.clear();
+
+    QVariantList list = variant.value<QVariantList>();
+    if (list.isEmpty()) {
+        return;
+    }
+    for(const QVariant& houseVar : list) {
+        m_routeHouses << houseVar.toString();
+    }
+
+    m_usedCoordinates.clear();
+    invalidateFilter();
+}
+
 void HouseLocationFilter::setUnfilteredHouseTitle(const QString& houseTitle)
 {
     if (houseTitle == m_unfilteredHouseTitle) {
@@ -43,6 +61,7 @@ void HouseLocationFilter::setUnfilteredHouseTitle(const QString& houseTitle)
 
     m_unfilteredHouseTitle = houseTitle;
     emit unfilteredHouseTitleChanged(m_unfilteredHouseTitle);
+    m_usedCoordinates.clear();
     invalidateFilter();
 }
 
@@ -83,14 +102,6 @@ void HouseLocationFilter::setMinDistance(double minDistance)
 
 bool HouseLocationFilter::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
 {
-    QVariant titleVariant = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HousetrailModel::HouseTitleRole);
-    if (titleVariant.canConvert<QString>()) {
-        QString title = titleVariant.value<QString>();
-        if (title == m_unfilteredHouseTitle) {
-            return true;
-        }
-    }
-
     QVariant variant = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HousetrailModel::CoordinateRole);
     if (!variant.canConvert<QGeoCoordinate>()) {
         return false;
@@ -99,6 +110,15 @@ bool HouseLocationFilter::filterAcceptsRow(int source_row, const QModelIndex& so
     QGeoCoordinate coord = variant.value<QGeoCoordinate>();
     if (coord.distanceTo(m_location) > m_radius) {
         return false;
+    }
+
+    QVariant titleVariant = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HousetrailModel::HouseTitleRole);
+    if (titleVariant.canConvert<QString>()) {
+        QString title = titleVariant.value<QString>();
+        if (title == m_unfilteredHouseTitle || m_routeHouses.contains(title)) {
+            m_usedCoordinates.append(coord);
+            return true;
+        }
     }
 
     if (isCloseToOtherPosition(coord)) {

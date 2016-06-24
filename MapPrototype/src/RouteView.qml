@@ -50,7 +50,8 @@ BaseView {
                 //und um alle vorkommnisse von " " zu erstetzen muss man in Javascript eine RegEx verwenden.
                 //http://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
 
-                uiStack.push({item: Qt.resolvedUrl("RouteMap.qml"), properties: {searchFor: searchString}})
+                routeLoader.searchFor = searchString;
+                uiStack.pop(null);
             }
         }
     }

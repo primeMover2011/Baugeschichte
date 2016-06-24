@@ -22,6 +22,7 @@ class ApplicationCore : public QObject
     Q_PROPERTY(QString selectedHouse READ selectedHouse WRITE setSelectedHouse NOTIFY selectedHouseChanged)
     Q_PROPERTY(QGeoCoordinate currentMapPosition READ currentMapPosition WRITE setCurrentMapPosition NOTIFY currentMapPositionChanged)
     Q_PROPERTY(bool showDetails READ showDetails WRITE setShowDetails NOTIFY showDetailsChanged)
+    Q_PROPERTY(QString routeKML READ routeKML WRITE setRouteKML NOTIFY routeKMLChanged)
     Q_OBJECT
 public:
     explicit ApplicationCore(QObject *parent = 0);
@@ -40,6 +41,8 @@ public:
 
     Q_INVOKABLE void centerSelectedHouse();
 
+    QString routeKML() const;
+
 public slots:
     void handleApplicationStateChange(Qt::ApplicationState state);
 
@@ -48,12 +51,15 @@ public slots:
 
     void setShowDetails(bool showDetails);
 
+    void setRouteKML(const QString& routeKML);
+
 signals:
     void mapProviderChanged(QString mapProvider);
     void selectedHouseChanged(QString selectedHouse);
     void currentMapPositionChanged(QGeoCoordinate currentMapPosition);
     void showDetailsChanged(bool showDetails);
     void requestFullZoomIn();
+    void routeKMLChanged(QString routeKML);
 
 private slots:
     void doReloadUI();
@@ -75,6 +81,7 @@ private:
     QGeoCoordinate m_currentMapPosition;
     bool m_showDetails;
     QNetworkAccessManager* m_housePositionLoader;
+    QString m_routeKML;
 };
 
 #endif // APPLICATIONCORE_H

@@ -4,6 +4,8 @@
 #include <QGeoCoordinate>
 #include <QList>
 #include <QSortFilterProxyModel>
+#include <QStringList>
+#include <QVariant>
 
 /**
  * @brief The HouseLocationFilter filters the HouseTrailModel by location and radius
@@ -26,6 +28,8 @@ public:
 
     void setUnfilteredHouseTitle(const QString& houseTitle);
     QString unfilteredHouseTitle() const;
+
+    Q_INVOKABLE void setRouteHouses(QVariant variant);
 
 public slots:
     /**
@@ -58,6 +62,7 @@ private:
     mutable QList<QGeoCoordinate> m_usedCoordinates;
 
     QString m_unfilteredHouseTitle;
+    QStringList m_routeHouses;
 };
 
 #endif // HOUSELOCATIONFILTER_H

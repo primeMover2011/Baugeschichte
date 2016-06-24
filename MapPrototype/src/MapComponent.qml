@@ -136,6 +136,20 @@ Map {
         radius: root.radius
         unfilteredHouseTitle: appCore.selectedHouse
     }
+    Connections {
+        target: routeLoader
+        onLoadingChanged: {
+            if (!routeLoader.loading) {
+                var newRouteHouses = [];
+                for (var i=0; i< routeLoader.routeHouses.length; ++i) {
+                    console.log(routeLoader.routeHouses[i].title)
+                    newRouteHouses.push(routeLoader.routeHouses[i].title)
+                    console.log("newRouteHouses: "+newRouteHouses)
+                }
+                locationFilter.setRouteHouses(newRouteHouses);
+            }
+        }
+    }
 
     MouseArea {
         anchors.fill: parent
@@ -239,13 +253,13 @@ Map {
         }
     }
 
+    RouteLine {
+        source: appCore.routeKML !== "" ? "http://baugeschichte.at/" + appCore.routeKML : ""
+    }
+
     MapItemView {
         id: housetrailMapItems
-        model: currentModel //houseTrailModel
-
-        onModelChanged:{
-            console.log("model changed")
-        }
+        model: currentModel
 
         delegate: MapQuickItem {
             id: mqItem
@@ -263,12 +277,30 @@ Map {
                 Image {
                     id: image
                     antialiasing: true
-                    source: title === appCore.selectedHouse ? "resources/marker-2-blue.svg" :
-                                                              "resources/marker-2.svg"
+                    source: getSource()
                     width: root.markerSize
                     height: root.markerSize
                     sourceSize: Qt.size(width, height)
                     fillMode: Image.PreserveAspectFit
+
+                    function getSource() {
+                        if (title === appCore.selectedHouse) {
+                            return "resources/marker-2-blue.svg";
+                        }
+                        if (routeLoader.isRouteHouse(title)) {
+                            return "resources/marker-2-red.svg";
+                        }
+                        return "resources/marker-2.svg"
+                    }
+
+                    Connections {
+                        target: routeLoader
+                        onLoadingChanged: {
+                            if (!routeLoader.loading) {
+                                image.source = Qt.binding(function(){return image.getSource();});
+                            }
+                        }
+                    }
                 }
                 MouseArea {
                     anchors.fill: image

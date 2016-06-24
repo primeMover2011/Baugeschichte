@@ -17,7 +17,7 @@ Item {
 
     visible: true
 
-    readonly property bool loading: uiStack.currentItem.loading || markerLoader.loading
+    readonly property bool loading: uiStack.currentItem.loading || markerLoader.loading || routeLoader.loading
 
     property MapComponent mainMap: null
 
@@ -76,6 +76,8 @@ Item {
                     mainMap.resetToMainModel();
                     uiStack.pop(null);
                     appCore.showDetails = false;
+                    appCore.routeKML = "";
+                    routeLoader.routeHouses = [];
                 }
             }
 
@@ -84,6 +86,9 @@ Item {
                 source: "resources/System-search.svg"
                 onClicked: {
                     appCore.selectedHouse = "";
+                    appCore.showDetails = false;
+                    appCore.routeKML = "";
+                    routeLoader.routeHouses = [];
                     uiStack.pop(null);
                     uiStack.push({
                                      item: Qt.resolvedUrl("SearchPage.qml")
@@ -96,9 +101,26 @@ Item {
                 source: "resources/Edit-find-cats.svg"
                 onClicked: {
                     appCore.selectedHouse = "";
+                    appCore.showDetails = false;
+                    appCore.routeKML = "";
+                    routeLoader.routeHouses = [];
                     uiStack.pop(null);
                     uiStack.push({
                                      item: Qt.resolvedUrl("CategoryselectionView.qml")
+                                 })
+                }
+            }
+
+            ToolbarButton {
+                id: routesButton
+                source: "resources/Edit-check-sheet.svg"
+                onClicked: {
+                    appCore.selectedHouse = "";
+                    appCore.showDetails = false;
+                    appCore.routeKML = "";
+                    routeLoader.routeHouses = [];
+                    uiStack.push({
+                                     item: Qt.resolvedUrl("RouteView.qml")
                                  })
                 }
             }
@@ -112,17 +134,6 @@ Item {
 
                 onClicked: {
                     isActive = !isActive;
-                }
-            }
-
-            ToolbarButton {
-                id: routesButton
-                source: "resources/Edit-check-sheet.svg"
-                onClicked: {
-                    appCore.selectedHouse = "";
-                    uiStack.push({
-                                     item: Qt.resolvedUrl("RouteView.qml")
-                                 })
                 }
             }
         }
@@ -258,6 +269,11 @@ Item {
         }
     }
 
+    RouteLoader {
+        id: routeLoader
+        anchors.fill: uiStack
+    }
+
     StackView {
         id: uiStack
         anchors.fill: background
@@ -278,6 +294,49 @@ Item {
                 readonly property bool detailsOpen: details.visible
 
                 loading: details.loading
+
+                // used to fit screen to route
+                Map {
+                    id: zoomMap
+                    anchors.fill: parent
+                    visible: false
+                    enabled: false
+
+                    plugin: initPlugin()
+                    function initPlugin() {
+                        return appCore.mapProvider === "osm" ? osmPlugin : mapBoxPlugin;
+                    }
+                    Plugin {
+                        id: osmPlugin
+                        name: "osm"
+                    }
+                    Plugin {
+                        id: mapBoxPlugin
+                        name: "mapbox"
+                        PluginParameter {
+                            name: "mapbox.map_id"
+                            value: "primemover.c5fe94e8"
+                        }
+                        PluginParameter {
+                            name: "mapbox.access_token"
+                            value: "pk.eyJ1IjoicHJpbWVtb3ZlciIsImEiOiIzNjFlYWNjZmZhMjAyNGFhMWQ0NDM0ZDIyMTE4YmEyMCJ9.d5wi3uI5VayKiniPnkxojg"
+                        }
+                    }
+
+                    RouteLine {
+                        source: appCore.routeKML !== "" ? "http://baugeschichte.at/" + appCore.routeKML : ""
+
+                        onLoadingChanged: {
+                            if (loading || pathLength() === 0) {
+                                return;
+                            }
+
+
+                            zoomMap.fitViewportToMapItems();
+                            mapOfEurope.zoomLevel = zoomMap.zoomLevel * 0.95;
+                        }
+                    }
+                }
 
                 MapComponent {
                     id: mapOfEurope

@@ -26,7 +26,6 @@
         <file>RouteView.qml</file>
         <file>resources/scale_end.png</file>
         <file>resources/scale.png</file>
-        <file>Helper.js</file>
         <file>CategoryselectionView.qml</file>
         <file>resources/Edit-check-sheet.svg</file>
         <file>RouteLoader.qml</file>

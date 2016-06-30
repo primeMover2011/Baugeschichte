@@ -4,7 +4,6 @@ import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.1
 import QtLocation 5.6
 import QtPositioning 5.6
-import "./Helper.js" as Helper
 import "./"
 import Baugeschichte 1.0
 
@@ -95,6 +94,14 @@ Map {
         }
     }
 
+    function smartDistanceString(meters) {
+        if (meters > 1000) {
+            return Math.round(meters / 1000) + " km";
+        } else {
+            return Math.round(meters) + " m";
+        }
+    }
+
     function calculateScale() {
         var coord1, coord2, dist, text, f
         f = 0
@@ -119,7 +126,7 @@ Map {
             }
         }
 
-        text = Helper.formatDistance(dist)
+        text = smartDistanceString(dist)
         scaleImage.width = (scaleImage.sourceSize.width * f) - 2 * scaleImageLeft.sourceSize.width
         scaleText.text = text
     }
@@ -367,7 +374,7 @@ Map {
     }
 
     Component.onCompleted: {
-        root.updateRadius();
         zoomLevel = defaultZoomLevel;
+        root.updateRadius();
     }
 }

@@ -6,7 +6,7 @@
 #include <QString>
 
 class MarkerLoader;
-class HousetrailModel;
+class HouseMarkerModel;
 
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -73,7 +73,7 @@ private:
     void loadMarkers();
 
     QQuickView* m_view;
-    HousetrailModel* m_houseTrailModel;
+    HouseMarkerModel* m_houseMarkerModel;
     MarkerLoader* m_markerLoader;
     QSortFilterProxyModel* m_detailsProxyModel;
     int m_screenDpi;

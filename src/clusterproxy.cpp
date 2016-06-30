@@ -1,5 +1,5 @@
 #include "clusterproxy.h"
-#include "housetrailimages.h"
+#include "housemarkermodel.h"
 
 ClusterProxy::ClusterProxy()
 {
@@ -16,7 +16,7 @@ bool ClusterProxy::filterAcceptsRow(int source_row, const QModelIndex& source_pa
     if (this->sourceModel() != nullptr) {
         auto index = this->sourceModel()->index(source_row, 0, source_parent);
         if (index.isValid()) {
-            auto valueRole = index.data(HousetrailModel::HousetrailRoles::CoordinateRole);
+            auto valueRole = index.data(HouseMarkerModel::HousetrailRoles::CoordinateRole);
             if (valueRole.isValid()) {
                 bool ok(false);
                 auto value = valueRole.toInt(&ok);

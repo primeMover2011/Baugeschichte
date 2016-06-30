@@ -1,6 +1,6 @@
 #include "applicationcore.h"
 #include "houselocationfilter.h"
-#include "housetrailimages.h"
+#include "housemarkermodel.h"
 #include "markerloader.h"
 
 #include <QDebug>
@@ -32,7 +32,7 @@
 ApplicationCore::ApplicationCore(QObject* parent)
     : QObject(parent)
     , m_view(new QQuickView())
-    , m_houseTrailModel(new HousetrailModel(this))
+    , m_houseMarkerModel(new HouseMarkerModel(this))
     , m_markerLoader(new MarkerLoader(this))
     , m_detailsProxyModel(new QSortFilterProxyModel(this))
     , m_screenDpi(calculateScreenDpi())
@@ -42,26 +42,26 @@ ApplicationCore::ApplicationCore(QObject* parent)
     , m_showDetails(false)
     , m_housePositionLoader(new QNetworkAccessManager(this))
 {
-    qRegisterMetaType<HouseMarker>("HouseTrail");
-    qRegisterMetaType<QVector<HouseMarker>>("QVector<HouseTrail>");
+    qRegisterMetaType<HouseMarker>("HouseMarker");
+    qRegisterMetaType<QVector<HouseMarker>>("QVector<HouseMarker>");
     qmlRegisterType<HouseLocationFilter>("Baugeschichte", 1, 0, "HouseLocationFilter");
 
     m_view->setWidth(1024);
     m_view->setHeight(800);
     m_view->setResizeMode(QQuickView::SizeRootObjectToView);
 
-    m_detailsProxyModel->setFilterRole(HousetrailModel::HousetrailRoles::CategoryRole);
-    m_detailsProxyModel->setSourceModel(m_houseTrailModel);
+    m_detailsProxyModel->setFilterRole(HouseMarkerModel::HousetrailRoles::CategoryRole);
+    m_detailsProxyModel->setSourceModel(m_houseMarkerModel);
 
     QQmlEngine* engine = m_view->engine();
     QQmlContext* context = engine->rootContext();
     context->setContextProperty(QStringLiteral("appCore"), this);
     context->setContextProperty(QStringLiteral("markerLoader"), m_markerLoader);
-    context->setContextProperty(QStringLiteral("houseTrailModel"), m_houseTrailModel);
+    context->setContextProperty(QStringLiteral("houseTrailModel"), m_houseMarkerModel);
     context->setContextProperty(QStringLiteral("filteredTrailModel"), m_detailsProxyModel);
     context->setContextProperty(QStringLiteral("screenDpi"), m_screenDpi);
 
-    connect(m_markerLoader, SIGNAL(newHousetrail(QVector<HouseMarker>)), m_houseTrailModel,
+    connect(m_markerLoader, SIGNAL(newHousetrail(QVector<HouseMarker>)), m_houseMarkerModel,
         SLOT(append(QVector<HouseMarker>)));
 
     connect(
@@ -119,7 +119,7 @@ bool ApplicationCore::showDetails() const
 
 void ApplicationCore::centerSelectedHouse()
 {
-    HouseMarker* house = m_houseTrailModel->getHouseByTitle(m_selectedHouse);
+    HouseMarker* house = m_houseMarkerModel->getHouseByTitle(m_selectedHouse);
     if (house != nullptr) {
         setCurrentMapPosition(house->theLocation());
         emit requestFullZoomIn();
@@ -294,18 +294,18 @@ int ApplicationCore::calculateScreenDpi() const
 
 void ApplicationCore::saveMarkers()
 {
-    if (m_houseTrailModel->rowCount() == 0) {
+    if (m_houseMarkerModel->rowCount() == 0) {
         return;
     }
 
     QJsonArray markerArray;
-    for (int i = 0; i < m_houseTrailModel->rowCount(); ++i) {
+    for (int i = 0; i < m_houseMarkerModel->rowCount(); ++i) {
         QJsonObject object;
-        object["dbId"] = m_houseTrailModel->get(i)->dbId();
-        object["title"] = m_houseTrailModel->get(i)->houseTitle();
-        object["coord_lat"] = m_houseTrailModel->get(i)->theLocation().latitude();
-        object["coord_lon"] = m_houseTrailModel->get(i)->theLocation().longitude();
-        object["category"] = m_houseTrailModel->get(i)->categories();
+        object["dbId"] = m_houseMarkerModel->get(i)->dbId();
+        object["title"] = m_houseMarkerModel->get(i)->houseTitle();
+        object["coord_lat"] = m_houseMarkerModel->get(i)->theLocation().latitude();
+        object["coord_lon"] = m_houseMarkerModel->get(i)->theLocation().longitude();
+        object["category"] = m_houseMarkerModel->get(i)->categories();
         markerArray.append(object);
     }
 
@@ -355,5 +355,5 @@ void ApplicationCore::loadMarkers()
         houses.push_back(house);
     }
 
-    m_houseTrailModel->append(houses);
+    m_houseMarkerModel->append(houses);
 }

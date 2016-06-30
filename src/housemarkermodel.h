@@ -1,11 +1,11 @@
-#ifndef HOUSETRAILIMAGES_H
-#define HOUSETRAILIMAGES_H
+#ifndef HOUSEMARKERIMAGES_H
+#define HOUSEMARKERIMAGES_H
 
 #include "housemarker.h"
 
 #include <QAbstractListModel>
 
-class HousetrailModel : public QAbstractListModel
+class HouseMarkerModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
@@ -16,8 +16,8 @@ public:
         CategoryRole,
     };
 
-    HousetrailModel(QObject* parent = 0);
-    ~HousetrailModel();
+    HouseMarkerModel(QObject* parent = 0);
+    ~HouseMarkerModel();
 
     Q_SLOT void append(const QVector<HouseMarker>& aHouseTrail);
     Q_INVOKABLE void clear();
@@ -47,4 +47,4 @@ private:
     int m_maxSize;
 };
 
-#endif // HOUSETRAILIMAGES_H
+#endif // HOUSEMARKERIMAGES_H

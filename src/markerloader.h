@@ -1,7 +1,7 @@
 #ifndef MARKERLOADER
 #define MARKERLOADER
 
-#include "housetrailimages.h"
+#include "housemarkermodel.h"
 
 #include <QGeoCoordinate>
 #include <QList>

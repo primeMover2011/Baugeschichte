@@ -1,22 +1,22 @@
-#include "housetrailimages.h"
+#include "housemarkermodel.h"
 
 #include <QDebug>
 
 #include <algorithm>
 #include <set>
 
-HousetrailModel::HousetrailModel(QObject* parent)
+HouseMarkerModel::HouseMarkerModel(QObject* parent)
     : QAbstractListModel(parent)
     , m_maxSize(10000)
 {
 }
 
-HousetrailModel::~HousetrailModel()
+HouseMarkerModel::~HouseMarkerModel()
 {
     clear();
 }
 
-void HousetrailModel::append(const QVector<HouseMarker>& aHouseTrail)
+void HouseMarkerModel::append(const QVector<HouseMarker>& aHouseTrail)
 {
     limitSize();
 
@@ -37,7 +37,7 @@ void HousetrailModel::append(const QVector<HouseMarker>& aHouseTrail)
     endInsertRows();
 }
 
-void HousetrailModel::clear()
+void HouseMarkerModel::clear()
 {
     beginRemoveRows(QModelIndex(), 0, m_Housetrails.count());
     qDeleteAll(m_Housetrails);
@@ -46,18 +46,18 @@ void HousetrailModel::clear()
     endRemoveRows();
 }
 
-int HousetrailModel::rowCount(const QModelIndex& parent) const
+int HouseMarkerModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return m_Housetrails.count();
 }
 
-bool HousetrailModel::contains(qint64 id) const
+bool HouseMarkerModel::contains(qint64 id) const
 {
     return m_Contained.contains(id);
 }
 
-QVariant HousetrailModel::data(const QModelIndex& index, int role) const
+QVariant HouseMarkerModel::data(const QModelIndex& index, int role) const
 {
     if (index.row() < 0 || index.row() >= m_Housetrails.count())
         return QVariant();
@@ -74,12 +74,12 @@ QVariant HousetrailModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-const HouseMarker* HousetrailModel::get(int idx) const
+const HouseMarker* HouseMarkerModel::get(int idx) const
 {
     return m_Housetrails.at(idx);
 }
 
-QString HousetrailModel::getHouseTitleById(qint64 id) const
+QString HouseMarkerModel::getHouseTitleById(qint64 id) const
 {
     if (!contains(id)) {
         return QString();
@@ -89,7 +89,7 @@ QString HousetrailModel::getHouseTitleById(qint64 id) const
     return house->houseTitle();
 }
 
-HouseMarker* HousetrailModel::getHouseByTitle(const QString& title) const
+HouseMarker* HouseMarkerModel::getHouseByTitle(const QString& title) const
 {
     for (auto house : m_Housetrails) {
         if (house->houseTitle() == title) {
@@ -99,7 +99,7 @@ HouseMarker* HousetrailModel::getHouseByTitle(const QString& title) const
     return nullptr;
 }
 
-QHash<int, QByteArray> HousetrailModel::roleNames() const
+QHash<int, QByteArray> HouseMarkerModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[DbIdRole] = "dbId";
@@ -109,7 +109,7 @@ QHash<int, QByteArray> HousetrailModel::roleNames() const
     return roles;
 }
 
-void HousetrailModel::limitSize()
+void HouseMarkerModel::limitSize()
 {
     int size = m_Housetrails.size();
     if (size > m_maxSize) {

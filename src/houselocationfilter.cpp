@@ -1,5 +1,5 @@
 #include "houselocationfilter.h"
-#include "housetrailimages.h"
+#include "housemarkermodel.h"
 
 #include <QDebug>
 #include <QJSValue>
@@ -103,7 +103,7 @@ void HouseLocationFilter::setMinDistance(double minDistance)
 bool HouseLocationFilter::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
 {
     QVariant variant
-        = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HousetrailModel::CoordinateRole);
+        = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HouseMarkerModel::CoordinateRole);
     if (!variant.canConvert<QGeoCoordinate>()) {
         return false;
     }
@@ -114,7 +114,7 @@ bool HouseLocationFilter::filterAcceptsRow(int source_row, const QModelIndex& so
     }
 
     QVariant titleVariant
-        = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HousetrailModel::HouseTitleRole);
+        = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HouseMarkerModel::HouseTitleRole);
     if (titleVariant.canConvert<QString>()) {
         QString title = titleVariant.value<QString>();
         if (title == m_unfilteredHouseTitle || m_routeHouses.contains(title)) {

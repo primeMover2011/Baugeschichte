@@ -149,9 +149,7 @@ Map {
             if (!routeLoader.loading) {
                 var newRouteHouses = [];
                 for (var i=0; i< routeLoader.routeHouses.length; ++i) {
-                    console.log(routeLoader.routeHouses[i].title)
                     newRouteHouses.push(routeLoader.routeHouses[i].title)
-                    console.log("newRouteHouses: "+newRouteHouses)
                 }
                 locationFilter.setRouteHouses(newRouteHouses);
             }

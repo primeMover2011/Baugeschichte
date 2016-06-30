@@ -177,9 +177,6 @@ void MarkerLoader::createModelAsync(QNetworkReply* theReply)
                               .arg(theReply->errorString(),
                                   theReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toString());
         }
-
-        qDebug() << "code: " << theReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toString()
-                 << " response: " << theResponse;
         theReply->deleteLater();
     }
 }

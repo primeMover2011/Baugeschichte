@@ -21,7 +21,6 @@ OPENCV3_PATH_LIBS =
 INCLUDE_PATH += OPENCV3_PATH_INCLUDE
 
 SOURCES += main.cpp \
-    clusterproxy.cpp \
     houselocationfilter.cpp \
     applicationcore.cpp \
     markerloader.cpp \
@@ -29,7 +28,6 @@ SOURCES += main.cpp \
     housemarkermodel.cpp
 
 HEADERS += \
-    clusterproxy.h \
     houselocationfilter.h \
     applicationcore.h \
     markerloader.h \

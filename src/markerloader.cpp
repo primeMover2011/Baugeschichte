@@ -160,7 +160,7 @@ void MarkerLoader::createModelAsync(QNetworkReply* theReply)
                         QJsonObject anObj = theValue.toObject();
                         aHouseTrail.setDbId(anObj["id"].toInt());
                         aHouseTrail.setHouseTitle(anObj["title"].toString());
-                        aHouseTrail.setTheLocation(QGeoCoordinate(anObj["lat"].toDouble(), anObj["lon"].toDouble()));
+                        aHouseTrail.setLocation(QGeoCoordinate(anObj["lat"].toDouble(), anObj["lon"].toDouble()));
 
                         doc.setArray(anObj["cats"].toArray());
 

@@ -270,7 +270,7 @@ Map {
             anchorPoint.y: image.height
 
             sourceItem: Item {
-                id: theSourceItem
+                id: sourceItem
                 width: image.width
                 height: image.height
 

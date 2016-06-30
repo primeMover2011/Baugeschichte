@@ -21,7 +21,7 @@ public:
         return m_houseTitle;
     }
 
-    const QGeoCoordinate& theLocation() const
+    const QGeoCoordinate& location() const
     {
         return m_location;
     }
@@ -33,7 +33,7 @@ public:
 
     void setDbId(qint64 dbId);
     void setHouseTitle(const QString& houseTitle);
-    void setTheLocation(const QGeoCoordinate& theLocation);
+    void setLocation(const QGeoCoordinate& location);
     void setCategories(const QString& categories);
 
 protected:

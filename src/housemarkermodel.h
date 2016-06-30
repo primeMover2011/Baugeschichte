@@ -41,9 +41,8 @@ private:
      */
     void limitSize();
 
-    QList<HouseMarker*> m_Housetrails;
-    QHash<qint64, HouseMarker*> m_Contained;
-
+    QList<HouseMarker*> m_housetrails;
+    QHash<qint64, HouseMarker*> m_contained;
     int m_maxSize;
 };
 

@@ -121,7 +121,7 @@ void ApplicationCore::centerSelectedHouse()
 {
     HouseMarker* house = m_houseMarkerModel->getHouseByTitle(m_selectedHouse);
     if (house != nullptr) {
-        setCurrentMapPosition(house->theLocation());
+        setCurrentMapPosition(house->location());
         emit requestFullZoomIn();
     } else {
         QString requestString
@@ -303,8 +303,8 @@ void ApplicationCore::saveMarkers()
         QJsonObject object;
         object["dbId"] = m_houseMarkerModel->get(i)->dbId();
         object["title"] = m_houseMarkerModel->get(i)->houseTitle();
-        object["coord_lat"] = m_houseMarkerModel->get(i)->theLocation().latitude();
-        object["coord_lon"] = m_houseMarkerModel->get(i)->theLocation().longitude();
+        object["coord_lat"] = m_houseMarkerModel->get(i)->location().latitude();
+        object["coord_lon"] = m_houseMarkerModel->get(i)->location().longitude();
         object["category"] = m_houseMarkerModel->get(i)->categories();
         markerArray.append(object);
     }
@@ -350,7 +350,7 @@ void ApplicationCore::loadMarkers()
         house.setDbId(object["dbId"].toInt());
         house.setHouseTitle(object["title"].toString());
         QGeoCoordinate coord(object["coord_lat"].toDouble(), object["coord_lon"].toDouble());
-        house.setTheLocation(coord);
+        house.setLocation(coord);
         house.setCategories(object["category"].toString());
         houses.push_back(house);
     }

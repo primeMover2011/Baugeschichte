@@ -15,7 +15,7 @@ void HouseMarker::setHouseTitle(const QString& houseTitle)
     m_houseTitle = houseTitle;
 }
 
-void HouseMarker::setTheLocation(const QGeoCoordinate& theLocation)
+void HouseMarker::setLocation(const QGeoCoordinate& theLocation)
 {
     if (m_location == theLocation) {
         return;

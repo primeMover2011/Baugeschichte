@@ -2,14 +2,14 @@
 
 #include <QGuiApplication>
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     QGuiApplication app(argc, argv);
     app.setApplicationDisplayName(QStringLiteral("Baugeschichte.at"));
 
     ApplicationCore appCore;
-    QObject::connect(&app, & QGuiApplication::applicationStateChanged,
-                     &appCore, &ApplicationCore::handleApplicationStateChange);
+    QObject::connect(
+        &app, &QGuiApplication::applicationStateChanged, &appCore, &ApplicationCore::handleApplicationStateChange);
 
     appCore.showView();
 

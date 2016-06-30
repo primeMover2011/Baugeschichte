@@ -29,7 +29,7 @@ void HouseTrail::setTheLocation(const QGeoCoordinate& theLocation)
 
     m_theLocation = theLocation;
     std::string aGeoHash;
-    GeographicLib::Geohash::Forward(m_theLocation.latitude(),m_theLocation.longitude(),12,aGeoHash);
+    GeographicLib::Geohash::Forward(m_theLocation.latitude(), m_theLocation.longitude(), 12, aGeoHash);
     setGeoHash(QString::fromStdString(aGeoHash));
 }
 
@@ -44,7 +44,7 @@ void HouseTrail::setGeoHash(const QString& geoHash)
 }
 
 
-HousetrailModel::HousetrailModel(QObject *parent)
+HousetrailModel::HousetrailModel(QObject* parent)
     : QAbstractListModel(parent)
     , m_maxSize(10000)
 {
@@ -78,14 +78,14 @@ void HousetrailModel::append(const QVector<HouseTrail>& aHouseTrail)
 
 void HousetrailModel::clear()
 {
-    beginRemoveRows(QModelIndex(),0,m_Housetrails.count());
+    beginRemoveRows(QModelIndex(), 0, m_Housetrails.count());
     qDeleteAll(m_Housetrails);
     m_Housetrails.clear();
     m_Contained.clear();
     endRemoveRows();
 }
 
-int HousetrailModel::rowCount(const QModelIndex &parent) const
+int HousetrailModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return m_Housetrails.count();
@@ -96,7 +96,7 @@ bool HousetrailModel::contains(qint64 id) const
     return m_Contained.contains(id);
 }
 
-QVariant HousetrailModel::data(const QModelIndex &index, int role) const
+QVariant HousetrailModel::data(const QModelIndex& index, int role) const
 {
     if (index.row() < 0 || index.row() >= m_Housetrails.count())
         return QVariant();
@@ -155,7 +155,7 @@ void HousetrailModel::limitSize()
 {
     int size = m_Housetrails.size();
     if (size > m_maxSize) {
-        beginRemoveRows(QModelIndex(), 0, size-m_maxSize-1);
+        beginRemoveRows(QModelIndex(), 0, size - m_maxSize - 1);
         while (m_Housetrails.size() > m_maxSize) {
             int i = m_Contained.remove(m_Housetrails[0]->dbId());
             if (i != 1) {

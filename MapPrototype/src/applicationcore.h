@@ -20,12 +20,13 @@ class ApplicationCore : public QObject
 {
     Q_PROPERTY(QString mapProvider READ mapProvider WRITE setMapProvider NOTIFY mapProviderChanged)
     Q_PROPERTY(QString selectedHouse READ selectedHouse WRITE setSelectedHouse NOTIFY selectedHouseChanged)
-    Q_PROPERTY(QGeoCoordinate currentMapPosition READ currentMapPosition WRITE setCurrentMapPosition NOTIFY currentMapPositionChanged)
+    Q_PROPERTY(QGeoCoordinate currentMapPosition READ currentMapPosition WRITE setCurrentMapPosition NOTIFY
+            currentMapPositionChanged)
     Q_PROPERTY(bool showDetails READ showDetails WRITE setShowDetails NOTIFY showDetailsChanged)
     Q_PROPERTY(QString routeKML READ routeKML WRITE setRouteKML NOTIFY routeKMLChanged)
     Q_OBJECT
 public:
-    explicit ApplicationCore(QObject *parent = 0);
+    explicit ApplicationCore(QObject* parent = 0);
     ~ApplicationCore();
 
     void showView();

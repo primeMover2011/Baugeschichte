@@ -1,0 +1,11 @@
+BasedOnStyle: WebKit
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+BreakBeforeBraces: Linux
+BreakConstructorInitializersBeforeComma: true
+ColumnLimit: 120
+Cpp11BracedListStyle: true
+IndentWidth: 4
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 2
+Standard: Cpp11

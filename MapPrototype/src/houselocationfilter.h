@@ -17,7 +17,8 @@ class HouseLocationFilter : public QSortFilterProxyModel
     Q_PROPERTY(QGeoCoordinate location READ location WRITE setLocation NOTIFY locationChanged)
     Q_PROPERTY(double radius READ radius WRITE setRadius NOTIFY radiusChanged)
     Q_PROPERTY(double minDistance READ minDistance WRITE setMinDistance NOTIFY minDistanceChanged)
-    Q_PROPERTY(QString unfilteredHouseTitle READ unfilteredHouseTitle WRITE setUnfilteredHouseTitle NOTIFY unfilteredHouseTitleChanged)
+    Q_PROPERTY(QString unfilteredHouseTitle READ unfilteredHouseTitle WRITE setUnfilteredHouseTitle NOTIFY
+            unfilteredHouseTitleChanged)
 
 public:
     HouseLocationFilter(QObject* parent = nullptr);
@@ -50,7 +51,7 @@ signals:
     void unfilteredHouseTitleChanged(QString unfilteredHouseTitle);
 
 protected:
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
+    bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
 
 private:
     bool isCloseToOtherPosition(const QGeoCoordinate& coord) const;

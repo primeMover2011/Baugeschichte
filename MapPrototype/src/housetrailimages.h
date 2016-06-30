@@ -1,10 +1,10 @@
 #ifndef HOUSETRAILIMAGES_H
 #define HOUSETRAILIMAGES_H
 
-#include <QObject>
 #include <QAbstractListModel>
-#include <QStringList>
 #include <QGeoCoordinate>
+#include <QObject>
+#include <QStringList>
 
 class HouseTrail
 {
@@ -49,9 +49,9 @@ protected:
     QString m_geoHash;
 };
 
-inline bool operator< (const HouseTrail& lhs, const HouseTrail& rhs)
+inline bool operator<(const HouseTrail& lhs, const HouseTrail& rhs)
 {
-    return  lhs.dbId() < rhs.dbId();
+    return lhs.dbId() < rhs.dbId();
 }
 
 class HousetrailModel : public QAbstractListModel
@@ -67,7 +67,7 @@ public:
 
     };
 
-    HousetrailModel(QObject *parent = 0);
+    HousetrailModel(QObject* parent = 0);
     ~HousetrailModel();
 
     Q_SLOT void append(const QVector<HouseTrail>& aHouseTrail);

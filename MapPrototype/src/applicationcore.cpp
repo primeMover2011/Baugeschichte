@@ -1,13 +1,13 @@
 #include "applicationcore.h"
-#include "markerloader.h"
 #include "houselocationfilter.h"
 #include "housetrailimages.h"
+#include "markerloader.h"
 
-#include <QGuiApplication>
 #include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QGuiApplication>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -20,16 +20,16 @@
 #include <QScreen>
 #include <QSortFilterProxyModel>
 #include <QStandardPaths>
-#include <QtQml>
 #include <QVector>
+#include <QtQml>
 
 #if defined(Q_OS_ANDROID)
-    #include <QAndroidJniObject>
+#include <QAndroidJniObject>
 #endif
 
 #include <cmath>
 
-ApplicationCore::ApplicationCore(QObject *parent)
+ApplicationCore::ApplicationCore(QObject* parent)
     : QObject(parent)
     , m_view(new QQuickView())
     , m_houseTrailModel(new HousetrailModel(this))
@@ -43,7 +43,7 @@ ApplicationCore::ApplicationCore(QObject *parent)
     , m_housePositionLoader(new QNetworkAccessManager(this))
 {
     qRegisterMetaType<HouseTrail>("HouseTrail");
-    qRegisterMetaType<QVector<HouseTrail> >("QVector<HouseTrail>");
+    qRegisterMetaType<QVector<HouseTrail>>("QVector<HouseTrail>");
     qmlRegisterType<HouseLocationFilter>("Baugeschichte", 1, 0, "HouseLocationFilter");
 
     m_view->setWidth(1024);
@@ -54,18 +54,18 @@ ApplicationCore::ApplicationCore(QObject *parent)
     m_detailsProxyModel->setSourceModel(m_houseTrailModel);
 
     QQmlEngine* engine = m_view->engine();
-    QQmlContext *context = engine->rootContext();
+    QQmlContext* context = engine->rootContext();
     context->setContextProperty(QStringLiteral("appCore"), this);
     context->setContextProperty(QStringLiteral("markerLoader"), m_markerLoader);
     context->setContextProperty(QStringLiteral("houseTrailModel"), m_houseTrailModel);
     context->setContextProperty(QStringLiteral("filteredTrailModel"), m_detailsProxyModel);
     context->setContextProperty(QStringLiteral("screenDpi"), m_screenDpi);
 
-    connect(m_markerLoader, SIGNAL(newHousetrail(QVector<HouseTrail>)),
-            m_houseTrailModel, SLOT(append(QVector<HouseTrail>)));
+    connect(m_markerLoader, SIGNAL(newHousetrail(QVector<HouseTrail>)), m_houseTrailModel,
+        SLOT(append(QVector<HouseTrail>)));
 
-    connect(m_housePositionLoader, &QNetworkAccessManager::finished,
-            this, &ApplicationCore::handleLoadedHouseCoordinates);
+    connect(
+        m_housePositionLoader, &QNetworkAccessManager::finished, this, &ApplicationCore::handleLoadedHouseCoordinates);
 
     loadMarkers();
 }
@@ -73,7 +73,7 @@ ApplicationCore::ApplicationCore(QObject *parent)
 ApplicationCore::~ApplicationCore()
 {
     saveMarkers();
-    delete(m_view);
+    delete (m_view);
 }
 
 void ApplicationCore::showView()
@@ -107,7 +107,7 @@ QString ApplicationCore::selectedHouse() const
     return m_selectedHouse;
 }
 
-const QGeoCoordinate&ApplicationCore::currentMapPosition() const
+const QGeoCoordinate& ApplicationCore::currentMapPosition() const
 {
     return m_currentMapPosition;
 }
@@ -119,13 +119,15 @@ bool ApplicationCore::showDetails() const
 
 void ApplicationCore::centerSelectedHouse()
 {
-    HouseTrail * house = m_houseTrailModel->getHouseByTitle(m_selectedHouse);
+    HouseTrail* house = m_houseTrailModel->getHouseByTitle(m_selectedHouse);
     if (house != nullptr) {
         setCurrentMapPosition(house->theLocation());
         emit requestFullZoomIn();
     } else {
-        QString requestString = QString("http://baugeschichte.at/api.php?action=ask&query=[[%1]]|%3FKoordinaten|%3FPostleitzahl&format=json")
-                .arg(m_selectedHouse);
+        QString requestString
+            = QString(
+                  "http://baugeschichte.at/api.php?action=ask&query=[[%1]]|%3FKoordinaten|%3FPostleitzahl&format=json")
+                  .arg(m_selectedHouse);
         QNetworkRequest request = QNetworkRequest(QUrl(requestString));
         m_housePositionLoader->get(request);
     }
@@ -208,16 +210,14 @@ void ApplicationCore::handleLoadedHouseCoordinates(QNetworkReply* reply)
         return;
     }
 
-    if (reply->error() != QNetworkReply::NoError)
-    {
+    if (reply->error() != QNetworkReply::NoError) {
         qDebug() << Q_FUNC_INFO << "network error";
         reply->deleteLater();
         return;
     }
 
     const qint64 available = reply->bytesAvailable();
-    if (available <= 0)
-    {
+    if (available <= 0) {
         qDebug() << Q_FUNC_INFO << "No data in network reply";
         reply->deleteLater();
         return;
@@ -227,13 +227,11 @@ void ApplicationCore::handleLoadedHouseCoordinates(QNetworkReply* reply)
     reply->deleteLater();
     QJsonParseError parseError;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(buffer, &parseError);
-    if (QJsonParseError::NoError != parseError.error)
-    {
+    if (QJsonParseError::NoError != parseError.error) {
         qDebug() << Q_FUNC_INFO << parseError.errorString();
         return;
     }
-    if (!jsonDoc.isObject())
-    {
+    if (!jsonDoc.isObject()) {
         qDebug() << Q_FUNC_INFO << "no object..." << jsonDoc.toVariant();
         return;
     }
@@ -276,9 +274,11 @@ QString ApplicationCore::mainQMLFile() const
 int ApplicationCore::calculateScreenDpi() const
 {
 #if defined(Q_OS_ANDROID)
-    QAndroidJniObject qtActivity = QAndroidJniObject::callStaticObjectMethod("org/qtproject/qt5/android/QtNative", "activity", "()Landroid/app/Activity;");
-    QAndroidJniObject resources = qtActivity.callObjectMethod("getResources","()Landroid/content/res/Resources;");
-    QAndroidJniObject displayMetrics = resources.callObjectMethod("getDisplayMetrics","()Landroid/util/DisplayMetrics;");
+    QAndroidJniObject qtActivity = QAndroidJniObject::callStaticObjectMethod(
+        "org/qtproject/qt5/android/QtNative", "activity", "()Landroid/app/Activity;");
+    QAndroidJniObject resources = qtActivity.callObjectMethod("getResources", "()Landroid/content/res/Resources;");
+    QAndroidJniObject displayMetrics
+        = resources.callObjectMethod("getDisplayMetrics", "()Landroid/util/DisplayMetrics;");
     int density = displayMetrics.getField<int>("densityDpi");
     return density;
 #else
@@ -299,7 +299,7 @@ void ApplicationCore::saveMarkers()
     }
 
     QJsonArray markerArray;
-    for (int i=0; i< m_houseTrailModel->rowCount(); ++i) {
+    for (int i = 0; i < m_houseTrailModel->rowCount(); ++i) {
         QJsonObject object;
         object["dbId"] = m_houseTrailModel->get(i)->dbId();
         object["title"] = m_houseTrailModel->get(i)->houseTitle();
@@ -345,7 +345,7 @@ void ApplicationCore::loadMarkers()
 
     QVector<HouseTrail> houses;
     houses.reserve(array.size());
-    Q_FOREACH(const QJsonValue& value, array) {
+    Q_FOREACH (const QJsonValue& value, array) {
         QJsonObject object = value.toObject();
         HouseTrail house;
         house.setDbId(object["dbId"].toInt());

@@ -1,33 +1,32 @@
 #include "markerloader.h"
 #include "Geohash.hpp"
 
-#include <QElapsedTimer>
 #include <QDateTime>
 #include <QDebug>
+#include <QElapsedTimer>
+#include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonParseError>
-#include <QJsonArray>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QtConcurrent>
 
 #include <limits>
 
-MarkerLoader::MarkerLoader(QObject *parent)
+MarkerLoader::MarkerLoader(QObject* parent)
     : QObject(parent)
     , m_latitude(-std::numeric_limits<double>::max())
     , m_longitude(-std::numeric_limits<double>::max())
     , m_radius(-1.0)
     , m_loadAll(false)
-    , m_manager (new QNetworkAccessManager(this))
+    , m_manager(new QNetworkAccessManager(this))
     , m_loading(false)
 {
     m_lazyLoadTimer.setSingleShot(true);
     m_lazyLoadTimer.setInterval(100); // 100 ms
     connect(&m_lazyLoadTimer, &QTimer::timeout, this, &MarkerLoader::loadMarkers);
 
-    connect(m_manager, SIGNAL(finished(QNetworkReply*)),
-            this, SLOT(poisFinished(QNetworkReply*)));
+    connect(m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(poisFinished(QNetworkReply*)));
 }
 
 double MarkerLoader::latitude() const
@@ -42,8 +41,7 @@ double MarkerLoader::longitude() const
 
 void MarkerLoader::setLocation(double latitude, double longitude)
 {
-    if (std::abs(latitude - m_latitude) < 1e-12
-            && std::abs(longitude - m_longitude) < 1e-12) {
+    if (std::abs(latitude - m_latitude) < 1e-12 && std::abs(longitude - m_longitude) < 1e-12) {
         return;
     }
 
@@ -103,15 +101,16 @@ void MarkerLoader::loadMarkers()
         return;
     }
 
-    QString locationRequest = QString("http://baugeschichte.at/app/v1/getData.php?action=getBuildingsBoxed&lat=%1&lon=%2&radius=")
-            .arg(m_latitude,0,'f',7)
-            .arg(m_longitude,0,'f',7);
+    QString locationRequest
+        = QString("http://baugeschichte.at/app/v1/getData.php?action=getBuildingsBoxed&lat=%1&lon=%2&radius=")
+              .arg(m_latitude, 0, 'f', 7)
+              .arg(m_longitude, 0, 'f', 7);
     QString theRequest4Pois = locationRequest + QString::number(m_radius, 'f', 7);
     if (m_loadAll) {
         theRequest4Pois = theRequest4Pois % "&all=1";
     }
 
-//    qDebug() << theRequest4Pois;
+    //    qDebug() << theRequest4Pois;
     QNetworkRequest request = QNetworkRequest(QUrl(theRequest4Pois));
     m_requests.append(request);
     m_manager->get(request);
@@ -120,68 +119,67 @@ void MarkerLoader::loadMarkers()
 }
 
 QString MarkerLoader::getGeoHashFromLocation(QGeoCoordinate theLocation, int thePrecision)
-{   if (thePrecision < 1) thePrecision = 1;
-    if (thePrecision > 12) thePrecision = 12;
+{
+    if (thePrecision < 1) {
+        thePrecision = 1;
+    }
+    if (thePrecision > 12) {
+        thePrecision = 12;
+    }
 
     std::string aGeoHash;
-    GeographicLib::Geohash::Forward(theLocation.latitude(),theLocation.longitude(),thePrecision,aGeoHash);
+    GeographicLib::Geohash::Forward(theLocation.latitude(), theLocation.longitude(), thePrecision, aGeoHash);
     return QString::fromStdString(aGeoHash);
 }
 
 QGeoCoordinate MarkerLoader::getLocationFromGeoHash(QString theGeoHash)
 {
-    //if (thePrecision < 1) thePrecision = 1;
-    //if (thePrecision > 12) thePrecision = 12;
+    // if (thePrecision < 1) thePrecision = 1;
+    // if (thePrecision > 12) thePrecision = 12;
 
     std::string aGeoHash = theGeoHash.toStdString();
     double lat, lon;
     int theLen;
 
-    GeographicLib::Geohash::Reverse(aGeoHash, lat,lon,theLen);
+    GeographicLib::Geohash::Reverse(aGeoHash, lat, lon, theLen);
     return QGeoCoordinate(lat, lon);
 }
 
-void MarkerLoader::poisFinished(QNetworkReply *theReply)
+void MarkerLoader::poisFinished(QNetworkReply* theReply)
 {
     QtConcurrent::run(this, &MarkerLoader::createModelAsync, theReply);
 
     const QNetworkRequest& request = theReply->request();
     m_requests.removeOne(request);
-    if (!m_requests.empty())
-    {
+    if (!m_requests.empty()) {
         m_manager->get(m_requests.first());
     }
 
     setLoading(!m_requests.isEmpty());
 }
 
-void MarkerLoader::createModelAsync(QNetworkReply *theReply)
+void MarkerLoader::createModelAsync(QNetworkReply* theReply)
 {
-//    qDebug() << Q_FUNC_INFO;
+    //    qDebug() << Q_FUNC_INFO;
     QString theResponse;
-    if (theReply)
-    {
-        if (theReply->error() == QNetworkReply::NoError)
-        {
+    if (theReply) {
+        if (theReply->error() == QNetworkReply::NoError) {
             const qint64 available = theReply->bytesAvailable();
-            if (available > 0)
-            {
+            if (available > 0) {
                 const QByteArray buffer = QString::fromUtf8(theReply->readAll()).toLatin1();
                 QJsonParseError anError;
                 QJsonDocument aDoc = QJsonDocument::fromJson(buffer, &anError);
-                if (QJsonParseError::NoError != anError.error)
-                {
+                if (QJsonParseError::NoError != anError.error) {
                     qDebug() << anError.errorString();
                     return;
                 }
 
-                if (!aDoc.isObject())
-                {
+                if (!aDoc.isObject()) {
                     qDebug() << "no object..." << aDoc.toVariant();
                 }
                 QJsonDocument doc;
                 {
-                    QJsonObject anInfoObject=aDoc.object();
+                    QJsonObject anInfoObject = aDoc.object();
                     QJsonArray theValueArray = anInfoObject["payload"].toArray();
                     QVector<HouseTrail> markers;
                     markers.reserve(theValueArray.size());
@@ -190,7 +188,7 @@ void MarkerLoader::createModelAsync(QNetworkReply *theReply)
                         QJsonObject anObj = theValue.toObject();
                         aHouseTrail.setDbId(anObj["id"].toInt());
                         aHouseTrail.setHouseTitle(anObj["title"].toString());
-                        aHouseTrail.setTheLocation(QGeoCoordinate(anObj["lat"].toDouble(),anObj["lon"].toDouble()));
+                        aHouseTrail.setTheLocation(QGeoCoordinate(anObj["lat"].toDouble(), anObj["lon"].toDouble()));
 
                         doc.setArray(anObj["cats"].toArray());
 
@@ -199,21 +197,17 @@ void MarkerLoader::createModelAsync(QNetworkReply *theReply)
                     }
 
                     emit newHousetrail(markers);
-
                 }
-            }
-            else
-                theResponse="empty";
-        }
-        else
-        {
-            theResponse =  tr("Error: %1 status: %2").arg(theReply->errorString(),
-                                                          theReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toString());
+            } else
+                theResponse = "empty";
+        } else {
+            theResponse = tr("Error: %1 status: %2")
+                              .arg(theReply->errorString(),
+                                  theReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toString());
         }
 
-        qDebug()<<"code: "<<
-                  theReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toString() <<
-                  " response: "<< theResponse;
+        qDebug() << "code: " << theReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toString()
+                 << " response: " << theResponse;
         theReply->deleteLater();
     }
 }

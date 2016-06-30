@@ -3,10 +3,10 @@
 
 #include "housetrailimages.h"
 
-#include <QObject>
 #include <QGeoCoordinate>
 #include <QList>
 #include <QNetworkReply>
+#include <QObject>
 #include <QTimer>
 #include <QVector>
 
@@ -24,7 +24,7 @@ class MarkerLoader : public QObject
     Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
 
 public:
-    explicit MarkerLoader(QObject *parent = 0);
+    explicit MarkerLoader(QObject* parent = 0);
 
     double latitude() const;
     double longitude() const;
@@ -54,7 +54,7 @@ signals:
 private slots:
     void loadMarkers();
     void poisFinished(QNetworkReply* theReply);
-    void createModelAsync(QNetworkReply *theReply);
+    void createModelAsync(QNetworkReply* theReply);
 
 private:
     void setLoading(bool loading);

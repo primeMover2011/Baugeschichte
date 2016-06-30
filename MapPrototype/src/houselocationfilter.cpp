@@ -2,8 +2,8 @@
 #include "housetrailimages.h"
 
 #include <QDebug>
-#include <QJsonObject>
 #include <QJSValue>
+#include <QJsonObject>
 
 #include <cmath>
 
@@ -45,7 +45,7 @@ void HouseLocationFilter::setRouteHouses(QVariant variant)
     if (list.isEmpty()) {
         return;
     }
-    for(const QVariant& houseVar : list) {
+    for (const QVariant& houseVar : list) {
         m_routeHouses << houseVar.toString();
     }
 
@@ -102,7 +102,8 @@ void HouseLocationFilter::setMinDistance(double minDistance)
 
 bool HouseLocationFilter::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
 {
-    QVariant variant = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HousetrailModel::CoordinateRole);
+    QVariant variant
+        = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HousetrailModel::CoordinateRole);
     if (!variant.canConvert<QGeoCoordinate>()) {
         return false;
     }
@@ -112,7 +113,8 @@ bool HouseLocationFilter::filterAcceptsRow(int source_row, const QModelIndex& so
         return false;
     }
 
-    QVariant titleVariant = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HousetrailModel::HouseTitleRole);
+    QVariant titleVariant
+        = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HousetrailModel::HouseTitleRole);
     if (titleVariant.canConvert<QString>()) {
         QString title = titleVariant.value<QString>();
         if (title == m_unfilteredHouseTitle || m_routeHouses.contains(title)) {
@@ -132,7 +134,7 @@ bool HouseLocationFilter::filterAcceptsRow(int source_row, const QModelIndex& so
 
 bool HouseLocationFilter::isCloseToOtherPosition(const QGeoCoordinate& coord) const
 {
-    Q_FOREACH(const QGeoCoordinate& usedCoord, m_usedCoordinates) {
+    Q_FOREACH (const QGeoCoordinate& usedCoord, m_usedCoordinates) {
         if (coord.distanceTo(usedCoord) < m_minDistance) {
             return true;
         }

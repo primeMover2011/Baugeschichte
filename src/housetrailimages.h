@@ -1,58 +1,9 @@
 #ifndef HOUSETRAILIMAGES_H
 #define HOUSETRAILIMAGES_H
 
+#include "housemarker.h"
+
 #include <QAbstractListModel>
-#include <QGeoCoordinate>
-#include <QObject>
-#include <QStringList>
-
-class HouseTrail
-{
-public:
-    explicit HouseTrail();
-
-    qint64 dbId() const
-    {
-        return m_dbId;
-    }
-    const QString& houseTitle() const
-    {
-        return m_houseTitle;
-    }
-
-    const QGeoCoordinate& theLocation() const
-    {
-        return m_theLocation;
-    }
-
-    const QString& categories() const
-    {
-        return m_categories;
-    }
-
-    const QString& geoHash() const
-    {
-        return m_geoHash;
-    }
-
-    void setDbId(qint64 dbId);
-    void setHouseTitle(const QString& houseTitle);
-    void setTheLocation(const QGeoCoordinate& theLocation);
-    void setCategories(const QString& categories);
-    void setGeoHash(const QString& geoHash);
-
-protected:
-    qint64 m_dbId;
-    QString m_houseTitle;
-    QGeoCoordinate m_theLocation;
-    QString m_categories;
-    QString m_geoHash;
-};
-
-inline bool operator<(const HouseTrail& lhs, const HouseTrail& rhs)
-{
-    return lhs.dbId() < rhs.dbId();
-}
 
 class HousetrailModel : public QAbstractListModel
 {
@@ -63,14 +14,12 @@ public:
         HouseTitleRole,
         CoordinateRole,
         CategoryRole,
-        GeohashRole,
-
     };
 
     HousetrailModel(QObject* parent = 0);
     ~HousetrailModel();
 
-    Q_SLOT void append(const QVector<HouseTrail>& aHouseTrail);
+    Q_SLOT void append(const QVector<HouseMarker>& aHouseTrail);
     Q_INVOKABLE void clear();
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
@@ -79,9 +28,9 @@ public:
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
-    const HouseTrail* get(int idx) const;
+    const HouseMarker* get(int idx) const;
     Q_INVOKABLE QString getHouseTitleById(qint64 id) const;
-    HouseTrail* getHouseByTitle(const QString& title) const;
+    HouseMarker* getHouseByTitle(const QString& title) const;
 
 protected:
     QHash<int, QByteArray> roleNames() const;
@@ -92,8 +41,8 @@ private:
      */
     void limitSize();
 
-    QList<HouseTrail*> m_Housetrails;
-    QHash<qint64, HouseTrail*> m_Contained;
+    QList<HouseMarker*> m_Housetrails;
+    QHash<qint64, HouseMarker*> m_Contained;
 
     int m_maxSize;
 };

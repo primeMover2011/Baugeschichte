@@ -23,20 +23,18 @@ INCLUDE_PATH += OPENCV3_PATH_INCLUDE
 SOURCES += main.cpp \
     housetrailimages.cpp \
     clusterproxy.cpp \
-    Geohash.cpp \
     houselocationfilter.cpp \
     applicationcore.cpp \
-    markerloader.cpp
+    markerloader.cpp \
+    housemarker.cpp
 
 HEADERS += \
     housetrailimages.h \
     clusterproxy.h \
-    Geohash.hpp \
-    Constants.hpp \
-    Utility.hpp \
     houselocationfilter.h \
     applicationcore.h \
-    markerloader.h
+    markerloader.h \
+    housemarker.h
 
 DISTFILES += \
     android/AndroidManifest.xml \

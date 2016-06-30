@@ -42,8 +42,8 @@ ApplicationCore::ApplicationCore(QObject* parent)
     , m_showDetails(false)
     , m_housePositionLoader(new QNetworkAccessManager(this))
 {
-    qRegisterMetaType<HouseTrail>("HouseTrail");
-    qRegisterMetaType<QVector<HouseTrail>>("QVector<HouseTrail>");
+    qRegisterMetaType<HouseMarker>("HouseTrail");
+    qRegisterMetaType<QVector<HouseMarker>>("QVector<HouseTrail>");
     qmlRegisterType<HouseLocationFilter>("Baugeschichte", 1, 0, "HouseLocationFilter");
 
     m_view->setWidth(1024);
@@ -61,8 +61,8 @@ ApplicationCore::ApplicationCore(QObject* parent)
     context->setContextProperty(QStringLiteral("filteredTrailModel"), m_detailsProxyModel);
     context->setContextProperty(QStringLiteral("screenDpi"), m_screenDpi);
 
-    connect(m_markerLoader, SIGNAL(newHousetrail(QVector<HouseTrail>)), m_houseTrailModel,
-        SLOT(append(QVector<HouseTrail>)));
+    connect(m_markerLoader, SIGNAL(newHousetrail(QVector<HouseMarker>)), m_houseTrailModel,
+        SLOT(append(QVector<HouseMarker>)));
 
     connect(
         m_housePositionLoader, &QNetworkAccessManager::finished, this, &ApplicationCore::handleLoadedHouseCoordinates);
@@ -119,7 +119,7 @@ bool ApplicationCore::showDetails() const
 
 void ApplicationCore::centerSelectedHouse()
 {
-    HouseTrail* house = m_houseTrailModel->getHouseByTitle(m_selectedHouse);
+    HouseMarker* house = m_houseTrailModel->getHouseByTitle(m_selectedHouse);
     if (house != nullptr) {
         setCurrentMapPosition(house->theLocation());
         emit requestFullZoomIn();
@@ -306,7 +306,6 @@ void ApplicationCore::saveMarkers()
         object["coord_lat"] = m_houseTrailModel->get(i)->theLocation().latitude();
         object["coord_lon"] = m_houseTrailModel->get(i)->theLocation().longitude();
         object["category"] = m_houseTrailModel->get(i)->categories();
-        object["geohash"] = m_houseTrailModel->get(i)->geoHash();
         markerArray.append(object);
     }
 
@@ -343,17 +342,16 @@ void ApplicationCore::loadMarkers()
     QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
     QJsonArray array = doc.array();
 
-    QVector<HouseTrail> houses;
+    QVector<HouseMarker> houses;
     houses.reserve(array.size());
     Q_FOREACH (const QJsonValue& value, array) {
         QJsonObject object = value.toObject();
-        HouseTrail house;
+        HouseMarker house;
         house.setDbId(object["dbId"].toInt());
         house.setHouseTitle(object["title"].toString());
         QGeoCoordinate coord(object["coord_lat"].toDouble(), object["coord_lon"].toDouble());
         house.setTheLocation(coord);
         house.setCategories(object["category"].toString());
-        house.setGeoHash(object["geohash"].toString());
         houses.push_back(house);
     }
 

@@ -1,5 +1,4 @@
 #include "markerloader.h"
-#include "Geohash.hpp"
 
 #include <QDateTime>
 #include <QDebug>
@@ -118,33 +117,6 @@ void MarkerLoader::loadMarkers()
     setLoading(!m_requests.isEmpty());
 }
 
-QString MarkerLoader::getGeoHashFromLocation(QGeoCoordinate theLocation, int thePrecision)
-{
-    if (thePrecision < 1) {
-        thePrecision = 1;
-    }
-    if (thePrecision > 12) {
-        thePrecision = 12;
-    }
-
-    std::string aGeoHash;
-    GeographicLib::Geohash::Forward(theLocation.latitude(), theLocation.longitude(), thePrecision, aGeoHash);
-    return QString::fromStdString(aGeoHash);
-}
-
-QGeoCoordinate MarkerLoader::getLocationFromGeoHash(QString theGeoHash)
-{
-    // if (thePrecision < 1) thePrecision = 1;
-    // if (thePrecision > 12) thePrecision = 12;
-
-    std::string aGeoHash = theGeoHash.toStdString();
-    double lat, lon;
-    int theLen;
-
-    GeographicLib::Geohash::Reverse(aGeoHash, lat, lon, theLen);
-    return QGeoCoordinate(lat, lon);
-}
-
 void MarkerLoader::poisFinished(QNetworkReply* theReply)
 {
     QtConcurrent::run(this, &MarkerLoader::createModelAsync, theReply);
@@ -181,10 +153,10 @@ void MarkerLoader::createModelAsync(QNetworkReply* theReply)
                 {
                     QJsonObject anInfoObject = aDoc.object();
                     QJsonArray theValueArray = anInfoObject["payload"].toArray();
-                    QVector<HouseTrail> markers;
+                    QVector<HouseMarker> markers;
                     markers.reserve(theValueArray.size());
                     foreach (const QJsonValue& theValue, theValueArray) {
-                        HouseTrail aHouseTrail;
+                        HouseMarker aHouseTrail;
                         QJsonObject anObj = theValue.toObject();
                         aHouseTrail.setDbId(anObj["id"].toInt());
                         aHouseTrail.setHouseTitle(anObj["title"].toString());

@@ -38,15 +38,12 @@ public:
 
     bool loading() const;
 
-    Q_INVOKABLE QString getGeoHashFromLocation(QGeoCoordinate theLocation, int thePrecision);
-    Q_INVOKABLE QGeoCoordinate getLocationFromGeoHash(QString theGeoHash);
-
 signals:
     void latitudeChanged(double);
     void longitudeChanged(double);
     void locationChanged(double, double);
     void radiusChanged(double);
-    void newHousetrail(QVector<HouseTrail> aNewHouseTrail);
+    void newHousetrail(QVector<HouseMarker> aNewHouseTrail);
     void loadingChanged(bool loading);
 
     void loadAllChanged(bool loadAll);

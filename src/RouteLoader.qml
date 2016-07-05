@@ -38,6 +38,8 @@ Item {
 
     property var routeHouses: []
 
+    readonly property var routeArea: __routeArea
+
     function isRouteHouse(title) {
         for (var i=0; i<routeHouses.length; ++i) {
             if (title === routeHouses[i].title) {
@@ -48,6 +50,8 @@ Item {
     }
 
     visible: false
+
+    property var __routeArea: QtPositioning.rectangle()
 
     JsonModel {
         id: simpleMapSearchModel
@@ -76,8 +80,12 @@ Item {
                 minLon = Math.min(jsonObject.lon, minLon);
                 maxLon = Math.max(jsonObject.lon, maxLon);
 
-                var center = QtPositioning.coordinate((minLat + maxLat) / 2, (minLon + maxLon) / 2);
-                appCore.currentMapPosition = center;
+                var area = QtPositioning.rectangle(
+                            QtPositioning.coordinate(maxLat, minLon),
+                            QtPositioning.coordinate(minLat, maxLon));
+                __routeArea = QtPositioning.rectangle(area.center,
+                                                      area.width * 1.1,
+                                                      area.height * 1.1);
             }
 
             appCore.routeKML = magneto.kml;

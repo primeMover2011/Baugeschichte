@@ -178,6 +178,8 @@ Map {
                     newRouteHouses.push(routeLoader.routeHouses[i].title)
                 }
                 locationFilter.setRouteHouses(newRouteHouses);
+
+                root.visibleRegion = routeLoader.routeArea;
             }
         }
     }

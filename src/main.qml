@@ -297,7 +297,6 @@ Item {
 
     RouteLoader {
         id: routeLoader
-        anchors.fill: uiStack
     }
 
     StackView {
@@ -322,47 +321,47 @@ Item {
                 loading: details.loading
 
                 // used to fit screen to route
-                Map {
-                    id: zoomMap
-                    anchors.fill: parent
-                    visible: false
-                    enabled: false
+//                Map {
+//                    id: zoomMap
+//                    anchors.fill: parent
+//                    visible: false
+//                    enabled: false
 
-                    plugin: initPlugin()
-                    function initPlugin() {
-                        return appCore.mapProvider === "osm" ? osmPlugin : mapBoxPlugin;
-                    }
-                    Plugin {
-                        id: osmPlugin
-                        name: "osm"
-                    }
-                    Plugin {
-                        id: mapBoxPlugin
-                        name: "mapbox"
-                        PluginParameter {
-                            name: "mapbox.map_id"
-                            value: "primemover.c5fe94e8"
-                        }
-                        PluginParameter {
-                            name: "mapbox.access_token"
-                            value: "pk.eyJ1IjoicHJpbWVtb3ZlciIsImEiOiIzNjFlYWNjZmZhMjAyNGFhMWQ0NDM0ZDIyMTE4YmEyMCJ9.d5wi3uI5VayKiniPnkxojg"
-                        }
-                    }
+//                    plugin: initPlugin()
+//                    function initPlugin() {
+//                        return appCore.mapProvider === "osm" ? osmPlugin : mapBoxPlugin;
+//                    }
+//                    Plugin {
+//                        id: osmPlugin
+//                        name: "osm"
+//                    }
+//                    Plugin {
+//                        id: mapBoxPlugin
+//                        name: "mapbox"
+//                        PluginParameter {
+//                            name: "mapbox.map_id"
+//                            value: "primemover.c5fe94e8"
+//                        }
+//                        PluginParameter {
+//                            name: "mapbox.access_token"
+//                            value: "pk.eyJ1IjoicHJpbWVtb3ZlciIsImEiOiIzNjFlYWNjZmZhMjAyNGFhMWQ0NDM0ZDIyMTE4YmEyMCJ9.d5wi3uI5VayKiniPnkxojg"
+//                        }
+//                    }
 
-                    RouteLine {
-                        source: appCore.routeKML !== "" ? "http://baugeschichte.at/" + appCore.routeKML : ""
+//                    RouteLine {
+//                        source: appCore.routeKML !== "" ? "http://baugeschichte.at/" + appCore.routeKML : ""
 
-                        onLoadingChanged: {
-                            if (loading || pathLength() === 0) {
-                                return;
-                            }
+//                        onLoadingChanged: {
+//                            if (loading || pathLength() === 0) {
+//                                return;
+//                            }
 
 
-                            zoomMap.fitViewportToMapItems();
-                            mapOfEurope.zoomLevel = zoomMap.zoomLevel * 0.95;
-                        }
-                    }
-                }
+//                            zoomMap.fitViewportToMapItems();
+//                            mapOfEurope.zoomLevel = zoomMap.zoomLevel * 0.95;
+//                        }
+//                    }
+//                }
 
                 MapComponent {
                     id: mapOfEurope

@@ -31,6 +31,7 @@
 #include <QList>
 #include <QSortFilterProxyModel>
 #include <QStringList>
+#include <QTimer>
 #include <QVariant>
 
 /**
@@ -79,6 +80,9 @@ signals:
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
 
+private slots:
+    void triggerRefiltering();
+
 private:
     bool isCloseToOtherPosition(const QGeoCoordinate& coord) const;
 
@@ -90,6 +94,7 @@ private:
 
     QString m_unfilteredHouseTitle;
     QStringList m_routeHouses;
+    QTimer m_invalidateTimer;
 };
 
 #endif // HOUSELOCATIONFILTER_H

@@ -41,6 +41,9 @@ HouseLocationFilter::HouseLocationFilter(QObject* parent)
     , m_unfilteredHouseTitle("")
 {
     setDynamicSortFilter(true);
+    m_invalidateTimer.setInterval(10);
+    m_invalidateTimer.setSingleShot(true);
+    connect(&m_invalidateTimer, &QTimer::timeout, this, &HouseLocationFilter::triggerRefiltering);
 }
 
 const QGeoCoordinate& HouseLocationFilter::location() const
@@ -75,8 +78,7 @@ void HouseLocationFilter::setRouteHouses(QVariant variant)
         m_routeHouses << houseVar.toString();
     }
 
-    m_usedCoordinates.clear();
-    invalidateFilter();
+    m_invalidateTimer.start();
 }
 
 void HouseLocationFilter::setUnfilteredHouseTitle(const QString& houseTitle)
@@ -87,8 +89,7 @@ void HouseLocationFilter::setUnfilteredHouseTitle(const QString& houseTitle)
 
     m_unfilteredHouseTitle = houseTitle;
     emit unfilteredHouseTitleChanged(m_unfilteredHouseTitle);
-    m_usedCoordinates.clear();
-    invalidateFilter();
+    m_invalidateTimer.start();
 }
 
 void HouseLocationFilter::setLocation(const QGeoCoordinate& location)
@@ -99,8 +100,7 @@ void HouseLocationFilter::setLocation(const QGeoCoordinate& location)
 
     m_location = location;
     emit locationChanged(m_location);
-    m_usedCoordinates.clear();
-    invalidateFilter();
+    m_invalidateTimer.start();
 }
 
 void HouseLocationFilter::setRadius(double radius)
@@ -110,8 +110,7 @@ void HouseLocationFilter::setRadius(double radius)
 
     m_radius = radius;
     emit radiusChanged(radius);
-    m_usedCoordinates.clear();
-    invalidateFilter();
+    m_invalidateTimer.start();
 }
 
 void HouseLocationFilter::setMinDistance(double minDistance)
@@ -122,8 +121,7 @@ void HouseLocationFilter::setMinDistance(double minDistance)
 
     m_minDistance = minDistance;
     emit minDistanceChanged(minDistance);
-    m_usedCoordinates.clear();
-    invalidateFilter();
+    m_invalidateTimer.start();
 }
 
 bool HouseLocationFilter::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
@@ -156,6 +154,12 @@ bool HouseLocationFilter::filterAcceptsRow(int source_row, const QModelIndex& so
     m_usedCoordinates.append(coord);
 
     return true;
+}
+
+void HouseLocationFilter::triggerRefiltering()
+{
+    m_usedCoordinates.clear();
+    invalidateFilter();
 }
 
 bool HouseLocationFilter::isCloseToOtherPosition(const QGeoCoordinate& coord) const

@@ -104,7 +104,7 @@ BaseView {
         anchors.centerIn: parent
         width: parent.width / scale
         height: parent.height / scale
-        scale: screenDpi > 250 ? 2 :1
+        scale: screenDpi > 200 ? 2 :1
 
         property MarkerLabel markerLabel
 

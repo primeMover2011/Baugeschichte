@@ -35,7 +35,9 @@ MapQuickItem {
     property Map mapItem
     
     anchorPoint.x: coco.width / 2
-    anchorPoint.y: coco.height * 1.9
+    anchorPoint.y: (coco.height + (mapItem ? mapItem.markerSize / mapItem.scale : 0)) + 2
+
+    scale: mapItem ? (1.0 / mapItem.scale) : 1.0
     
     sourceItem: Rectangle {
         id: coco

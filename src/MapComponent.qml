@@ -104,11 +104,11 @@ BaseView {
         anchors.centerIn: parent
         width: parent.width / scale
         height: parent.height / scale
-        scale: 1
+        scale: screenDpi > 250 ? 2 :1
 
         property MarkerLabel markerLabel
 
-        readonly property int markerSize: localHelper.dp(50)
+        readonly property int markerSize: localHelper.dp(50) / map.scale
         readonly property real defaultZoomLevel: 16
 
         center: QtPositioning.coordinate(47.0666667, 15.45)
@@ -187,6 +187,7 @@ BaseView {
                         source: getSource()
                         width: map.markerSize
                         height: map.markerSize
+
                         sourceSize: Qt.size(width, height)
                         fillMode: Image.PreserveAspectFit
 
@@ -239,6 +240,7 @@ BaseView {
         PositionIndicator {
             id: positionCircle
             positionSource: myPosition
+            scale: 1 / map.scale
         }
 
         Component.onCompleted: {

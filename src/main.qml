@@ -111,6 +111,7 @@ Item {
                 id: searchButton
                 source: "resources/System-search.svg"
                 onClicked: {
+                    filteredTrailModel.setFilterWildcard("");
                     appCore.selectedHouse = "";
                     appCore.showDetails = false;
                     appCore.routeKML = "";
@@ -141,6 +142,7 @@ Item {
                 id: routesButton
                 source: "resources/Edit-check-sheet.svg"
                 onClicked: {
+                    filteredTrailModel.setFilterWildcard("");
                     appCore.selectedHouse = "";
                     appCore.showDetails = false;
                     appCore.routeKML = "";

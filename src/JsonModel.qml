@@ -29,7 +29,7 @@ import QtQuick 2.4
 Item {
     id: root
 
-    property variant model: housetrailDetails
+    property variant model: jsonModel
     property string phrase : ""
     property string searchString: ""
     property bool shouldEncode: true//default. due to problems with encoding on serverside. switched off in routesearch
@@ -42,12 +42,14 @@ Item {
     // Is empty if the last request was successful
     readonly property string error: internal.error
 
+    property bool categoriesFix: false
+
     signal isLoaded
     signal newobject(var magneto)
 
     onPhraseChanged: internal.reload();
 
-    ListModel { id: housetrailDetails }
+    ListModel { id: jsonModel }
 
     QtObject {
         id: internal
@@ -78,8 +80,14 @@ Item {
                 if (req.readyState === XMLHttpRequest.DONE) {
                     if (req.status == 200)
                     {
+                        var responseText = req.responseText;
+                        if (categoriesFix) {
+                            responseText = responseText.replace(/tten,/, 'tten",');
+                            responseText = responseText.replace(/#ff0000""/, '#ff0000"');
+                        }
+
                         try {
-                            var searchResult = JSON.parse(req.responseText);
+                            var searchResult = JSON.parse(responseText);
                             if (searchResult.errors !== undefined) {
                                 error = qsTr("Error fetching searchresults: ") + searchResult.errors[0].message;
                                 console.log(error);
@@ -87,8 +95,8 @@ Item {
                                newobject(searchResult)
                             }
                         } catch (e) {
-                            error = qsTr("Jason parse error for fetched URL: ") + searchPhrase +
-                                    "\n" + qsTr("Fetched text was: ") + req.responseText;
+                            error = qsTr("Json parse error for fetched URL: ") + searchPhrase +
+                                    "\n" + qsTr("Fetched text was: ") + responseText;
                             console.log(error);
                         }
                     } else {

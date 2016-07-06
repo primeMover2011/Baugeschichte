@@ -40,11 +40,14 @@ BaseView {
 
     property alias center: map.center
     property alias zoomLevel: map.zoomLevel
-    property variant currentModel: locationFilter
 
     function resetToMainModel()
     {
-        root.currentModel = locationFilter;
+        housetrailMapItems.model = locationFilter;
+    }
+    function useCategoryModel()
+    {
+        housetrailMapItems.model = categoryModel;
     }
 
     function updateRadius() {
@@ -74,10 +77,19 @@ BaseView {
 
     HouseLocationFilter {
         id: locationFilter
-        sourceModel: filteredTrailModel
+        sourceModel: houseTrailModel
         location: map.center
         radius: root.radius
         unfilteredHouseTitle: appCore.selectedHouse
+    }
+
+    HouseLocationFilter {
+        id: categoryModel
+        sourceModel: appCore.categoryHouses
+        location: map.center
+        radius: root.radius
+        unfilteredHouseTitle: appCore.selectedHouse
+        minDistance: locationFilter.minDistance
     }
 
     DensityHelpers {
@@ -166,7 +178,7 @@ BaseView {
 
         MapItemView {
             id: housetrailMapItems
-            model: root.currentModel
+            model: locationFilter
 
             delegate: MapQuickItem {
                 id: mqItem

@@ -47,7 +47,6 @@ public:
     void setCategories(const QString& categories);
     const QString& categories() const;
 
-
 protected:
     QString m_houseTitle;
     QGeoCoordinate m_location;

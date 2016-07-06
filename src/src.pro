@@ -25,14 +25,16 @@ SOURCES += main.cpp \
     applicationcore.cpp \
     markerloader.cpp \
     housemarker.cpp \
-    housemarkermodel.cpp
+    housemarkermodel.cpp \
+    categoryloader.cpp
 
 HEADERS += \
     houselocationfilter.h \
     applicationcore.h \
     markerloader.h \
     housemarker.h \
-    housemarkermodel.h
+    housemarkermodel.h \
+    categoryloader.h
 
 DISTFILES += \
     android/AndroidManifest.xml \

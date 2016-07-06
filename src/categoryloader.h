@@ -3,7 +3,7 @@
  **
  ** The MIT License (MIT)
  **
- ** Copyright (c) 2015 primeMover2011
+ ** Copyright (c) 2016 Guenter Schwann
  **
  ** Permission is hereby granted, free of charge, to any person obtaining a copy
  ** of this software and associated documentation files (the "Software"), to deal
@@ -24,49 +24,47 @@
  ** SOFTWARE.
  **/
 
-import QtQuick 2.4
-import QtQuick.Controls 1.4
-import "./"
+#ifndef CATEGORYLOADER_H
+#define CATEGORYLOADER_H
 
-BaseView {
+#include "housemarkermodel.h"
 
-    JsonModel {
-        id: searchModel
-        onNewobject: {
-            for (var idx in magneto) {
-                var jsonObject = magneto[idx];
-                model.append(jsonObject);
-            }
-        }
-        searchString: "http://baugeschichte.at/app/v1/getData.php?action=getAllCategories&lang=de"
-        Component.onCompleted: {
-            phrase = " " //fires a searchrequest
-        }
-    }
+#include <QNetworkReply>
+#include <QObject>
+#include <QVector>
 
-    ListView {
-        id: searchResult
-        model: searchModel.model
-        interactive: true
-        anchors  {
-            top: parent.top
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
-        }
-        clip: true
+class QNetworkAccessManager;
 
-        delegate: SearchResultDelegate {
-            text: category
-            onSelected: {
-                selectCategory(category)
-                uiStack.pop()
-            }
+/**
+ * Class to load all houses of one category
+ */
+class CategoryLoader : public QObject
+{
+    Q_PROPERTY(bool isLoading READ isLoading NOTIFY isLoadingChanged)
+    Q_OBJECT
+public:
+    explicit CategoryLoader(QObject* parent = nullptr);
 
-            function selectCategory(theCat) {
-                appCore.loadCategory(theCat);
-            }
-        }
-    }
-}
+    Q_INVOKABLE void loadCategory(QString category);
 
+    bool isLoading() const;
+
+    void loadFromJsonText(const QByteArray& jsonText);
+
+signals:
+    void isLoadingChanged(bool loading);
+    void newHousetrail(QVector<HouseMarker> aNewHouseTrail);
+
+private slots:
+    void categoryLoaded(QNetworkReply* theReply);
+
+private:
+    void setLoading(bool loading);
+
+    QString m_currentCategory;
+    QNetworkAccessManager* m_manager;
+    bool m_loading;
+    QList<QNetworkRequest> m_requests;
+};
+
+#endif // CATEGORYLOADER_H

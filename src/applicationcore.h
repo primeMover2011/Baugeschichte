@@ -31,6 +31,7 @@
 #include <QObject>
 #include <QString>
 
+class CategoryLoader;
 class MarkerLoader;
 class HouseMarkerModel;
 
@@ -50,6 +51,7 @@ class ApplicationCore : public QObject
             currentMapPositionChanged)
     Q_PROPERTY(bool showDetails READ showDetails WRITE setShowDetails NOTIFY showDetailsChanged)
     Q_PROPERTY(QString routeKML READ routeKML WRITE setRouteKML NOTIFY routeKMLChanged)
+    Q_PROPERTY(HouseMarkerModel* categoryHouses READ categoryHouses NOTIFY categoryHousesChanged)
     Q_OBJECT
 public:
     explicit ApplicationCore(QObject* parent = 0);
@@ -68,7 +70,11 @@ public:
 
     Q_INVOKABLE void centerSelectedHouse();
 
+    Q_INVOKABLE void loadCategory(QString category);
+
     QString routeKML() const;
+
+    HouseMarkerModel* categoryHouses() const;
 
 public slots:
     void handleApplicationStateChange(Qt::ApplicationState state);
@@ -88,6 +94,8 @@ signals:
     void requestFullZoomIn();
     void routeKMLChanged(QString routeKML);
 
+    void categoryHousesChanged(HouseMarkerModel* categoryHouses);
+
 private slots:
     void doReloadUI();
     void handleLoadedHouseCoordinates(QNetworkReply* reply);
@@ -101,7 +109,6 @@ private:
     QQuickView* m_view;
     HouseMarkerModel* m_houseMarkerModel;
     MarkerLoader* m_markerLoader;
-    QSortFilterProxyModel* m_detailsProxyModel;
     int m_screenDpi;
     QString m_mapProvider;
     QString m_selectedHouse;
@@ -109,6 +116,8 @@ private:
     bool m_showDetails;
     QNetworkAccessManager* m_housePositionLoader;
     QString m_routeKML;
+    CategoryLoader* m_categoryLoader;
+    HouseMarkerModel* m_categoryMarkerModel;
 };
 
 #endif // APPLICATIONCORE_H

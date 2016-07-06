@@ -65,11 +65,11 @@ void HouseMarkerModel::append(const QVector<HouseMarker>& aHouseTrail)
 
 void HouseMarkerModel::clear()
 {
-    beginRemoveRows(QModelIndex(), 0, m_housetrails.count());
+    beginResetModel();
     qDeleteAll(m_housetrails);
     m_housetrails.clear();
     m_contained.clear();
-    endRemoveRows();
+    endResetModel();
 }
 
 int HouseMarkerModel::rowCount(const QModelIndex& parent) const

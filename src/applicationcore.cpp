@@ -25,6 +25,7 @@
  **/
 
 #include "applicationcore.h"
+#include "categoryloader.h"
 #include "houselocationfilter.h"
 #include "housemarkermodel.h"
 #include "markerloader.h"
@@ -60,35 +61,36 @@ ApplicationCore::ApplicationCore(QObject* parent)
     , m_view(new QQuickView())
     , m_houseMarkerModel(new HouseMarkerModel(this))
     , m_markerLoader(new MarkerLoader(this))
-    , m_detailsProxyModel(new QSortFilterProxyModel(this))
     , m_screenDpi(calculateScreenDpi())
     , m_mapProvider("osm")
     , m_selectedHouse("")
     , m_currentMapPosition(-1.0, -1.0)
     , m_showDetails(false)
     , m_housePositionLoader(new QNetworkAccessManager(this))
+    , m_categoryLoader(new CategoryLoader(this))
+    , m_categoryMarkerModel(new HouseMarkerModel(this))
 {
     qRegisterMetaType<HouseMarker>("HouseMarker");
     qRegisterMetaType<QVector<HouseMarker>>("QVector<HouseMarker>");
     qmlRegisterType<HouseLocationFilter>("Baugeschichte", 1, 0, "HouseLocationFilter");
+    qmlRegisterUncreatableType<HouseMarkerModel>("HouseMarkerModel", 1, 0, "HouseMarkerModel", "");
 
     m_view->setWidth(1024);
     m_view->setHeight(800);
     m_view->setResizeMode(QQuickView::SizeRootObjectToView);
-
-    m_detailsProxyModel->setFilterRole(HouseMarkerModel::HousetrailRoles::CategoryRole);
-    m_detailsProxyModel->setSourceModel(m_houseMarkerModel);
 
     QQmlEngine* engine = m_view->engine();
     QQmlContext* context = engine->rootContext();
     context->setContextProperty(QStringLiteral("appCore"), this);
     context->setContextProperty(QStringLiteral("markerLoader"), m_markerLoader);
     context->setContextProperty(QStringLiteral("houseTrailModel"), m_houseMarkerModel);
-    context->setContextProperty(QStringLiteral("filteredTrailModel"), m_detailsProxyModel);
     context->setContextProperty(QStringLiteral("screenDpi"), m_screenDpi);
+    context->setContextProperty(QStringLiteral("categoryLoader"), m_categoryLoader);
 
     connect(m_markerLoader, SIGNAL(newHousetrail(QVector<HouseMarker>)), m_houseMarkerModel,
         SLOT(append(QVector<HouseMarker>)));
+
+    connect(m_categoryLoader, &CategoryLoader::newHousetrail, m_categoryMarkerModel, &HouseMarkerModel::append);
 
     connect(
         m_housePositionLoader, &QNetworkAccessManager::finished, this, &ApplicationCore::handleLoadedHouseCoordinates);
@@ -159,9 +161,20 @@ void ApplicationCore::centerSelectedHouse()
     }
 }
 
+void ApplicationCore::loadCategory(QString category)
+{
+    m_categoryMarkerModel->clear();
+    m_categoryLoader->loadCategory(category);
+}
+
 QString ApplicationCore::routeKML() const
 {
     return m_routeKML;
+}
+
+HouseMarkerModel* ApplicationCore::categoryHouses() const
+{
+    return m_categoryMarkerModel;
 }
 
 void ApplicationCore::handleApplicationStateChange(Qt::ApplicationState state)

@@ -24,17 +24,16 @@
  ** SOFTWARE.
  **/
 
-import QtQuick 2.4
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.1
-import "./"
+import QtQuick 2.6
 
 /**
  Carousel in the details view showing the fotos of the building
  */
-PathView {
-    id: imagePathView
+ListView {
+    id: root
+
     focus: true
+    clip: true
 
     Keys.onLeftPressed: {
         decrementCurrentIndex();
@@ -44,56 +43,16 @@ PathView {
         incrementCurrentIndex();
     }
 
-    flickDeceleration: 390
+    orientation: ListView.Horizontal
+    snapMode:
+        ListView.SnapToItem
     
-    pathItemCount:              3
-    preferredHighlightBegin:    0.5
-    preferredHighlightEnd:      0.5
-    highlightRangeMode:         PathView.StrictlyEnforceRange
-
-    path: Path {
-        id: myPath
-        startX: 0; startY: imagePathView.height / 2 //parent.height / 6
-        PathAttribute {name: "rotateY"; value: 50.0}
-        PathAttribute {name: "scalePic"; value: 0.2}
-        PathAttribute {name: "zOrder"; value: 1}
-        
-        PathLine{x:imagePathView.width/4; y: imagePathView.height/ 2}
-        PathPercent {value: 0.44}
-        PathAttribute {name: "rotateY"; value: 50.0}
-        PathAttribute {name: "scalePic"; value: 0.5}
-        PathAttribute {name: "zOrder"; value: 10}
-        
-        PathQuad{x:imagePathView.width/2; y: imagePathView.height / 2.2 ; controlX: imagePathView.width/2.2; controlY: imagePathView.height / 2.2 }
-        PathPercent {value: 0.50}
-        PathAttribute {name: "rotateY"; value: 0.0}
-        PathAttribute {name: "scalePic"; value: 1.0}
-        PathAttribute {name: "zOrder"; value: 50}
-        
-        PathQuad{x:imagePathView.width * 0.75; y: imagePathView.height / 2 ; controlX: imagePathView.width * 0.78; controlY: imagePathView.height / 2}
-        PathPercent {value: 0.56}
-        PathAttribute {name: "rotateY"; value: -50.0}
-        PathAttribute {name: "scalePic"; value: 0.5}
-        PathAttribute {name: "zOrder"; value: 10}
-        
-        PathLine{x:imagePathView.width; y: imagePathView.height / 2}
-        PathPercent {value: 1.00}
-        PathAttribute {name: "rotateY"; value: -50.0}
-        PathAttribute {name: "scalePic"; value: 0.2}
-        PathAttribute {name: "zOrder"; value: 1}
-    }
-    
-    delegate:
-        Item{
+    delegate: Item {
         id: imageContainer
-        property real tmpAngle : PathView.rotateY
-        property real scaleValue: PathView.scalePic
-        width: parent.width
-        height: parent.height
-        visible: PathView.onPath
-        z: PathView.zOrder
-        anchors.top:parent.top
-        
+
+        width: root.width
+        height: root.height
+
         Image {
             id:myImage
             width: parent.width
@@ -146,17 +105,5 @@ PathView {
                 wrapMode: Text.Wrap
             }
         }
-        
-        transform:[
-            Rotation{
-                angle: tmpAngle
-                origin.x: myImage.width/2
-                axis { x: 0; y: 1; z: 0 }
-            },
-            Scale {
-                xScale:scaleValue; yScale:scaleValue
-                origin.x: myImage.width/2;   origin.y: myImage.height/2
-            }
-        ]
     }
 }

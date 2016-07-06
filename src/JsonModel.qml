@@ -42,8 +42,6 @@ Item {
     // Is empty if the last request was successful
     readonly property string error: internal.error
 
-    property bool categoriesFix: false
-
     signal isLoaded
     signal newobject(var magneto)
 
@@ -81,11 +79,6 @@ Item {
                     if (req.status == 200)
                     {
                         var responseText = req.responseText;
-                        if (categoriesFix) {
-                            responseText = responseText.replace(/tten,/, 'tten",');
-                            responseText = responseText.replace(/#ff0000""/, '#ff0000"');
-                        }
-
                         try {
                             var searchResult = JSON.parse(responseText);
                             if (searchResult.errors !== undefined) {

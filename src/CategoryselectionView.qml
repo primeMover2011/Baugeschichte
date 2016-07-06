@@ -38,7 +38,6 @@ BaseView {
                 model.append(jsonObject);
             }
         }
-        categoriesFix: true
         searchString: "http://baugeschichte.at/app/v1/getData.php?action=getAllCategories&lang=de"
         Component.onCompleted: {
             phrase = " " //fires a searchrequest

@@ -30,9 +30,14 @@ HouseMarker::HouseMarker()
 {
 }
 
-void HouseMarker::setHouseTitle(const QString& houseTitle)
+void HouseMarker::setTitle(const QString& houseTitle)
 {
     m_houseTitle = houseTitle;
+}
+
+const QString&HouseMarker::title() const
+{
+    return m_houseTitle;
 }
 
 void HouseMarker::setLocation(const QGeoCoordinate& theLocation)
@@ -44,7 +49,17 @@ void HouseMarker::setLocation(const QGeoCoordinate& theLocation)
     m_location = theLocation;
 }
 
+const QGeoCoordinate&HouseMarker::location() const
+{
+    return m_location;
+}
+
 void HouseMarker::setCategories(const QString& categories)
 {
     m_categories = categories;
+}
+
+const QString&HouseMarker::categories() const
+{
+    return m_categories;
 }

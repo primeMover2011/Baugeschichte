@@ -327,7 +327,7 @@ void ApplicationCore::saveMarkers()
     QJsonArray markerArray;
     for (int i = 0; i < m_houseMarkerModel->rowCount(); ++i) {
         QJsonObject object;
-        object["title"] = m_houseMarkerModel->get(i)->houseTitle();
+        object["title"] = m_houseMarkerModel->get(i)->title();
         object["coord_lat"] = m_houseMarkerModel->get(i)->location().latitude();
         object["coord_lon"] = m_houseMarkerModel->get(i)->location().longitude();
         object["category"] = m_houseMarkerModel->get(i)->categories();
@@ -372,7 +372,7 @@ void ApplicationCore::loadMarkers()
     Q_FOREACH (const QJsonValue& value, array) {
         QJsonObject object = value.toObject();
         HouseMarker house;
-        house.setHouseTitle(object["title"].toString());
+        house.setTitle(object["title"].toString());
         QGeoCoordinate coord(object["coord_lat"].toDouble(), object["coord_lon"].toDouble());
         house.setLocation(coord);
         house.setCategories(object["category"].toString());

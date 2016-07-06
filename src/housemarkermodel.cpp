@@ -57,7 +57,7 @@ void HouseMarkerModel::append(const QVector<HouseMarker>& aHouseTrail)
     beginInsertRows(QModelIndex(), rowCount(), insertEnd);
     foreach (const HouseMarker& house, newHouses) {
         HouseMarker* newHouse = new HouseMarker(house);
-        m_contained.insert(house.houseTitle(), newHouse);
+        m_contained.insert(house.title(), newHouse);
         m_housetrails.append(newHouse);
     }
     endInsertRows();
@@ -80,7 +80,7 @@ int HouseMarkerModel::rowCount(const QModelIndex& parent) const
 
 bool HouseMarkerModel::contains(const HouseMarker& marker) const
 {
-    return m_contained.contains(marker.houseTitle());
+    return m_contained.contains(marker.title());
 }
 
 QVariant HouseMarkerModel::data(const QModelIndex& index, int role) const
@@ -90,7 +90,7 @@ QVariant HouseMarkerModel::data(const QModelIndex& index, int role) const
 
     HouseMarker* aHousetrail = m_housetrails[index.row()];
     if (role == HouseTitleRole)
-        return aHousetrail->houseTitle();
+        return aHousetrail->title();
     else if (role == CoordinateRole)
         return QVariant::fromValue(aHousetrail->location());
     else if (role == CategoryRole)
@@ -108,7 +108,7 @@ const HouseMarker* HouseMarkerModel::get(int idx) const
 HouseMarker* HouseMarkerModel::getHouseByTitle(const QString& title) const
 {
     for (auto house : m_housetrails) {
-        if (house->houseTitle() == title) {
+        if (house->title() == title) {
             return house;
         }
     }
@@ -130,7 +130,7 @@ void HouseMarkerModel::limitSize()
     if (size > m_maxSize) {
         beginRemoveRows(QModelIndex(), 0, size - m_maxSize - 1);
         while (m_housetrails.size() > m_maxSize) {
-            int i = m_contained.remove(m_housetrails[0]->houseTitle());
+            int i = m_contained.remove(m_housetrails[0]->title());
             if (i != 1) {
                 qWarning() << "m_Contained.remove returned" << i << "but should be 1";
             }

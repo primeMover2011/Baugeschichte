@@ -184,7 +184,7 @@ void MarkerLoader::createModelAsync(QNetworkReply* theReply)
                     foreach (const QJsonValue& theValue, theValueArray) {
                         HouseMarker aHouseTrail;
                         QJsonObject anObj = theValue.toObject();
-                        aHouseTrail.setHouseTitle(anObj["title"].toString());
+                        aHouseTrail.setTitle(anObj["title"].toString());
                         aHouseTrail.setLocation(QGeoCoordinate(anObj["lat"].toDouble(), anObj["lon"].toDouble()));
 
                         doc.setArray(anObj["cats"].toArray());

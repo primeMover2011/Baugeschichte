@@ -39,5 +39,6 @@
         <file>MapScale.qml</file>
         <file>PositionIndicator.qml</file>
         <file>ImageCarousel.qml</file>
+        <file>SizeTracer.qml</file>
     </qresource>
 </RCC>

@@ -38,10 +38,6 @@ class HouseMarker
 public:
     explicit HouseMarker();
 
-    qint64 dbId() const
-    {
-        return m_dbId;
-    }
     const QString& houseTitle() const
     {
         return m_houseTitle;
@@ -57,13 +53,11 @@ public:
         return m_categories;
     }
 
-    void setDbId(qint64 dbId);
     void setHouseTitle(const QString& houseTitle);
     void setLocation(const QGeoCoordinate& location);
     void setCategories(const QString& categories);
 
 protected:
-    qint64 m_dbId;
     QString m_houseTitle;
     QGeoCoordinate m_location;
     QString m_categories;
@@ -71,7 +65,7 @@ protected:
 
 inline bool operator<(const HouseMarker& lhs, const HouseMarker& rhs)
 {
-    return lhs.dbId() < rhs.dbId();
+    return lhs.houseTitle() < rhs.houseTitle();
 }
 
 #endif // HOUSEMARKER_H

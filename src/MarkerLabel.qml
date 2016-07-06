@@ -31,7 +31,6 @@ MapQuickItem {
     id: root
 
     property alias title: textItem.text
-    property int id: -1
     property Map mapItem
     
     anchorPoint.x: coco.width / 2

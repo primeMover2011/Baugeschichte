@@ -27,13 +27,7 @@
 #include "housemarker.h"
 
 HouseMarker::HouseMarker()
-    : m_dbId(-1)
 {
-}
-
-void HouseMarker::setDbId(qint64 dbId)
-{
-    m_dbId = dbId;
 }
 
 void HouseMarker::setHouseTitle(const QString& houseTitle)

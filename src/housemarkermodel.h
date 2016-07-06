@@ -36,8 +36,7 @@ class HouseMarkerModel : public QAbstractListModel
     Q_OBJECT
 public:
     enum HousetrailRoles {
-        DbIdRole = Qt::UserRole + 1,
-        HouseTitleRole,
+        HouseTitleRole = Qt::UserRole + 1,
         CoordinateRole,
         CategoryRole,
     };
@@ -50,12 +49,11 @@ public:
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
-    bool contains(qint64 id) const;
+    bool contains(const HouseMarker& marker) const;
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
     const HouseMarker* get(int idx) const;
-    Q_INVOKABLE QString getHouseTitleById(qint64 id) const;
     HouseMarker* getHouseByTitle(const QString& title) const;
 
 protected:
@@ -68,7 +66,7 @@ private:
     void limitSize();
 
     QList<HouseMarker*> m_housetrails;
-    QHash<qint64, HouseMarker*> m_contained;
+    QHash<QString, HouseMarker*> m_contained;
     int m_maxSize;
 };
 

@@ -48,7 +48,7 @@ void HouseMarkerModel::append(const QVector<HouseMarker>& aHouseTrail)
 
     std::set<HouseMarker> newHouses; // use a set to eliminate duplicates
     foreach (const HouseMarker& house, aHouseTrail) {
-        if (!this->contains(house.dbId())) {
+        if (!this->contains(house)) {
             newHouses.insert(house);
         }
     }
@@ -57,7 +57,7 @@ void HouseMarkerModel::append(const QVector<HouseMarker>& aHouseTrail)
     beginInsertRows(QModelIndex(), rowCount(), insertEnd);
     foreach (const HouseMarker& house, newHouses) {
         HouseMarker* newHouse = new HouseMarker(house);
-        m_contained.insert(house.dbId(), newHouse);
+        m_contained.insert(house.houseTitle(), newHouse);
         m_housetrails.append(newHouse);
     }
     endInsertRows();
@@ -78,9 +78,9 @@ int HouseMarkerModel::rowCount(const QModelIndex& parent) const
     return m_housetrails.count();
 }
 
-bool HouseMarkerModel::contains(qint64 id) const
+bool HouseMarkerModel::contains(const HouseMarker& marker) const
 {
-    return m_contained.contains(id);
+    return m_contained.contains(marker.houseTitle());
 }
 
 QVariant HouseMarkerModel::data(const QModelIndex& index, int role) const
@@ -89,30 +89,20 @@ QVariant HouseMarkerModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     HouseMarker* aHousetrail = m_housetrails[index.row()];
-    if (role == DbIdRole)
-        return aHousetrail->dbId();
-    else if (role == HouseTitleRole)
+    if (role == HouseTitleRole)
         return aHousetrail->houseTitle();
     else if (role == CoordinateRole)
         return QVariant::fromValue(aHousetrail->location());
     else if (role == CategoryRole)
         return aHousetrail->categories();
+
+    qWarning() << Q_FUNC_INFO << "Unkown role requested: " << role;
     return QVariant();
 }
 
 const HouseMarker* HouseMarkerModel::get(int idx) const
 {
     return m_housetrails.at(idx);
-}
-
-QString HouseMarkerModel::getHouseTitleById(qint64 id) const
-{
-    if (!contains(id)) {
-        return QString();
-    }
-
-    HouseMarker* house = m_contained.value(id);
-    return house->houseTitle();
 }
 
 HouseMarker* HouseMarkerModel::getHouseByTitle(const QString& title) const
@@ -128,7 +118,6 @@ HouseMarker* HouseMarkerModel::getHouseByTitle(const QString& title) const
 QHash<int, QByteArray> HouseMarkerModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
-    roles[DbIdRole] = "dbId";
     roles[HouseTitleRole] = "title";
     roles[CoordinateRole] = "coord";
     roles[CategoryRole] = "category";
@@ -141,7 +130,7 @@ void HouseMarkerModel::limitSize()
     if (size > m_maxSize) {
         beginRemoveRows(QModelIndex(), 0, size - m_maxSize - 1);
         while (m_housetrails.size() > m_maxSize) {
-            int i = m_contained.remove(m_housetrails[0]->dbId());
+            int i = m_contained.remove(m_housetrails[0]->houseTitle());
             if (i != 1) {
                 qWarning() << "m_Contained.remove returned" << i << "but should be 1";
             }

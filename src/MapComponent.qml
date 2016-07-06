@@ -226,7 +226,6 @@ BaseView {
 
                             map.markerLabel.coordinate = mqItem.coordinate;
                             map.markerLabel.z = 9999;
-                            map.markerLabel.id = dbId;
                             map.markerLabel.title = title
                             map.markerLabel.visible = true;
 

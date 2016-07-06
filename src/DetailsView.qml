@@ -64,9 +64,11 @@ BaseView {
             poiName = magneto.title
             for (var key in magneto.payload) {
                 var jsonObject = magneto.payload[key];
-                jsonObject.detailText = jsonObject.text
-                jsonObject.text = ""
-                model.append(jsonObject);
+                if (jsonObject.title.trim() !== "Info") {
+                    jsonObject.detailText = jsonObject.text
+                    jsonObject.text = ""
+                    model.append(jsonObject);
+                }
             }
         }
         onErrorChanged: {
@@ -287,11 +289,14 @@ BaseView {
     Image {
         id:prevImage
         anchors { left: parent.left; bottom: parent.bottom; margins: 10 }
+        width: localHelper.dp(50)
+        height: localHelper.dp(50)
+
         source: "resources/Go-previous.svg"
         fillMode: Image.PreserveAspectFit
         smooth: true
-        width: localHelper.dp(50)
-        height: localHelper.dp(50)
+        visible: theDetails.model.count > 1
+
         MouseArea {
             anchors.fill: parent
 
@@ -313,6 +318,7 @@ BaseView {
         source: "resources/Go-next.svg"
         fillMode: Image.PreserveAspectFit
         smooth: true
+        visible: theDetails.model.count > 1
 
         MouseArea {
             anchors.fill: parent

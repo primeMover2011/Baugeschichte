@@ -44,5 +44,8 @@
         <file>resources/marker-blue.svg</file>
         <file>resources/marker-red.svg</file>
         <file>resources/marker.svg</file>
+        <file>DetailsModel.qml</file>
+        <file>resources/Flag_of_Germany.png</file>
+        <file>resources/Flag_of_United_Kingdom.png</file>
     </qresource>
 </RCC>

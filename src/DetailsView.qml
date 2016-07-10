@@ -48,36 +48,29 @@ BaseView {
 
     property real itemSize: width / 3
     property string searchFor: ""
-    property string poiName: ""
+    property string poiName: details.title
 
-    loading: theDetails.isLoading
+    loading: detailsDE.isLoading || detailsEN.isLoading || detailsS1.isLoading
+    property var details: detailsDE
 
     DensityHelpers {
         id:localHelper
     }
 
-    JsonModel {
-        id: theDetails
+    DetailsModel {
+        id: detailsDE
         phrase: root.visible ? root.searchFor : ""
-        searchString: "http://baugeschichte.at/app/v1/getData.php?action=getBuildingDetail&name="
-        onNewobject: {
-            poiName = magneto.title
-            for (var key in magneto.payload) {
-                var jsonObject = magneto.payload[key];
-                if (jsonObject.title.trim() !== "Info") {
-                    jsonObject.detailText = jsonObject.text
-                    jsonObject.text = ""
-                    model.append(jsonObject);
-                }
-            }
-        }
-        onErrorChanged: {
-            if (error !== "") {
-                console.log("Error: " + error);
-                var jsonObject = {"detailText": error, "title": qsTr("Load error")};
-                model.append(jsonObject);
-            }
-        }
+        language: "de"
+    }
+    DetailsModel {
+        id: detailsEN
+        phrase: detailsDE.phrase
+        language: "en"
+    }
+    DetailsModel {
+        id: detailsS1
+        phrase: detailsDE.phrase
+        language: "s1"
     }
 
     Rectangle {
@@ -105,7 +98,7 @@ BaseView {
         orientation:            ListView.Horizontal
         highlightMoveDuration:  250
         clip:                   false
-        model:                  theDetails.model
+        model:                  details.model
 
         delegate:               Item {
             width:      mainListView.width
@@ -178,7 +171,7 @@ BaseView {
         source: "resources/Go-previous.svg"
         fillMode: Image.PreserveAspectFit
         smooth: true
-        visible: theDetails.model.count > 1
+        visible: details.model.count > 1
 
         MouseArea {
             anchors.fill: parent
@@ -192,6 +185,80 @@ BaseView {
             }
         }
     }
+
+    Image {
+        id: languageSwitch
+        anchors {
+            bottom: parent.bottom;
+            horizontalCenter: parent.horizontalCenter;
+            margins: 10
+        }
+        width: localHelper.dp(50)
+        height: width
+
+        source: root.details === detailsDE ? "resources/Flag_of_Germany.png" :
+                                             root.details === detailsEN ? "resources/Flag_of_United_Kingdom.png"
+                                                                        : ""
+
+        visible: twoOrMoreLanguages(detailsDE.isEmpty, detailsEN.isEmpty, detailsS1.isEmpty)
+
+        Text {
+            anchors.centerIn: parent
+            text: parent.source == "" ? "L1" : ""
+        }
+
+        MouseArea {
+            anchors.fill: parent
+
+            onClicked: {
+                if (root.details === detailsDE) {
+                    if (!detailsEN.isEmpty) {
+                        root.details = detailsEN;
+                        return;
+                    }
+                    if (!detailsS1.isEmpty) {
+                        root.details = detailsS1;
+                        return;
+                    }
+                }
+                if (root.details === detailsEN) {
+                    if (!detailsS1.isEmpty) {
+                        root.details = detailsS1;
+                        return;
+                    }
+                    if (!detailsDE.isEmpty) {
+                        root.details = detailsDE;
+                        return;
+                    }
+                }
+                if (root.details === detailsS1) {
+                    if (!detailsDE.isEmpty) {
+                        root.details = detailsDE;
+                        return;
+                    }
+                    if (!detailsEN.isEmpty) {
+                        root.details = detailsEN;
+                        return;
+                    }
+                }
+            }
+        }
+
+        function twoOrMoreLanguages() {
+            var languages = 0;
+            if (!detailsDE.isEmpty) {
+                languages += 1;
+            }
+            if (!detailsEN.isEmpty) {
+                languages += 1;
+            }
+            if (!detailsS1.isEmpty) {
+                languages += 1;
+            }
+            return languages >= 2;
+        }
+    }
+
     Image {
         id:nextImage
         anchors { right: parent.right; bottom: parent.bottom; margins: 10 }
@@ -201,7 +268,7 @@ BaseView {
         source: "resources/Go-next.svg"
         fillMode: Image.PreserveAspectFit
         smooth: true
-        visible: theDetails.model.count > 1
+        visible: details.model.count > 1
 
         MouseArea {
             anchors.fill: parent

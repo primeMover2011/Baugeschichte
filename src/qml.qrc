@@ -41,5 +41,8 @@
         <file>PositionIndicator.qml</file>
         <file>ImageCarousel.qml</file>
         <file>SizeTracer.qml</file>
+        <file>resources/marker-blue.svg</file>
+        <file>resources/marker-red.svg</file>
+        <file>resources/marker.svg</file>
     </qresource>
 </RCC>

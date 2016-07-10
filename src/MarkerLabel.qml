@@ -43,7 +43,7 @@ MapQuickItem {
         
         color: "#ffffff"
         border.width: 1
-        border.color: "#e02222"
+        border.color: "#0048a0"
         width: textItem.width * 1.2
         height: textItem.height * 1.5
         radius: 3
@@ -54,7 +54,7 @@ MapQuickItem {
             anchors.verticalCenter: parent.verticalCenter
             text: "Text"
             font.pixelSize: localHelper.defaultFontSize
-            color: "#ff0000"
+            color: "#0063DD"
             font.bold: true
         }
         

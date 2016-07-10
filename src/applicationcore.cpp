@@ -300,7 +300,7 @@ void ApplicationCore::handleLoadedHouseCoordinates(QNetworkReply* reply)
 
 QString ApplicationCore::mainQMLFile() const
 {
-    QFileInfo mainFile(QStringLiteral("../../Baugeschichte/MapPrototype/src/main.qml"));
+    QFileInfo mainFile(QStringLiteral("../../Baugeschichte/src/main.qml"));
     if (mainFile.exists()) {
         qDebug() << "Load UI from" << mainFile.absoluteFilePath();
         return mainFile.absoluteFilePath();

@@ -35,6 +35,7 @@ BaseView {
     id: root
 
     property bool followMe: false
+    property bool showPosition: false
     property bool autoUpdatePois: true
     property double radius: 100
 
@@ -99,14 +100,12 @@ BaseView {
     PositionSource {
         id: myPosition
         preferredPositioningMethods: PositionSource.AllPositioningMethods
-        active: root.followMe
+        active: root.showPosition
         updateInterval: 1500
         onPositionChanged: {
-            map.center = myPosition.position.coordinate
-        }
-        onActiveChanged:
-        {
-            console.log("open the pod bay doors, hal")
+            if (root.followMe) {
+                map.center = myPosition.position.coordinate
+            }
         }
     }
 
@@ -252,6 +251,7 @@ BaseView {
             id: positionCircle
             positionSource: myPosition
             scale: 1 / map.scale
+            visible: root.showPosition
         }
 
         Component.onCompleted: {

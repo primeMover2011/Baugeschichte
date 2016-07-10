@@ -53,7 +53,7 @@ Item {
     }
 
     PositionSource {
-        id: thePosition
+        id: positionCheck
         preferredPositioningMethods: PositionSource.AllPositioningMethods
         active: false
     }
@@ -155,14 +155,36 @@ Item {
             }
 
             ToolbarButton {
-                id: theFollowMeButton
-                source: "qrc:/resources/Ic_gps_" + (isActive ? "not_fixed" : "off") + "_48px.svg"
-                enabled: thePosition.valid
+                id: followMeButton
+                source: iconFromState()
+                enabled: positionCheck.valid
 
-                property bool isActive: false
+                property bool followPosition: false
+                property bool showPosition: false
 
                 onClicked: {
-                    isActive = !isActive;
+                    if (!showPosition) {
+                        showPosition = true;
+                        followPosition = true;
+                    } else {
+                        if (followPosition) {
+                            followPosition = false;
+                        } else {
+                            showPosition = false;
+                        }
+                    }
+                }
+
+                function iconFromState() {
+                    if (!showPosition) {
+                        return "qrc:/resources/gps_off.svg"
+                    } else {
+                        if (followPosition) {
+                            return "qrc:/resources/gps_follow.svg"
+                        } else {
+                            return "qrc:/resources/gps_on.svg"
+                        }
+                    }
                 }
             }
         }
@@ -273,7 +295,8 @@ Item {
                     width: splitScreen ? details.x : parent.width
                     height: parent.height
 
-                    followMe: theFollowMeButton.isActive
+                    followMe: followMeButton.followPosition
+                    showPosition: followMeButton.showPosition
                     visible: parent.splitScreen || !details.visible
 
                     Settings {

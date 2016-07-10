@@ -36,7 +36,6 @@ MapQuickItem {
 
     property var positionSource
 
-    visible: positionSource.active
     coordinate: positionSource.position.coordinate
 
     anchorPoint.x: positionCircle.width / 2

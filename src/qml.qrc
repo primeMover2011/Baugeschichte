@@ -3,8 +3,9 @@
         <file>resources/Edit-find-cats.svg</file>
         <file>resources/Go-previous.svg</file>
         <file>resources/Go-next.svg</file>
-        <file>resources/Ic_gps_off_48px.svg</file>
-        <file>resources/Ic_gps_not_fixed_48px.svg</file>
+        <file>resources/gps_follow.svg</file>
+        <file>resources/gps_off.svg</file>
+        <file>resources/gps_on.svg</file>
         <file>resources/icon-clear.png</file>
         <file>resources/icon-loading.png</file>
         <file>resources/icon-refresh.png</file>
@@ -40,5 +41,8 @@
         <file>PositionIndicator.qml</file>
         <file>ImageCarousel.qml</file>
         <file>SizeTracer.qml</file>
+        <file>resources/marker-blue.svg</file>
+        <file>resources/marker-red.svg</file>
+        <file>resources/marker.svg</file>
     </qresource>
 </RCC>

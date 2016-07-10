@@ -35,6 +35,7 @@ BaseView {
     id: root
 
     property bool followMe: false
+    property bool showPosition: false
     property bool autoUpdatePois: true
     property double radius: 100
 
@@ -66,7 +67,7 @@ BaseView {
             markerLoader.loadAll = map.zoomLevel > 17;
 
             if (map.zoomLevel < 18) {
-                var coord3 = map.toCoordinate(Qt.point(map.markerSize, 0))
+                var coord3 = map.toCoordinate(Qt.point(map.markerSize * 1.1, 0))
                 var markerDist = coord1.distanceTo(coord3)
                 locationFilter.minDistance = markerDist;
             } else {
@@ -99,14 +100,12 @@ BaseView {
     PositionSource {
         id: myPosition
         preferredPositioningMethods: PositionSource.AllPositioningMethods
-        active: root.followMe
+        active: root.showPosition
         updateInterval: 1500
         onPositionChanged: {
-            map.center = myPosition.position.coordinate
-        }
-        onActiveChanged:
-        {
-            console.log("open the pod bay doors, hal")
+            if (root.followMe) {
+                map.center = myPosition.position.coordinate
+            }
         }
     }
 
@@ -205,12 +204,12 @@ BaseView {
 
                         function getSource() {
                             if (title === appCore.selectedHouse) {
-                                return "resources/marker-2-blue.svg";
+                                return "resources/marker-blue.svg";
                             }
                             if (routeLoader.isRouteHouse(title)) {
-                                return "resources/marker-2-red.svg";
+                                return "resources/marker-red.svg";
                             }
-                            return "resources/marker-2.svg"
+                            return "resources/marker.svg"
                         }
 
                         Connections {
@@ -252,6 +251,7 @@ BaseView {
             id: positionCircle
             positionSource: myPosition
             scale: 1 / map.scale
+            visible: root.showPosition
         }
 
         Component.onCompleted: {

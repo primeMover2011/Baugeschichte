@@ -45,7 +45,9 @@ Item {
     signal isLoaded
     signal newobject(var magneto)
 
-    onPhraseChanged: internal.reload();
+    onPhraseChanged: {
+        internal.reload();
+    }
 
     ListModel { id: jsonModel }
 

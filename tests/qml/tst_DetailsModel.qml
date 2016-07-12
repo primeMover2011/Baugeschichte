@@ -29,39 +29,22 @@ import QtTest 1.1
 import "../../src"
 
 TestCase {
-    name: "RouteLineTests"
+    name: "DetailsModelTests"
 
-    RouteLine {
-        id: routeLine
+    DetailsModel {
+        id: detailsModel
+        searchString: "../../Baugeschichte/tests/qml/data/"
     }
 
     function cleanup() {
-        routeLine.clear();
     }
 
     function test_load() {
-        routeLine.source = "data/Landpartie.kml"
-        tryCompare(routeLine, "loading", false, 500);
-        compare(routeLine.pathLength(), 51);
-    }
+        detailsModel.phrase = "details01.json";
+        tryCompare(detailsModel, "isLoading", false, 1000, "Timed out readong json file");
 
-    function test_reload() {
-        routeLine.source = "data/Landpartie.kml"
-        routeLine.source = ""
-        routeLine.source = "data/Landpartie.kml"
-        tryCompare(routeLine, "loading", false, 500);
-        compare(routeLine.pathLength(), 51);
-    }
-
-    function test_kml_style_2() {
-        routeLine.source = "data/Rundgang_Herz-Jesu.kml"
-        tryCompare(routeLine, "loading", false, 500);
-        compare(routeLine.pathLength(), 37);
-    }
-
-    function test_kml_style_3() {
-        routeLine.source = "data/FugngerroutemitdemZielLendkai35Graz.kml"
-        tryCompare(routeLine, "loading", false, 500);
-        compare(routeLine.pathLength(), 19);
+        compare(detailsModel.modelDE.count, 3);
+        compare(detailsModel.modelEN.count, 3);
+        compare(detailsModel.modelS1.count, 0);
     }
 }

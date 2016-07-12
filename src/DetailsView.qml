@@ -48,29 +48,17 @@ BaseView {
 
     property real itemSize: width / 3
     property string searchFor: ""
-    property string poiName: details.title
+    property string poiName: detailsModel.title
 
-    loading: detailsDE.isLoading || detailsEN.isLoading || detailsS1.isLoading
-    property var details: detailsDE
+    loading: detailsModel.isLoading
+
+    DetailsModel {
+        id: detailsModel
+        phrase: root.visible ? root.searchFor : ""
+    }
 
     DensityHelpers {
         id:localHelper
-    }
-
-    DetailsModel {
-        id: detailsDE
-        phrase: root.visible ? root.searchFor : ""
-        language: "de"
-    }
-    DetailsModel {
-        id: detailsEN
-        phrase: detailsDE.phrase
-        language: "en"
-    }
-    DetailsModel {
-        id: detailsS1
-        phrase: detailsDE.phrase
-        language: "s1"
     }
 
     Rectangle {
@@ -98,7 +86,7 @@ BaseView {
         orientation:            ListView.Horizontal
         highlightMoveDuration:  250
         clip:                   false
-        model:                  details.model
+        model:                  detailsModel.modelDE
 
         delegate:               Item {
             width:      mainListView.width
@@ -171,7 +159,7 @@ BaseView {
         source: "resources/Go-previous.svg"
         fillMode: Image.PreserveAspectFit
         smooth: true
-        visible: details.model.count > 1
+        visible: mainListView.model.count > 1
 
         MouseArea {
             anchors.fill: parent
@@ -196,11 +184,11 @@ BaseView {
         width: localHelper.dp(50)
         height: width
 
-        source: root.details === detailsDE ? "resources/Flag_of_Germany.png" :
-                                             root.details === detailsEN ? "resources/Flag_of_United_Kingdom.png"
+        source: mainListView.model === detailsModel.modelDE ? "resources/Flag_of_Germany.png" :
+                                             mainListView.model === detailsModel.modelEN ? "resources/Flag_of_United_Kingdom.png"
                                                                         : ""
 
-        visible: twoOrMoreLanguages(detailsDE.isEmpty, detailsEN.isEmpty, detailsS1.isEmpty)
+        visible: twoOrMoreLanguages()
 
         Text {
             anchors.centerIn: parent
@@ -211,33 +199,35 @@ BaseView {
             anchors.fill: parent
 
             onClicked: {
-                if (root.details === detailsDE) {
-                    if (!detailsEN.isEmpty) {
-                        root.details = detailsEN;
+                if (mainListView.model === detailsModel.modelDE) {
+                    if (detailsModel.modelEN.count > 0) {
+                        mainListView.model = detailsModel.modelEN;
                         return;
                     }
-                    if (!detailsS1.isEmpty) {
-                        root.details = detailsS1;
-                        return;
-                    }
-                }
-                if (root.details === detailsEN) {
-                    if (!detailsS1.isEmpty) {
-                        root.details = detailsS1;
-                        return;
-                    }
-                    if (!detailsDE.isEmpty) {
-                        root.details = detailsDE;
+                    if (detailsModel.modelS1.count > 0) {
+                        mainListView.model = detailsModel.modelS1;
                         return;
                     }
                 }
-                if (root.details === detailsS1) {
-                    if (!detailsDE.isEmpty) {
-                        root.details = detailsDE;
+
+                if (mainListView.model === detailsModel.modelEN) {
+                    if (detailsModel.modelS1.count > 0) {
+                        mainListView.model = detailsModel.modelS1;
                         return;
                     }
-                    if (!detailsEN.isEmpty) {
-                        root.details = detailsEN;
+                    if (detailsModel.modelDE.count > 0) {
+                        mainListView.model = detailsModel.modelDE;
+                        return;
+                    }
+                }
+
+                if (mainListView.model === detailsModel.modelS1) {
+                    if (detailsModel.modelDE.count > 0) {
+                        rmainListView.model = detailsModel.modelDE;
+                        return;
+                    }
+                    if (detailsModel.modelEN.count > 0) {
+                        mainListView.model = detailsModel.modelEN;
                         return;
                     }
                 }
@@ -246,13 +236,13 @@ BaseView {
 
         function twoOrMoreLanguages() {
             var languages = 0;
-            if (!detailsDE.isEmpty) {
+            if (detailsModel.modelDE.count > 0) {
                 languages += 1;
             }
-            if (!detailsEN.isEmpty) {
+            if (detailsModel.modelEN.count > 0) {
                 languages += 1;
             }
-            if (!detailsS1.isEmpty) {
+            if (detailsModel.modelEN.count > 0) {
                 languages += 1;
             }
             return languages >= 2;
@@ -268,7 +258,7 @@ BaseView {
         source: "resources/Go-next.svg"
         fillMode: Image.PreserveAspectFit
         smooth: true
-        visible: details.model.count > 1
+        visible: mainListView.model.count > 1
 
         MouseArea {
             anchors.fill: parent

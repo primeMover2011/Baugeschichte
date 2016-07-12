@@ -29,24 +29,45 @@ import QtQuick 2.4
 JsonModel {
     id: root
 
-    property string language: "de"
     property string title: ""
 
-    property bool isEmpty: model.count === 0
+    property variant modelDE: model
+    property ListModel modelEN: ListModel {}
+    property ListModel modelS1: ListModel {}
 
-    searchString: "http://baugeschichte.at/app/v1/getData.php?action=getBuildingDetail&lang="+language+"&name="
+    searchString: "http://baugeschichte.at/app/v1/getData.php?action=getBuildingDetail&name="
     onNewobject: {
+        modelDE.clear();
+        modelEN.clear();
+        modelS1.clear();
+
         title = magneto.title
         for (var key in magneto.payload) {
             var jsonObject = magneto.payload[key];
+            if (jsonObject.title === null) {
+                jsonObject.title = ""
+            }
+
             if (jsonObject.title.trim() !== "Info" && jsonObject.text !== "") {
                 jsonObject.detailText = jsonObject.text
                 jsonObject.text = ""
-                model.append(jsonObject);
+
+                if (jsonObject.lang === undefined) {
+                    jsonObject.lang = ""
+                }
+
+                if (jsonObject.lang === "de") {
+                    model.append(jsonObject);
+                } else if (jsonObject.lang === "en") {
+                    modelEN.append(jsonObject);
+                } else {
+                    modelS1.append(jsonObject);
+                }
             }
         }
     }
     onErrorChanged: {
+        console.log("Error: " + error);
         title = "";
         if (error !== "") {
             console.log("Error: " + error);

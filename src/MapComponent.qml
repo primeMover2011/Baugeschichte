@@ -152,7 +152,8 @@ BaseView {
 
         plugin: initPlugin()
         function initPlugin() {
-            return appCore.mapProvider === "osm" ? osmPlugin : mapBoxPlugin;
+//            return appCore.mapProvider === "osm" ? osmPlugin : mapBoxPlugin;
+            return mapBoxPlugin;
         }
         Plugin {
             id: osmPlugin
@@ -163,11 +164,11 @@ BaseView {
             name: "mapbox"
             PluginParameter {
                 name: "mapbox.map_id"
-                value: "primemover.c5fe94e8"
+                value: "mapbox.streets"
             }
             PluginParameter {
                 name: "mapbox.access_token"
-                value: "pk.eyJ1IjoicHJpbWVtb3ZlciIsImEiOiIzNjFlYWNjZmZhMjAyNGFhMWQ0NDM0ZDIyMTE4YmEyMCJ9.d5wi3uI5VayKiniPnkxojg"
+                value: "pk.eyJ1IjoiYmF1Z2VzY2hpY2h0ZSIsImEiOiJjaXFqdXU4OG8wMDAxaHltYnVmcHV2bjVjIn0.C2joRbxcvAQGbF9I-KhgnA"
             }
         }
 

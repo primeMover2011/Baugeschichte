@@ -48,7 +48,7 @@ JsonModel {
                 jsonObject.title = ""
             }
 
-            if (jsonObject.title.trim() !== "Info" && jsonObject.text !== "") {
+            if (jsonObject.title.trim() !== "Info") {
                 jsonObject.detailText = jsonObject.text
                 jsonObject.text = ""
 

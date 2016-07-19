@@ -51,6 +51,35 @@ BaseView {
     property string poiName: detailsModel.title
 
     loading: detailsModel.isLoading
+    onLoadingChanged: {
+        if (!loading) {
+            selectLanguage();
+        }
+    }
+
+    function selectLanguage() {
+        // get from last manual setting
+        if (appCore.detailsLanguage === "DE" && detailsModel.modelDE.count > 0) {
+            mainListView.model = detailsModel.modelDE;
+        }
+        if (appCore.detailsLanguage === "EN" && detailsModel.modelEN.count > 0) {
+            mainListView.model = detailsModel.modelEN;
+        }
+        if (appCore.detailsLanguage === "S1" && detailsModel.modelS1.count > 0) {
+            mainListView.model = detailsModel.modelS1;
+        }
+
+        // auto fallback
+        if (detailsModel.modelDE.count > 0) {
+            mainListView.model = detailsModel.modelDE;
+        }
+        if (detailsModel.modelEN.count > 0) {
+            mainListView.model = detailsModel.modelEN;
+        }
+        if (detailsModel.modelS1.count > 0) {
+            mainListView.model = detailsModel.modelS1;
+        }
+    }
 
     DetailsModel {
         id: detailsModel
@@ -202,10 +231,12 @@ BaseView {
                 if (mainListView.model === detailsModel.modelDE) {
                     if (detailsModel.modelEN.count > 0) {
                         mainListView.model = detailsModel.modelEN;
+                        appCore.detailsLanguage = "EN";
                         return;
                     }
                     if (detailsModel.modelS1.count > 0) {
                         mainListView.model = detailsModel.modelS1;
+                        appCore.detailsLanguage = "S1";
                         return;
                     }
                 }
@@ -213,10 +244,12 @@ BaseView {
                 if (mainListView.model === detailsModel.modelEN) {
                     if (detailsModel.modelS1.count > 0) {
                         mainListView.model = detailsModel.modelS1;
+                        appCore.detailsLanguage = "S1";
                         return;
                     }
                     if (detailsModel.modelDE.count > 0) {
                         mainListView.model = detailsModel.modelDE;
+                        appCore.detailsLanguage = "DE";
                         return;
                     }
                 }
@@ -224,10 +257,12 @@ BaseView {
                 if (mainListView.model === detailsModel.modelS1) {
                     if (detailsModel.modelDE.count > 0) {
                         rmainListView.model = detailsModel.modelDE;
+                        appCore.detailsLanguage = "DE";
                         return;
                     }
                     if (detailsModel.modelEN.count > 0) {
                         mainListView.model = detailsModel.modelEN;
+                        appCore.detailsLanguage = "EN";
                         return;
                     }
                 }

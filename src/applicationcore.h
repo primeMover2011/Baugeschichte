@@ -54,6 +54,7 @@ class ApplicationCore : public QObject
     Q_PROPERTY(HouseMarkerModel* categoryHouses READ categoryHouses NOTIFY categoryHousesChanged)
     Q_PROPERTY(bool showPosition READ showPosition WRITE setShowPosition NOTIFY showPositionChanged)
     Q_PROPERTY(bool followPosition READ followPosition WRITE setFollowPosition NOTIFY followPositionChanged)
+    Q_PROPERTY(QString detailsLanguage READ detailsLanguage WRITE setDetailsLanguage NOTIFY detailsLanguageChanged)
     Q_OBJECT
 public:
     explicit ApplicationCore(QObject* parent = 0);
@@ -84,6 +85,9 @@ public:
     bool followPosition() const;
     void setFollowPosition(bool followPosition);
 
+    QString detailsLanguage() const;
+    void setDetailsLanguage(QString detailsLanguage);
+
 public slots:
     void handleApplicationStateChange(Qt::ApplicationState state);
 
@@ -106,6 +110,8 @@ signals:
 
     void showPositionChanged(bool showPosition);
     void followPositionChanged(bool followPosition);
+
+    void detailsLanguageChanged(QString detailsLanguage);
 
 private slots:
     void doReloadUI();
@@ -131,6 +137,7 @@ private:
     HouseMarkerModel* m_categoryMarkerModel;
     bool m_showPosition;
     bool m_followPosition;
+    QString m_detailsLanguage;
 };
 
 #endif // APPLICATIONCORE_H

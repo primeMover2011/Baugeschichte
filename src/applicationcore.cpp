@@ -71,6 +71,7 @@ ApplicationCore::ApplicationCore(QObject* parent)
     , m_categoryMarkerModel(new HouseMarkerModel(this))
     , m_showPosition(false)
     , m_followPosition(false)
+    , m_detailsLanguage("DE")
 {
     qRegisterMetaType<HouseMarker>("HouseMarker");
     qRegisterMetaType<QVector<HouseMarker>>("QVector<HouseMarker>");
@@ -207,6 +208,21 @@ void ApplicationCore::setFollowPosition(bool followPosition)
 
     m_followPosition = followPosition;
     emit followPositionChanged(m_followPosition);
+}
+
+QString ApplicationCore::detailsLanguage() const
+{
+    return m_detailsLanguage;
+}
+
+void ApplicationCore::setDetailsLanguage(QString detailsLanguage)
+{
+    if (m_detailsLanguage == detailsLanguage) {
+        return;
+    }
+
+    m_detailsLanguage = detailsLanguage;
+    emit detailsLanguageChanged(m_detailsLanguage);
 }
 
 void ApplicationCore::handleApplicationStateChange(Qt::ApplicationState state)

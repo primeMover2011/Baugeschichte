@@ -8,5 +8,8 @@ SUBDIRS = src
 
 android: {
 } else {
+ios: {
+} else {
 SUBDIRS += tests
+}
 }

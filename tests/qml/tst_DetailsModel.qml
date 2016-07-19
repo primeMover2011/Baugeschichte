@@ -46,5 +46,7 @@ TestCase {
         compare(detailsModel.modelDE.count, 3);
         compare(detailsModel.modelEN.count, 3);
         compare(detailsModel.modelS1.count, 0);
+
+        compare(detailsModel.imagesModel.count, 5);
     }
 }

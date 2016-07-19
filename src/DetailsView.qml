@@ -105,7 +105,7 @@ BaseView {
                     Layout.maximumHeight: parent.height * 0.75
                     Layout.minimumHeight: parent.height * 0.25
 
-                    model: images
+                    model: detailsModel.imagesModel
                 }
 
                 Rectangle {

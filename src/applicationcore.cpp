@@ -69,6 +69,8 @@ ApplicationCore::ApplicationCore(QObject* parent)
     , m_housePositionLoader(new QNetworkAccessManager(this))
     , m_categoryLoader(new CategoryLoader(this))
     , m_categoryMarkerModel(new HouseMarkerModel(this))
+    , m_showPosition(false)
+    , m_followPosition(false)
 {
     qRegisterMetaType<HouseMarker>("HouseMarker");
     qRegisterMetaType<QVector<HouseMarker>>("QVector<HouseMarker>");
@@ -175,6 +177,36 @@ QString ApplicationCore::routeKML() const
 HouseMarkerModel* ApplicationCore::categoryHouses() const
 {
     return m_categoryMarkerModel;
+}
+
+bool ApplicationCore::showPosition() const
+{
+    return m_showPosition;
+}
+
+void ApplicationCore::setShowPosition(bool showPosition)
+{
+    if (m_showPosition == showPosition) {
+        return;
+    }
+
+    m_showPosition = showPosition;
+    emit showPositionChanged(m_showPosition);
+}
+
+bool ApplicationCore::followPosition() const
+{
+    return m_followPosition;
+}
+
+void ApplicationCore::setFollowPosition(bool followPosition)
+{
+    if (m_followPosition == followPosition) {
+        return;
+    }
+
+    m_followPosition = followPosition;
+    emit followPositionChanged(m_followPosition);
 }
 
 void ApplicationCore::handleApplicationStateChange(Qt::ApplicationState state)

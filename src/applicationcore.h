@@ -52,6 +52,8 @@ class ApplicationCore : public QObject
     Q_PROPERTY(bool showDetails READ showDetails WRITE setShowDetails NOTIFY showDetailsChanged)
     Q_PROPERTY(QString routeKML READ routeKML WRITE setRouteKML NOTIFY routeKMLChanged)
     Q_PROPERTY(HouseMarkerModel* categoryHouses READ categoryHouses NOTIFY categoryHousesChanged)
+    Q_PROPERTY(bool showPosition READ showPosition WRITE setShowPosition NOTIFY showPositionChanged)
+    Q_PROPERTY(bool followPosition READ followPosition WRITE setFollowPosition NOTIFY followPositionChanged)
     Q_OBJECT
 public:
     explicit ApplicationCore(QObject* parent = 0);
@@ -76,6 +78,12 @@ public:
 
     HouseMarkerModel* categoryHouses() const;
 
+    bool showPosition() const;
+    void setShowPosition(bool showPosition);
+
+    bool followPosition() const;
+    void setFollowPosition(bool followPosition);
+
 public slots:
     void handleApplicationStateChange(Qt::ApplicationState state);
 
@@ -95,6 +103,9 @@ signals:
     void routeKMLChanged(QString routeKML);
 
     void categoryHousesChanged(HouseMarkerModel* categoryHouses);
+
+    void showPositionChanged(bool showPosition);
+    void followPositionChanged(bool followPosition);
 
 private slots:
     void doReloadUI();
@@ -118,6 +129,8 @@ private:
     QString m_routeKML;
     CategoryLoader* m_categoryLoader;
     HouseMarkerModel* m_categoryMarkerModel;
+    bool m_showPosition;
+    bool m_followPosition;
 };
 
 #endif // APPLICATIONCORE_H

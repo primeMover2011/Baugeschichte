@@ -159,27 +159,24 @@ Item {
                 source: iconFromState()
                 enabled: positionCheck.valid
 
-                property bool followPosition: false
-                property bool showPosition: false
-
                 onClicked: {
-                    if (!showPosition) {
-                        showPosition = true;
-                        followPosition = true;
+                    if (!appCore.showPosition) {
+                        appCore.showPosition = true;
+                        appCore.followPosition = false;
                     } else {
-                        if (followPosition) {
-                            followPosition = false;
+                        if (appCore.followPosition) {
+                            appCore.showPosition = false;
                         } else {
-                            showPosition = false;
+                            appCore.followPosition = true;
                         }
                     }
                 }
 
                 function iconFromState() {
-                    if (!showPosition) {
+                    if (!appCore.showPosition) {
                         return "qrc:/resources/gps_off.svg"
                     } else {
-                        if (followPosition) {
+                        if (appCore.followPosition) {
                             return "qrc:/resources/gps_follow.svg"
                         } else {
                             return "qrc:/resources/gps_on.svg"
@@ -295,8 +292,6 @@ Item {
                     width: splitScreen ? details.x : parent.width
                     height: parent.height
 
-                    followMe: followMeButton.followPosition
-                    showPosition: followMeButton.showPosition
                     visible: parent.splitScreen || !details.visible
 
                     Settings {

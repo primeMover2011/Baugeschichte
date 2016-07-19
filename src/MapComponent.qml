@@ -34,8 +34,6 @@ import Baugeschichte 1.0
 BaseView {
     id: root
 
-    property bool followMe: false
-    property bool showPosition: false
     property bool autoUpdatePois: true
     property double radius: 100
 
@@ -100,10 +98,21 @@ BaseView {
     PositionSource {
         id: myPosition
         preferredPositioningMethods: PositionSource.AllPositioningMethods
-        active: root.showPosition
+        active: appCore.showPosition
         updateInterval: 1500
+
+        // even when not following - jump to current position on first position reveice
+        property bool firstUpdate: true
+        onFirstUpdateChanged: console.log("firstUpdate: "+firstUpdate)
+        onActiveChanged: {
+            if (active) {
+                firstUpdate = true;
+            }
+        }
+
         onPositionChanged: {
-            if (root.followMe) {
+            if (appCore.followPosition || firstUpdate) {
+                firstUpdate = false;
                 map.center = myPosition.position.coordinate
             }
         }
@@ -145,6 +154,10 @@ BaseView {
         MouseArea {
             anchors.fill: parent
             propagateComposedEvents: true
+            onPressed: {
+                appCore.followPosition = false;
+                mouse.accepted = false;
+            }
             onClicked: {
                 appCore.selectedHouse = "";
             }
@@ -252,7 +265,7 @@ BaseView {
             id: positionCircle
             positionSource: myPosition
             scale: 1 / map.scale
-            visible: root.showPosition
+            visible: appCore.showPosition
         }
 
         Component.onCompleted: {

@@ -156,7 +156,6 @@ BaseView {
             propagateComposedEvents: true
             onPressed: {
                 appCore.followPosition = false;
-                mouse.accepted = false;
             }
             onClicked: {
                 appCore.selectedHouse = "";

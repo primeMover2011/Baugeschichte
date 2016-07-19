@@ -44,9 +44,14 @@ ListView {
     }
 
     orientation: ListView.Horizontal
-    snapMode:
-        ListView.SnapToItem
+    snapMode: ListView.SnapToItem
+
+    flickDeceleration: 2 * width
+    maximumFlickVelocity: width
     
+    onMovementEnded: {
+        currentIndex = indexAt(contentX + width / 2, height / 2);
+    }
     delegate: Item {
         id: imageContainer
 
@@ -103,6 +108,54 @@ ListView {
                 font.pixelSize: localHelper.smallFontSize
                 horizontalAlignment: Text.AlignHCenter
                 wrapMode: Text.Wrap
+            }
+        }
+    }
+
+    Image {
+        id: previousButton
+
+        width: localHelper.dp(50)
+        height: width
+        sourceSize: Qt.size(width, height)
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
+
+        source: "resources/arrow-left.svg"
+        opacity: previousClickArea.pressed ? 0.8 : 0.6
+        visible: root.currentIndex > 0
+
+        MouseArea {
+            id: previousClickArea
+            anchors.fill: parent
+            anchors.margins: -localHelper.dp(5)
+
+            onClicked: {
+                decrementCurrentIndex();
+            }
+        }
+    }
+
+    Image {
+        id: nextButton
+
+        width: localHelper.dp(50)
+        height: width
+        sourceSize: Qt.size(width, height)
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.right: parent.right
+
+        source: "resources/arrow-right.svg"
+        opacity: previousClickArea.pressed ? 0.8 : 0.6
+        visible: root.currentIndex < root.model.count - 1
+
+        MouseArea {
+            id: nextClickArea
+            anchors.fill: parent
+            anchors.margins: -localHelper.dp(5)
+
+            onClicked: {
+                incrementCurrentIndex();
             }
         }
     }

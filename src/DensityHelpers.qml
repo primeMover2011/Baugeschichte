@@ -24,7 +24,7 @@
  ** SOFTWARE.
  **/
 
-import QtQuick 2.4
+import QtQuick 2.6
 
 Item {
     id: defaultHelper
@@ -33,7 +33,7 @@ Item {
     readonly property int defaultFontSize: Math.floor(fm.font.pixelSize * 1.3 * textScaleFactor)
     readonly property int largeFontSize: Math.floor(fm.font.pixelSize * 1.8 * textScaleFactor)
 
-    property real contentScaleFactor: screenDpi / 160
+    property real contentScaleFactor: fm.font.pixelSize / 14
     property real textScaleFactor: 1
 
     function dp(value) {

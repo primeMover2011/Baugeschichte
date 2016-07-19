@@ -30,6 +30,7 @@
 #include "housemarkermodel.h"
 #include "markerloader.h"
 
+#include <QApplication>
 #include <QDebug>
 #include <QDir>
 #include <QFile>
@@ -83,6 +84,7 @@ ApplicationCore::ApplicationCore(QObject* parent)
     m_view->setResizeMode(QQuickView::SizeRootObjectToView);
 
     QQmlEngine* engine = m_view->engine();
+    connect(engine, &QQmlEngine::quit, qApp, &QApplication::quit);
     QQmlContext* context = engine->rootContext();
     context->setContextProperty(QStringLiteral("appCore"), this);
     context->setContextProperty(QStringLiteral("markerLoader"), m_markerLoader);

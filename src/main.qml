@@ -99,9 +99,13 @@ Item {
                 id: mapButton
                 source: "resources/Map-icon.svg"
                 onClicked: {
+                    if (appCore.showDetails) {
+                        appCore.showDetails = false;
+                        return;
+                    }
+
                     mainMap.resetToMainModel();
                     uiStack.pop(null);
-                    appCore.showDetails = false;
                     appCore.routeKML = "";
                     routeLoader.routeHouses = [];
                 }
@@ -225,9 +229,12 @@ Item {
         standardButtons: StandardButton.Yes | StandardButton.No
         modality: Qt.WindowModal
         title: qsTr("Baugeschichte App beenden?")
-        onButtonClicked: console.log("clicked button " + clickedButton)
-        onYes: Qt.quit()
-        onNo: visible = false
+        onYes: {
+            Qt.quit();
+        }
+        onNo: {
+            visible = false;
+        }
     }
 
     Rectangle {
@@ -252,12 +259,13 @@ Item {
                     }
                 }
             }
-            if (event.key === Qt.Key_Menu) {
-                event.accepted = true;
-                uiStack.push({
-                                 item: Qt.resolvedUrl("SettingsView.qml")
-                             });
-            }
+// settings disabled for now
+//            if (event.key === Qt.Key_Menu) {
+//                event.accepted = true;
+//                uiStack.push({
+//                                 item: Qt.resolvedUrl("SettingsView.qml")
+//                             });
+//            }
         }
     }
 

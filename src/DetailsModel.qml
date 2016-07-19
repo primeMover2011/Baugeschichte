@@ -56,7 +56,7 @@ JsonModel {
             }
 
             var resultObject = {}
-            resultObject.tilte = jsonObject.title;
+            resultObject.title = jsonObject.title;
 
             if (jsonObject.title.trim() !== "Info") {
                 resultObject.detailText = jsonObject.text

@@ -48,6 +48,8 @@ JsonModel {
             console.warn("Unknown version for details: "+magneto.version)
         }
 
+        var section = -1;
+
         title = magneto.title
         for (var key in magneto.payload) {
             var jsonObject = magneto.payload[key];
@@ -66,6 +68,7 @@ JsonModel {
                 }
 
                 if (jsonObject.lang === "de") {
+                    ++section;
                     model.append(resultObject);
                 } else if (jsonObject.lang === "en") {
                     modelEN.append(resultObject);
@@ -74,7 +77,9 @@ JsonModel {
                 }
 
                 for (var idx in jsonObject.images) {
-                    imagesModel.append(jsonObject.images[idx]);
+                    var img = jsonObject.images[idx];
+                    img.section = section;
+                    imagesModel.append(img);
                 }
             }
         }

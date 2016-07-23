@@ -107,7 +107,7 @@ Item {
                     mainMap.resetToMainModel();
                     uiStack.pop(null);
                     appCore.routeKML = "";
-                    routeLoader.routeHouses = [];
+                    routeLoader.reset();
                 }
             }
 

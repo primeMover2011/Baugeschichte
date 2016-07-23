@@ -49,5 +49,6 @@
         <file>resources/Flag_of_United_Kingdom.png</file>
         <file>resources/arrow-left.svg</file>
         <file>resources/arrow-right.svg</file>
+        <file>SearchModel.qml</file>
     </qresource>
 </RCC>

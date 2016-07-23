@@ -90,6 +90,10 @@ BaseView {
     DetailsModel {
         id: detailsModel
         phrase: root.visible ? root.searchFor : ""
+        onPhraseChanged: {
+            imagePathView.currentIndex = 0;
+            mainListView.currentIndex = 0;
+        }
     }
 
     DensityHelpers {
@@ -135,7 +139,7 @@ BaseView {
             model: detailsModel.imagesModel
 
             onCurrentIndexChanged: {
-                if (currentIndex < 0) {
+                if (currentIndex < 0 || currentIndex >= detailsModel.imagesModel.count) {
                     return;
                 }
 

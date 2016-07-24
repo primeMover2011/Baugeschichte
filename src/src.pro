@@ -2,11 +2,16 @@ TEMPLATE = app
 
 TARGET = Baugeschichte
 
-QT += qml quick positioning concurrent svg xml
+QT += qml quick location positioning concurrent svg xml
 android: QT += androidextras
+ios {
+#  LIBS += -L$$[QT_INSTALL_PLUGINS]/geoservices
+#  QTPLUGIN += qtgeoservices_mapbox
+}
+
+CONFIG += c++11
 
 RESOURCES += qml.qrc
-CONFIG += c++11
 
 SOURCES += main.cpp \
     houselocationfilter.cpp \

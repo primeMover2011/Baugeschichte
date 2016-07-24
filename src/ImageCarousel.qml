@@ -48,7 +48,9 @@ ListView {
 
     flickDeceleration: 2 * width
     maximumFlickVelocity: width
-    
+    highlightFollowsCurrentItem: true
+    highlightMoveVelocity: 2 * width
+
     onMovementEnded: {
         currentIndex = indexAt(contentX + width / 2, height / 2);
     }
@@ -68,7 +70,7 @@ ListView {
             anchors.horizontalCenter: parent.horizontalCenter
             smooth: true
             asynchronous: true
-            
+
             function imageUrl(imageName) {
                 var isRemote = imageName.substring(0, 4) === "http";
                 if (isRemote) {
@@ -79,7 +81,7 @@ ListView {
                     return url;
                 }
             }
-            
+
             Text {
                 id: loadError
                 width: parent.width

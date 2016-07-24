@@ -3,7 +3,7 @@
  **
  ** The MIT License (MIT)
  **
- ** Copyright (c) 2015 primeMover2011
+ ** Copyright (c) 2016 Guenter Schwann
  **
  ** Permission is hereby granted, free of charge, to any person obtaining a copy
  ** of this software and associated documentation files (the "Software"), to deal
@@ -28,54 +28,25 @@ import QtQuick 2.4
 import QtQuick.Controls 1.4
 import "./"
 
-BaseView {
-    loading: searchModel.isLoading
+JsonModel {
+    id: root
+    onNewobject: {
+        if (magneto.length < 2) {
+            console.warn("Wrong search result from " + searchString + " : " + magneto);
+            return;
+        }
 
-    SearchModel {
-        id: searchModel
-    }
-
-    LineInput {
-        id: searchInput
-        width: parent.width
-        hint: qsTr("Adresse...")
-        onAccepted: {
-            searchModel.phrase = "";
-            searchModel.phrase = text;
+        var titles = magneto[1];
+        for (var key in titles) {
+            var jsonObject = {};
+            jsonObject.title = titles[key];
+            model.append(jsonObject);
         }
     }
 
-    ListView {
-        id: searchResult
-        model: searchModel.model
-        interactive: true
-        clip: true
-        anchors  {
-            top: searchInput.bottom
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
-        }
-
-        delegate: SearchResultDelegate {
-            text: title
-            onSelected: {
-                appCore.selectedHouse = title;
-                appCore.showDetails = true;
-                appCore.centerSelectedHouse();
-                uiStack.pop(null);
-            }
-        }
-    }
-
-    Text {
-        anchors.bottom: parent.bottom
-        width: parent.width
-        visible: searchModel.error !== ""
-
-        text: searchModel.error
-        color: "red"
-        wrapMode: Text.Wrap
-    }
+    property string __url: "http://baugeschichte.at/api.php?action=opensearch&"
+    property string __format: "format=json&formatversion=2"
+    property string __namespace: "&namespace=0"
+    property string __resultLimit: "&limit=20"
+    searchString: __url + __format + __namespace + "&search="
 }
-

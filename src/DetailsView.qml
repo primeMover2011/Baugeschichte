@@ -61,29 +61,39 @@ BaseView {
         // get from last manual setting
         if (appCore.detailsLanguage === "DE" && detailsModel.modelDE.count > 0) {
             mainListView.model = detailsModel.modelDE;
+            return;
         }
         if (appCore.detailsLanguage === "EN" && detailsModel.modelEN.count > 0) {
             mainListView.model = detailsModel.modelEN;
+            return;
         }
         if (appCore.detailsLanguage === "S1" && detailsModel.modelS1.count > 0) {
             mainListView.model = detailsModel.modelS1;
+            return;
         }
 
         // auto fallback
         if (detailsModel.modelDE.count > 0) {
             mainListView.model = detailsModel.modelDE;
+            return;
         }
         if (detailsModel.modelEN.count > 0) {
             mainListView.model = detailsModel.modelEN;
+            return;
         }
         if (detailsModel.modelS1.count > 0) {
             mainListView.model = detailsModel.modelS1;
+            return;
         }
     }
 
     DetailsModel {
         id: detailsModel
         phrase: root.visible ? root.searchFor : ""
+        onPhraseChanged: {
+            imagePathView.currentIndex = 0;
+            mainListView.currentIndex = 0;
+        }
     }
 
     DensityHelpers {
@@ -99,51 +109,85 @@ BaseView {
     Rectangle {
         id: initialTextbackground
         width: parent.width
-        height:  parent.height / 2
+        height:  imagePathView.height
         anchors.bottom: parent.bottom
 
         color: "#FFFCF2"
         border.color: "#8E8E8E"
-
-        visible: mainListView.count === 0
     }
 
-    ListView {
-        id:                     mainListView
-        anchors                 { fill: parent; /*margins: 10*/ }
-        interactive:            false
-        orientation:            ListView.Horizontal
-        highlightMoveDuration:  250
-        clip:                   false
-        model:                  detailsModel.modelDE
+    SplitView {
+        id: splitView
+        anchors {
+            top: parent.top
+            bottom: prevImage.visible || nextImage.visible || languageSwitch.visible ? languageSwitch.top : parent.bottom
+            left: parent.left
+            right: parent.right
+        }
 
-        delegate:               Item {
-            width:      mainListView.width
-            height:     mainListView.height
+        orientation: Qt.Vertical
 
-            SplitView{
-                anchors.fill: parent
-                orientation: Qt.Vertical
+        ImageCarousel {
+            id: imagePathView
 
-                ImageCarousel {
-                    id: imagePathView
+            width: parent.width
+            height: parent.height / 2
+            Layout.fillHeight: true
+            Layout.maximumHeight: parent.height * 0.75
+            Layout.minimumHeight: parent.height * 0.25
 
-                    width: parent.width
-                    height: parent.height / 2
-                    Layout.fillHeight: true
-                    Layout.maximumHeight: parent.height * 0.75
-                    Layout.minimumHeight: parent.height * 0.25
+            model: detailsModel.imagesModel
 
-                    model: detailsModel.imagesModel
+            onCurrentIndexChanged: {
+                if (currentIndex < 0 || currentIndex >= detailsModel.imagesModel.count) {
+                    return;
                 }
+
+                var section = detailsModel.imagesModel.get(currentIndex).section;
+                if (mainListView !== section) {
+                    mainListView.currentIndex = section;
+                }
+            }
+
+            function showImageForText() {
+                for (var i=0; i<model.count; ++i) {
+                    var section = detailsModel.imagesModel.get(i).section;
+                    if (section === mainListView.currentIndex) {
+                        currentIndex = i;
+                        return;
+                    }
+                }
+            }
+        }
+
+        ListView {
+            id: mainListView
+
+            width: parent.width
+            height: parent.height / 2
+            Layout.fillHeight: true
+            Layout.maximumHeight: parent.height * 0.75
+//            Layout.minimumHeight: parent.height * 0.25
+
+            interactive: false
+            orientation: ListView.Horizontal
+            highlightMoveDuration: 250
+            clip: false
+            model: detailsModel.modelDE
+
+            onCurrentIndexChanged: {
+                imagePathView.showImageForText()
+            }
+
+            delegate: Item {
+                width: mainListView.width
+                height: mainListView.height
 
                 Rectangle {
                     id: textBase
 
                     width: parent.width
-                    height: parent.height / 2
-                    Layout.maximumHeight: parent.height * 0.75
-                    Layout.minimumHeight: parent.height * 0.25
+                    height: parent.height
 
                     color: initialTextbackground.color
                     border.color: initialTextbackground.border.color
@@ -152,32 +196,33 @@ BaseView {
                         id: titleText
                         anchors.left: parent.left
                         anchors.right: parent.right
+                        anchors.margins: localHelper.dp(5)
                         horizontalAlignment: Text.AlignHCenter
                         text: (poiName !== "") ? (poiName + ": " + title) : title
-                        smooth: true
+//                        smooth: true
                         font.pixelSize: localHelper.defaultFontSize
-                        anchors.margins: localHelper.dp(5)
                         wrapMode: Text.Wrap
                     }
 
                     TextArea {
                         anchors { top: titleText.bottom;
                             bottom: parent.bottom; left: parent.left;
-                            right: parent.right; margins: 5 }
-                        readOnly:           true
+                            right: parent.right; margins: 5
+                        }
+                        readOnly: true
                         verticalScrollBarPolicy: Qt.ScrollBarAsNeeded
                         horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-                        wrapMode:           TextEdit.WordWrap
-                        text:               (detailText.length > 0) ? detailText : qsTr("Kein Text")
-                        font.pixelSize:     localHelper.smallFontSize
+                        wrapMode: TextEdit.WordWrap
+                        text: (detailText.length > 0) ? detailText : qsTr("Kein Text")
+                        font.pixelSize: localHelper.smallFontSize
                     }
 
                     Keys.onLeftPressed: console.log("onLeft Details")
                     Keys.onRightPressed: console.log("onLeft Details")
                 }
-            }//SplitView
+            }
         }
-    }
+    } //SplitView
 
     Image {
         id:prevImage

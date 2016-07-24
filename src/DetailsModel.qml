@@ -37,16 +37,27 @@ JsonModel {
 
     property ListModel imagesModel: ListModel {}
 
-    searchString: "http://baugeschichte.at/app/v1/getData.php?action=getBuildingDetail&name="
-    onNewobject: {
+    function clear() {
         modelDE.clear();
         modelEN.clear();
         modelS1.clear();
         imagesModel.clear();
+    }
+
+    searchString: "http://baugeschichte.at/app/v1/getData.php?action=getBuildingDetail&name="
+
+    onPhraseChanged: {
+        clear();
+    }
+
+    onNewobject: {
+        clear();
 
         if (magneto.version !== "1") {
             console.warn("Unknown version for details: "+magneto.version)
         }
+
+        var section = -1;
 
         title = magneto.title
         for (var key in magneto.payload) {
@@ -66,6 +77,7 @@ JsonModel {
                 }
 
                 if (jsonObject.lang === "de") {
+                    ++section;
                     model.append(resultObject);
                 } else if (jsonObject.lang === "en") {
                     modelEN.append(resultObject);
@@ -74,7 +86,9 @@ JsonModel {
                 }
 
                 for (var idx in jsonObject.images) {
-                    imagesModel.append(jsonObject.images[idx]);
+                    var img = jsonObject.images[idx];
+                    img.section = section;
+                    imagesModel.append(img);
                 }
             }
         }

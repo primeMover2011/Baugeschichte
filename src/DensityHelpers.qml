@@ -33,11 +33,11 @@ Item {
     readonly property int defaultFontSize: Math.floor(fm.font.pixelSize * 1.3 * textScaleFactor)
     readonly property int largeFontSize: Math.floor(fm.font.pixelSize * 1.8 * textScaleFactor)
 
-    property real contentScaleFactor: fm.font.pixelSize / 14
+    property real contentScaleFactor: fm.font.pixelSize / 16.0
     property real textScaleFactor: 1
 
     function dp(value) {
-        return value * contentScaleFactor
+        return Math.round(value * contentScaleFactor)
     }
 
     FontMetrics {

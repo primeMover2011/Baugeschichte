@@ -52,4 +52,14 @@ TestCase {
         compare(detailsModel.imagesModel.get(3).section, 1);
         compare(detailsModel.imagesModel.get(4).section, 2);
     }
+
+    function test_prevent_double_load() {
+        detailsModel.phrase = "details01.json";
+        detailsModel.phrase = "";
+        detailsModel.phrase = "details01.json";
+        tryCompare(detailsModel, "isLoading", false, 1000, "Timed out readong json file");
+
+        compare(detailsModel.modelDE.count, 3);
+        compare(detailsModel.imagesModel.count, 5);
+    }
 }

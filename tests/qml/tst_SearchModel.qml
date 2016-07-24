@@ -3,7 +3,7 @@
  **
  ** The MIT License (MIT)
  **
- ** Copyright (c) 2015 primeMover2011
+ ** Copyright (c) 2016 Guenter Schwann
  **
  ** Permission is hereby granted, free of charge, to any person obtaining a copy
  ** of this software and associated documentation files (the "Software"), to deal
@@ -24,58 +24,25 @@
  ** SOFTWARE.
  **/
 
-import QtQuick 2.4
-import QtQuick.Controls 1.4
-import "./"
+import QtQuick 2.6
+import QtTest 1.1
+import "../../src"
 
-BaseView {
-    loading: searchModel.isLoading
+TestCase {
+    name: "DetailsModelTests"
 
     SearchModel {
         id: searchModel
+        searchString: "../../Baugeschichte/tests/qml/data/"
     }
 
-    LineInput {
-        id: searchInput
-        width: parent.width
-        hint: qsTr("Adresse...")
-        onAccepted: {
-            searchModel.phrase = "";
-            searchModel.phrase = text;
-        }
+    function cleanup() {
     }
 
-    ListView {
-        id: searchResult
-        model: searchModel.model
-        interactive: true
-        clip: true
-        anchors  {
-            top: searchInput.bottom
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
-        }
+    function test_load() {
+        searchModel.phrase = "search01.json";
+        tryCompare(searchModel, "isLoading", false, 1000, "Timed out readong json file");
 
-        delegate: SearchResultDelegate {
-            text: title
-            onSelected: {
-                appCore.selectedHouse = title;
-                appCore.showDetails = true;
-                appCore.centerSelectedHouse();
-                uiStack.pop(null);
-            }
-        }
-    }
-
-    Text {
-        anchors.bottom: parent.bottom
-        width: parent.width
-        visible: searchModel.error !== ""
-
-        text: searchModel.error
-        color: "red"
-        wrapMode: Text.Wrap
+        compare(searchModel.model.count, 10);
     }
 }
-

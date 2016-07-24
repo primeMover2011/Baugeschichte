@@ -49,6 +49,11 @@ Item {
         return false;
     }
 
+    function reset() {
+        routeHouses = [];
+        searchFor = "";
+    }
+
     visible: false
 
     property var __routeArea: QtPositioning.rectangle()

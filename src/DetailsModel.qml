@@ -37,16 +37,22 @@ JsonModel {
 
     property ListModel imagesModel: ListModel {}
 
-    searchString: "http://baugeschichte.at/app/v1/getData.php?action=getBuildingDetail&name="
-
-    onPhraseChanged: {
+    function clear() {
         modelDE.clear();
         modelEN.clear();
         modelS1.clear();
         imagesModel.clear();
     }
 
+    searchString: "http://baugeschichte.at/app/v1/getData.php?action=getBuildingDetail&name="
+
+    onPhraseChanged: {
+        clear();
+    }
+
     onNewobject: {
+        clear();
+
         if (magneto.version !== "1") {
             console.warn("Unknown version for details: "+magneto.version)
         }

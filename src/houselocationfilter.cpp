@@ -30,102 +30,135 @@
 #include <QDebug>
 #include <QJSValue>
 #include <QJsonObject>
+#include <QList>
+#include <QStringList>
+#include <QTimer>
+#include <QVariant>
 
 #include <cmath>
 
+class HouseLocationFilterPrivate
+{
+public:
+    HouseLocationFilterPrivate()
+        : m_location()
+        , m_radius(200.0)
+        , m_minDistance(100.0)
+        , m_unfilteredHouseTitle("")
+    {
+        m_invalidateTimer.setInterval(10);
+        m_invalidateTimer.setSingleShot(true);
+    }
+
+    QGeoCoordinate m_location;
+    double m_radius;
+    double m_minDistance;
+
+    mutable QList<QGeoCoordinate> m_usedCoordinates;
+
+    QString m_unfilteredHouseTitle;
+    QStringList m_routeHouses;
+    QTimer m_invalidateTimer;
+};
+
 HouseLocationFilter::HouseLocationFilter(QObject* parent)
     : QSortFilterProxyModel(parent)
-    , m_location()
-    , m_radius(200.0)
-    , m_minDistance(100.0)
-    , m_unfilteredHouseTitle("")
 {
+    Q_D(HouseLocationFilter);
     setDynamicSortFilter(true);
-    m_invalidateTimer.setInterval(10);
-    m_invalidateTimer.setSingleShot(true);
-    connect(&m_invalidateTimer, &QTimer::timeout, this, &HouseLocationFilter::triggerRefiltering);
+    connect(&(d->m_invalidateTimer), &QTimer::timeout, this, &HouseLocationFilter::triggerRefiltering);
 }
 
 const QGeoCoordinate& HouseLocationFilter::location() const
 {
-    return m_location;
+    Q_D(const HouseLocationFilter);
+    return d->m_location;
 }
 
 double HouseLocationFilter::radius() const
 {
-    return m_radius;
+    Q_D(const HouseLocationFilter);
+    return d->m_radius;
 }
 
 double HouseLocationFilter::minDistance() const
 {
-    return m_minDistance;
+    Q_D(const HouseLocationFilter);
+    return d->m_minDistance;
 }
 
 QString HouseLocationFilter::unfilteredHouseTitle() const
 {
-    return m_unfilteredHouseTitle;
+    Q_D(const HouseLocationFilter);
+    return d->m_unfilteredHouseTitle;
 }
 
 void HouseLocationFilter::setRouteHouses(QVariant variant)
 {
-    m_routeHouses.clear();
+    Q_D(HouseLocationFilter);
+    d->m_routeHouses.clear();
 
     QVariantList list = variant.value<QVariantList>();
     if (list.isEmpty()) {
         return;
     }
     for (const QVariant& houseVar : list) {
-        m_routeHouses << houseVar.toString();
+        d->m_routeHouses << houseVar.toString();
     }
 
-    m_invalidateTimer.start();
+    d->m_invalidateTimer.start();
 }
 
 void HouseLocationFilter::setUnfilteredHouseTitle(const QString& houseTitle)
 {
-    if (houseTitle == m_unfilteredHouseTitle) {
+    Q_D(HouseLocationFilter);
+    if (houseTitle == d->m_unfilteredHouseTitle) {
         return;
     }
 
-    m_unfilteredHouseTitle = houseTitle;
-    emit unfilteredHouseTitleChanged(m_unfilteredHouseTitle);
-    m_invalidateTimer.start();
+    d->m_unfilteredHouseTitle = houseTitle;
+    emit unfilteredHouseTitleChanged(d->m_unfilteredHouseTitle);
+    d->m_invalidateTimer.start();
 }
 
 void HouseLocationFilter::setLocation(const QGeoCoordinate& location)
 {
-    if (location == m_location) {
+    Q_D(HouseLocationFilter);
+    if (location == d->m_location) {
         return;
     }
 
-    m_location = location;
-    emit locationChanged(m_location);
-    m_invalidateTimer.start();
+    d->m_location = location;
+    emit locationChanged(d->m_location);
+    d->m_invalidateTimer.start();
 }
 
 void HouseLocationFilter::setRadius(double radius)
 {
-    if (std::abs(m_radius - radius) < 1e-9)
+    Q_D(HouseLocationFilter);
+    if (std::abs(d->m_radius - radius) < 1e-9)
         return;
 
-    m_radius = radius;
+    d->m_radius = radius;
     emit radiusChanged(radius);
-    m_invalidateTimer.start();
+    d->m_invalidateTimer.start();
 }
 
 void HouseLocationFilter::setMinDistance(double minDistance)
 {
-    if (std::abs(minDistance - m_minDistance) < 1e-9) {
+    Q_D(HouseLocationFilter);
+    if (std::abs(minDistance - d->m_minDistance) < 1e-9) {
         return;
     }
 
-    m_minDistance = minDistance;
+    d->m_minDistance = minDistance;
     emit minDistanceChanged(minDistance);
-    m_invalidateTimer.start();
+    d->m_invalidateTimer.start();
 }
 
 bool HouseLocationFilter::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
 {
+    Q_D(const HouseLocationFilter);
     QVariant variant
         = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HouseMarkerModel::CoordinateRole);
     if (!variant.canConvert<QGeoCoordinate>()) {
@@ -133,7 +166,7 @@ bool HouseLocationFilter::filterAcceptsRow(int source_row, const QModelIndex& so
     }
 
     QGeoCoordinate coord = variant.value<QGeoCoordinate>();
-    if (coord.distanceTo(m_location) > m_radius) {
+    if (coord.distanceTo(d->m_location) > d->m_radius) {
         return false;
     }
 
@@ -141,8 +174,8 @@ bool HouseLocationFilter::filterAcceptsRow(int source_row, const QModelIndex& so
         = sourceModel()->data(sourceModel()->index(source_row, 0, source_parent), HouseMarkerModel::HouseTitleRole);
     if (titleVariant.canConvert<QString>()) {
         QString title = titleVariant.value<QString>();
-        if (title == m_unfilteredHouseTitle || m_routeHouses.contains(title)) {
-            m_usedCoordinates.append(coord);
+        if (title == d->m_unfilteredHouseTitle || d->m_routeHouses.contains(title)) {
+            d->m_usedCoordinates.append(coord);
             return true;
         }
     }
@@ -151,21 +184,23 @@ bool HouseLocationFilter::filterAcceptsRow(int source_row, const QModelIndex& so
         return false;
     }
 
-    m_usedCoordinates.append(coord);
+    d->m_usedCoordinates.append(coord);
 
     return true;
 }
 
 void HouseLocationFilter::triggerRefiltering()
 {
-    m_usedCoordinates.clear();
+    Q_D(HouseLocationFilter);
+    d->m_usedCoordinates.clear();
     invalidateFilter();
 }
 
 bool HouseLocationFilter::isCloseToOtherPosition(const QGeoCoordinate& coord) const
 {
-    Q_FOREACH (const QGeoCoordinate& usedCoord, m_usedCoordinates) {
-        if (coord.distanceTo(usedCoord) < m_minDistance) {
+    Q_D(const HouseLocationFilter);
+    Q_FOREACH (const QGeoCoordinate& usedCoord, d->m_usedCoordinates) {
+        if (coord.distanceTo(usedCoord) < d->m_minDistance) {
             return true;
         }
     }

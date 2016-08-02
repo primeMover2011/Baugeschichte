@@ -25,8 +25,11 @@
  **/
 
 #include "housemarkermodel.h"
+#include "housemarker.h"
 
 #include <QDebug>
+#include <QGeoCoordinate>
+#include <QString>
 
 #include <algorithm>
 #include <set>

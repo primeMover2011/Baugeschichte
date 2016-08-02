@@ -29,131 +29,165 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QElapsedTimer>
+#include <QGeoCoordinate>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonParseError>
 #include <QNetworkAccessManager>
+#include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QtConcurrent>
 
 #include <limits>
 
+class MarkerLoaderPrivate
+{
+public:
+    MarkerLoaderPrivate()
+        : m_latitude(-std::numeric_limits<double>::max())
+        , m_longitude(-std::numeric_limits<double>::max())
+        , m_radius(-1.0)
+        , m_loadAll(false)
+        , m_manager(nullptr)
+        , m_loading(false)
+    {
+        m_lazyLoadTimer.setSingleShot(true);
+        m_lazyLoadTimer.setInterval(100); // 100 ms
+    }
+
+    double m_latitude;
+    double m_longitude;
+    double m_radius;
+    bool m_loadAll;
+
+    QNetworkAccessManager* m_manager;
+    bool m_loading;
+
+    QList<QNetworkRequest> m_requests;
+
+    QTimer m_lazyLoadTimer;
+};
+
 MarkerLoader::MarkerLoader(QObject* parent)
     : QObject(parent)
-    , m_latitude(-std::numeric_limits<double>::max())
-    , m_longitude(-std::numeric_limits<double>::max())
-    , m_radius(-1.0)
-    , m_loadAll(false)
-    , m_manager(new QNetworkAccessManager(this))
-    , m_loading(false)
 {
-    m_lazyLoadTimer.setSingleShot(true);
-    m_lazyLoadTimer.setInterval(100); // 100 ms
-    connect(&m_lazyLoadTimer, &QTimer::timeout, this, &MarkerLoader::loadMarkers);
+    Q_D(MarkerLoader);
+    d->m_manager = new QNetworkAccessManager(this);
+    connect(&(d->m_lazyLoadTimer), &QTimer::timeout, this, &MarkerLoader::loadMarkers);
 
-    connect(m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(poisFinished(QNetworkReply*)));
+    connect(d->m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(poisFinished(QNetworkReply*)));
 }
 
 double MarkerLoader::latitude() const
 {
-    return m_latitude;
+    Q_D(const MarkerLoader);
+    return d->m_latitude;
 }
 
 double MarkerLoader::longitude() const
 {
-    return m_longitude;
+    Q_D(const MarkerLoader);
+    return d->m_longitude;
 }
 
 void MarkerLoader::setLocation(double latitude, double longitude)
 {
-    if (std::abs(latitude - m_latitude) < 1e-12 && std::abs(longitude - m_longitude) < 1e-12) {
+    Q_D(MarkerLoader);
+    if (std::abs(latitude - d->m_latitude) < 1e-12 && std::abs(longitude - d->m_longitude) < 1e-12) {
         return;
     }
 
-    m_latitude = latitude;
-    m_longitude = longitude;
+    d->m_latitude = latitude;
+    d->m_longitude = longitude;
 
-    emit latitudeChanged(m_latitude);
-    emit longitudeChanged(m_longitude);
-    emit locationChanged(m_latitude, m_longitude);
+    emit latitudeChanged(d->m_latitude);
+    emit longitudeChanged(d->m_longitude);
+    emit locationChanged(d->m_latitude, d->m_longitude);
 
-    m_lazyLoadTimer.start();
+    d->m_lazyLoadTimer.start();
 }
 
 double MarkerLoader::radius() const
 {
-    return m_radius;
+    Q_D(const MarkerLoader);
+    return d->m_radius;
 }
 
 void MarkerLoader::setRadius(double radius)
 {
-    if (std::abs(radius - m_radius) < 1e-12) {
+    Q_D(MarkerLoader);
+    if (std::abs(radius - d->m_radius) < 1e-12) {
         return;
     }
 
-    m_radius = radius;
+    d->m_radius = radius;
     emit radiusChanged(radius);
 
-    m_lazyLoadTimer.start();
+    d->m_lazyLoadTimer.start();
 }
 
 bool MarkerLoader::loadAll() const
 {
-    return m_loadAll;
+    Q_D(const MarkerLoader);
+    return d->m_loadAll;
 }
 
 void MarkerLoader::setLoadAll(bool loadAll)
 {
-    if (loadAll == m_loadAll) {
+    Q_D(MarkerLoader);
+    if (loadAll == d->m_loadAll) {
         return;
     }
 
-    m_loadAll = loadAll;
-    emit loadAllChanged(m_loadAll);
+    d->m_loadAll = loadAll;
+    emit loadAllChanged(d->m_loadAll);
 
-    m_lazyLoadTimer.start();
+    d->m_lazyLoadTimer.start();
 }
 
 bool MarkerLoader::loading() const
 {
-    return m_loading;
+    Q_D(const MarkerLoader);
+    return d->m_loading;
 }
 
 void MarkerLoader::loadMarkers()
 {
+    Q_D(MarkerLoader);
     static double COORD_LIMIT = -9e12;
-    if (m_latitude < COORD_LIMIT || m_longitude < COORD_LIMIT || m_radius < 0.0) {
+    if (d->m_latitude < COORD_LIMIT || d->m_longitude < COORD_LIMIT || d->m_radius < 0.0) {
         return;
     }
 
     QString locationRequest
         = QString("http://baugeschichte.at/app/v1/getData.php?action=getBuildingsBoxed&lat=%1&lon=%2&radius=")
-              .arg(m_latitude, 0, 'f', 7)
-              .arg(m_longitude, 0, 'f', 7);
-    QString theRequest4Pois = locationRequest + QString::number(m_radius, 'f', 7);
-    if (m_loadAll) {
+              .arg(d->m_latitude, 0, 'f', 7)
+              .arg(d->m_longitude, 0, 'f', 7);
+    QString theRequest4Pois = locationRequest + QString::number(d->m_radius, 'f', 7);
+    if (d->m_loadAll) {
         theRequest4Pois = theRequest4Pois % "&all=1";
     }
 
     //    qDebug() << theRequest4Pois;
     QNetworkRequest request = QNetworkRequest(QUrl(theRequest4Pois));
-    m_requests.append(request);
-    m_manager->get(request);
+    d->m_requests.append(request);
+    d->m_manager->get(request);
 
-    setLoading(!m_requests.isEmpty());
+    setLoading(!d->m_requests.isEmpty());
 }
 
 void MarkerLoader::poisFinished(QNetworkReply* theReply)
 {
+    Q_D(MarkerLoader);
     QtConcurrent::run(this, &MarkerLoader::createModelAsync, theReply);
 
     const QNetworkRequest& request = theReply->request();
-    m_requests.removeOne(request);
-    if (!m_requests.empty()) {
-        m_manager->get(m_requests.first());
+    d->m_requests.removeOne(request);
+    if (!d->m_requests.empty()) {
+        d->m_manager->get(d->m_requests.first());
     }
 
-    setLoading(!m_requests.isEmpty());
+    setLoading(!d->m_requests.isEmpty());
 }
 
 void MarkerLoader::createModelAsync(QNetworkReply* theReply)
@@ -208,10 +242,11 @@ void MarkerLoader::createModelAsync(QNetworkReply* theReply)
 
 void MarkerLoader::setLoading(bool loading)
 {
-    if (loading == m_loading) {
+    Q_D(MarkerLoader);
+    if (loading == d->m_loading) {
         return;
     }
 
-    m_loading = loading;
-    emit loadingChanged(m_loading);
+    d->m_loading = loading;
+    emit loadingChanged(d->m_loading);
 }

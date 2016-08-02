@@ -28,12 +28,12 @@
 #define HOUSELOCATIONFILTER_H
 
 #include <QGeoCoordinate>
-#include <QList>
 #include <QSortFilterProxyModel>
-#include <QStringList>
-#include <QTimer>
-#include <QVariant>
+#include <QString>
 
+class QVariant;
+
+class HouseLocationFilterPrivate;
 /**
  * @brief The HouseLocationFilter filters the HouseTrailModel by location and radius
  */
@@ -86,15 +86,7 @@ private slots:
 private:
     bool isCloseToOtherPosition(const QGeoCoordinate& coord) const;
 
-    QGeoCoordinate m_location;
-    double m_radius;
-    double m_minDistance;
-
-    mutable QList<QGeoCoordinate> m_usedCoordinates;
-
-    QString m_unfilteredHouseTitle;
-    QStringList m_routeHouses;
-    QTimer m_invalidateTimer;
+    Q_DECLARE_PRIVATE(HouseLocationFilter)
 };
 
 #endif // HOUSELOCATIONFILTER_H

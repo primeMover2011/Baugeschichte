@@ -27,14 +27,16 @@
 #ifndef CATEGORYLOADER_H
 #define CATEGORYLOADER_H
 
-#include "housemarkermodel.h"
+#include "housemarker.h"
 
-#include <QNetworkReply>
 #include <QObject>
+#include <QString>
 #include <QVector>
 
 class QNetworkAccessManager;
+class QNetworkReply;
 
+class CategoryLoaderPrivate;
 /**
  * Class to load all houses of one category
  */
@@ -61,10 +63,7 @@ private slots:
 private:
     void setLoading(bool loading);
 
-    QString m_currentCategory;
-    QNetworkAccessManager* m_manager;
-    bool m_loading;
-    QList<QNetworkRequest> m_requests;
+    Q_DECLARE_PRIVATE(CategoryLoader)
 };
 
 #endif // CATEGORYLOADER_H

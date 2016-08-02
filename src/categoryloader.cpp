@@ -26,45 +26,66 @@
 
 #include "categoryloader.h"
 
+#include <QGeoCoordinate>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonParseError>
+#include <QList>
 #include <QNetworkAccessManager>
+#include <QNetworkReply>
+
+class CategoryLoaderPrivate
+{
+public:
+    CategoryLoaderPrivate()
+        : m_manager(nullptr)
+        , m_loading(false)
+    {}
+
+    QString m_currentCategory;
+    QNetworkAccessManager* m_manager;
+    bool m_loading;
+    QList<QNetworkRequest> m_requests;
+};
 
 CategoryLoader::CategoryLoader(QObject* parent)
     : QObject(parent)
-    , m_manager(new QNetworkAccessManager(this))
-    , m_loading(false)
 {
-    connect(m_manager, &QNetworkAccessManager::finished, this, &CategoryLoader::categoryLoaded);
+    Q_D(CategoryLoader);
+    d->m_manager = new QNetworkAccessManager(this);
+    connect(d->m_manager, &QNetworkAccessManager::finished, this, &CategoryLoader::categoryLoaded);
 }
 
 void CategoryLoader::loadCategory(QString category)
 {
-    if (m_currentCategory == category) {
+    Q_D(CategoryLoader);
+    if (d->m_currentCategory == category) {
         return;
     }
 
-    m_currentCategory = category;
+    d->m_currentCategory = category;
 
     QString requestUrl("http://baugeschichte.at/api.php?action=ask&query=[[Kategorie:");
     requestUrl += category;
     requestUrl += QString("]]|%3FKoordinaten|%3ftitle&format=json");
 
     QNetworkRequest request = QNetworkRequest(QUrl(requestUrl));
-    m_requests.append(request);
-    m_manager->get(request);
+    d->m_requests.append(request);
+    d->m_manager->get(request);
 
-    setLoading(!m_requests.isEmpty());
+    setLoading(!d->m_requests.isEmpty());
 }
 
 bool CategoryLoader::isLoading() const
 {
-    return m_loading;
+    Q_D(const CategoryLoader);
+    return d->m_loading;
 }
 
 void CategoryLoader::loadFromJsonText(const QByteArray& jsonText)
 {
+    Q_D(CategoryLoader);
+
     QJsonParseError parseError;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonText, &parseError);
     if (QJsonParseError::NoError != parseError.error) {
@@ -83,7 +104,7 @@ void CategoryLoader::loadFromJsonText(const QByteArray& jsonText)
         QJsonObject obj = house.toObject();
         HouseMarker newHouse;
         newHouse.setTitle(obj["fulltext"].toString());
-        newHouse.setCategories(m_currentCategory);
+        newHouse.setCategories(d->m_currentCategory);
 
         QJsonArray coordsArray = obj["printouts"].toObject()["Koordinaten"].toArray();
         QJsonObject coords = coordsArray[0].toObject();
@@ -98,14 +119,15 @@ void CategoryLoader::loadFromJsonText(const QByteArray& jsonText)
 
 void CategoryLoader::categoryLoaded(QNetworkReply* reply)
 {
+    Q_D(CategoryLoader);
 
     if (reply == nullptr) {
         return;
     }
 
     const QNetworkRequest& request = reply->request();
-    m_requests.removeOne(request);
-    setLoading(!m_requests.isEmpty());
+    d->m_requests.removeOne(request);
+    setLoading(!d->m_requests.isEmpty());
 
     reply->deleteLater();
     if (reply->error() != QNetworkReply::NoError) {
@@ -126,10 +148,12 @@ void CategoryLoader::categoryLoaded(QNetworkReply* reply)
 
 void CategoryLoader::setLoading(bool loading)
 {
-    if (loading == m_loading) {
+    Q_D(CategoryLoader);
+
+    if (loading == d->m_loading) {
         return;
     }
 
-    m_loading = loading;
-    emit isLoadingChanged(m_loading);
+    d->m_loading = loading;
+    emit isLoadingChanged(d->m_loading);
 }

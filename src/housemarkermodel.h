@@ -27,9 +27,9 @@
 #ifndef HOUSEMARKERIMAGES_H
 #define HOUSEMARKERIMAGES_H
 
-#include "housemarker.h"
-
 #include <QAbstractListModel>
+
+class HouseMarker;
 
 class HouseMarkerModel : public QAbstractListModel
 {

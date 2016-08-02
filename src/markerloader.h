@@ -27,14 +27,13 @@
 #ifndef MARKERLOADER
 #define MARKERLOADER
 
-#include "housemarkermodel.h"
+#include "housemarker.h"
 
-#include <QGeoCoordinate>
-#include <QList>
-#include <QNetworkReply>
 #include <QObject>
-#include <QTimer>
 #include <QVector>
+
+class MarkerLoaderPrivate;
+class QNetworkReply;
 
 /**
  * Loads markers for it's given position and radius
@@ -43,8 +42,8 @@
 class MarkerLoader : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(double latitude READ latitude /*WRITE setLatitude*/ NOTIFY latitudeChanged)
-    Q_PROPERTY(double longitude READ longitude /*WRITE setLongitude*/ NOTIFY longitudeChanged)
+    Q_PROPERTY(double latitude READ latitude NOTIFY latitudeChanged)
+    Q_PROPERTY(double longitude READ longitude NOTIFY longitudeChanged)
     Q_PROPERTY(double radius READ radius WRITE setRadius NOTIFY radiusChanged)
     Q_PROPERTY(bool loadAll READ loadAll WRITE setLoadAll NOTIFY loadAllChanged)
     Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
@@ -82,17 +81,7 @@ private slots:
 private:
     void setLoading(bool loading);
 
-    double m_latitude;
-    double m_longitude;
-    double m_radius;
-    bool m_loadAll;
-
-    QNetworkAccessManager* m_manager;
-    bool m_loading;
-
-    QList<QNetworkRequest> m_requests;
-
-    QTimer m_lazyLoadTimer;
+    Q_DECLARE_PRIVATE(MarkerLoader)
 };
 
 #endif // MARKERLOADER

@@ -31,6 +31,7 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <QFileInfo>
+#include <QGeoCoordinate>
 #include <QList>
 #include <QSignalSpy>
 #include <QVector>

@@ -26,40 +26,62 @@
 
 #include "housemarker.h"
 
-HouseMarker::HouseMarker()
+#include <QGeoCoordinate>
+#include <QString>
+
+class HouseMarkerPrivate
 {
+public:
+    QString m_houseTitle;
+    QGeoCoordinate m_location;
+    QString m_categories;
+};
+
+HouseMarker::HouseMarker()
+    : d(new HouseMarkerPrivate)
+{
+}
+
+HouseMarker::~HouseMarker()
+{
+    delete d;
 }
 
 void HouseMarker::setTitle(const QString& houseTitle)
 {
-    m_houseTitle = houseTitle;
+    d->m_houseTitle = houseTitle;
 }
 
 const QString&HouseMarker::title() const
 {
-    return m_houseTitle;
+    return d->m_houseTitle;
 }
 
 void HouseMarker::setLocation(const QGeoCoordinate& theLocation)
 {
-    if (m_location == theLocation) {
+    if (d->m_location == theLocation) {
         return;
     }
 
-    m_location = theLocation;
+    d->m_location = theLocation;
 }
 
 const QGeoCoordinate&HouseMarker::location() const
 {
-    return m_location;
+    return d->m_location;
 }
 
 void HouseMarker::setCategories(const QString& categories)
 {
-    m_categories = categories;
+    d->m_categories = categories;
 }
 
 const QString&HouseMarker::categories() const
 {
-    return m_categories;
+    return d->m_categories;
+}
+
+bool operator<(const HouseMarker& lhs, const HouseMarker& rhs)
+{
+    return lhs.title() < rhs.title();
 }

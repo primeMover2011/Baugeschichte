@@ -27,8 +27,9 @@
 #ifndef HOUSEMARKER_H
 #define HOUSEMARKER_H
 
-#include <QGeoCoordinate>
-#include <QString>
+class HouseMarkerPrivate;
+class QGeoCoordinate;
+class QString;
 
 /**
  * @brief The HouseMarker class contains the data for a marker on the map
@@ -37,6 +38,7 @@ class HouseMarker
 {
 public:
     explicit HouseMarker();
+    ~HouseMarker();
 
     void setTitle(const QString& title);
     const QString& title() const;
@@ -47,15 +49,10 @@ public:
     void setCategories(const QString& categories);
     const QString& categories() const;
 
-protected:
-    QString m_houseTitle;
-    QGeoCoordinate m_location;
-    QString m_categories;
+private:
+    HouseMarkerPrivate* d;
 };
 
-inline bool operator<(const HouseMarker& lhs, const HouseMarker& rhs)
-{
-    return lhs.title() < rhs.title();
-}
+bool operator<(const HouseMarker& lhs, const HouseMarker& rhs);
 
 #endif // HOUSEMARKER_H

@@ -49,6 +49,7 @@ class HouseLocationFilter : public QSortFilterProxyModel
 
 public:
     HouseLocationFilter(QObject* parent = nullptr);
+    ~HouseLocationFilter();
 
     const QGeoCoordinate& location() const;
     double radius() const;
@@ -86,7 +87,9 @@ private slots:
 private:
     bool isCloseToOtherPosition(const QGeoCoordinate& coord) const;
 
+    Q_DISABLE_COPY(HouseLocationFilter)
     Q_DECLARE_PRIVATE(HouseLocationFilter)
+    HouseLocationFilterPrivate* const d_ptr;
 };
 
 #endif // HOUSELOCATIONFILTER_H

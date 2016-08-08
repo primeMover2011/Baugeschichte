@@ -42,9 +42,21 @@ HouseMarker::HouseMarker()
 {
 }
 
+HouseMarker::HouseMarker(const HouseMarker& marker)
+    : d(new HouseMarkerPrivate)
+{
+    *d = *marker.d;
+}
+
 HouseMarker::~HouseMarker()
 {
     delete d;
+}
+
+HouseMarker& HouseMarker::operator=(const HouseMarker& marker)
+{
+    *d = *marker.d;
+    return *this;
 }
 
 void HouseMarker::setTitle(const QString& houseTitle)
@@ -52,7 +64,7 @@ void HouseMarker::setTitle(const QString& houseTitle)
     d->m_houseTitle = houseTitle;
 }
 
-const QString&HouseMarker::title() const
+const QString& HouseMarker::title() const
 {
     return d->m_houseTitle;
 }
@@ -66,7 +78,7 @@ void HouseMarker::setLocation(const QGeoCoordinate& theLocation)
     d->m_location = theLocation;
 }
 
-const QGeoCoordinate&HouseMarker::location() const
+const QGeoCoordinate& HouseMarker::location() const
 {
     return d->m_location;
 }
@@ -76,7 +88,7 @@ void HouseMarker::setCategories(const QString& categories)
     d->m_categories = categories;
 }
 
-const QString&HouseMarker::categories() const
+const QString& HouseMarker::categories() const
 {
     return d->m_categories;
 }

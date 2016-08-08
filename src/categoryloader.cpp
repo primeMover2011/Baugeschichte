@@ -50,10 +50,16 @@ public:
 
 CategoryLoader::CategoryLoader(QObject* parent)
     : QObject(parent)
+    , d_ptr(new CategoryLoaderPrivate())
 {
     Q_D(CategoryLoader);
     d->m_manager = new QNetworkAccessManager(this);
     connect(d->m_manager, &QNetworkAccessManager::finished, this, &CategoryLoader::categoryLoaded);
+}
+
+CategoryLoader::~CategoryLoader()
+{
+    delete d_ptr;
 }
 
 void CategoryLoader::loadCategory(QString category)

@@ -70,12 +70,18 @@ public:
 
 MarkerLoader::MarkerLoader(QObject* parent)
     : QObject(parent)
+    , d_ptr(new MarkerLoaderPrivate())
 {
     Q_D(MarkerLoader);
     d->m_manager = new QNetworkAccessManager(this);
     connect(&(d->m_lazyLoadTimer), &QTimer::timeout, this, &MarkerLoader::loadMarkers);
 
     connect(d->m_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(poisFinished(QNetworkReply*)));
+}
+
+MarkerLoader::~MarkerLoader()
+{
+    delete d_ptr;
 }
 
 double MarkerLoader::latitude() const

@@ -63,10 +63,16 @@ public:
 
 HouseLocationFilter::HouseLocationFilter(QObject* parent)
     : QSortFilterProxyModel(parent)
+    , d_ptr(new HouseLocationFilterPrivate())
 {
     Q_D(HouseLocationFilter);
     setDynamicSortFilter(true);
     connect(&(d->m_invalidateTimer), &QTimer::timeout, this, &HouseLocationFilter::triggerRefiltering);
+}
+
+HouseLocationFilter::~HouseLocationFilter()
+{
+    delete d_ptr;
 }
 
 const QGeoCoordinate& HouseLocationFilter::location() const

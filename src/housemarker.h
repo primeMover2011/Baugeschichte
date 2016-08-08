@@ -38,7 +38,10 @@ class HouseMarker
 {
 public:
     explicit HouseMarker();
+    HouseMarker(const HouseMarker& marker);
     ~HouseMarker();
+
+    HouseMarker& operator=(const HouseMarker& marker);
 
     void setTitle(const QString& title);
     const QString& title() const;

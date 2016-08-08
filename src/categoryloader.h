@@ -46,6 +46,7 @@ class CategoryLoader : public QObject
     Q_OBJECT
 public:
     explicit CategoryLoader(QObject* parent = nullptr);
+    ~CategoryLoader();
 
     Q_INVOKABLE void loadCategory(QString category);
 
@@ -63,7 +64,9 @@ private slots:
 private:
     void setLoading(bool loading);
 
+    Q_DISABLE_COPY(CategoryLoader)
     Q_DECLARE_PRIVATE(CategoryLoader)
+    CategoryLoaderPrivate* const d_ptr;
 };
 
 #endif // CATEGORYLOADER_H

@@ -50,6 +50,7 @@ class MarkerLoader : public QObject
 
 public:
     explicit MarkerLoader(QObject* parent = 0);
+    ~MarkerLoader();
 
     double latitude() const;
     double longitude() const;
@@ -81,7 +82,9 @@ private slots:
 private:
     void setLoading(bool loading);
 
+    Q_DISABLE_COPY(MarkerLoader)
     Q_DECLARE_PRIVATE(MarkerLoader)
+    MarkerLoaderPrivate* const d_ptr;
 };
 
 #endif // MARKERLOADER

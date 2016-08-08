@@ -150,6 +150,11 @@ BaseView {
             }
 
             function showImageForText() {
+                if (detailsModel.imagesModel.get(currentIndex).section === mainListView.currentIndex) {
+                    // already correct section
+                    return;
+                }
+
                 for (var i=0; i<model.count; ++i) {
                     var section = detailsModel.imagesModel.get(i).section;
                     if (section === mainListView.currentIndex) {

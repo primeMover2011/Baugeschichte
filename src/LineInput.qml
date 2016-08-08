@@ -45,7 +45,7 @@ FocusScope {
     id: wrapper
 
     property alias text: input.text
-    property alias hint: hint.text
+    property alias hint: hintText.text
     property alias prefix: prefix.text
 
     signal accepted
@@ -73,13 +73,13 @@ FocusScope {
         radius: 4
 
         Text {
-            id: hint
+            id: hintText
             anchors { fill: parent; leftMargin: 14 }
             verticalAlignment: Text.AlignVCenter
             text: qsTr("Enter word")
             font.pixelSize: localHelper.smallFontSize
             color: "#707070"
-            opacity: input.length ? 0 : 1
+            visible: input.length === 0 && !input.activeFocus
         }
 
         Text {
@@ -88,7 +88,7 @@ FocusScope {
             verticalAlignment: Text.AlignVCenter
             font.pixelSize: localHelper.largeFontSize
             color: "#707070"
-            opacity: !hint.opacity
+            opacity: !hintText.opacity
         }
 
         TextInput {

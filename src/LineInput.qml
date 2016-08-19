@@ -102,7 +102,6 @@ FocusScope {
                 if (Qt.inputMethod.visible) {
                     Qt.inputMethod.hide()
                 }
-                console.log("accepted")
 
                 wrapper.accepted();
             }

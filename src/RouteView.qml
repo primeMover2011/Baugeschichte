@@ -44,16 +44,17 @@ BaseView {
 
     }
 
-    LineInput {
-        id: searchInput
-        width: parent.width
-        hint: qsTr("Suchbegriff...")
-        focus: true //flipBar.opened
-        onAccepted: {
-            searchModel.phrase = "";
-            searchModel.phrase = text + "*";
-        }
-    }
+//    disable route searching for now
+//    LineInput {
+//        id: searchInput
+//        width: parent.width
+//        hint: qsTr("Suchbegriff...")
+//        focus: true //flipBar.opened
+//        onAccepted: {
+//            searchModel.phrase = "";
+//            searchModel.phrase = text + "*";
+//        }
+//    }
 
     ListView {
         id: searchResult
@@ -61,7 +62,7 @@ BaseView {
         interactive: true
         clip: true
         anchors  {
-            top: searchInput.bottom
+            top: parent.top
             bottom: parent.bottom
             left: parent.left
             right: parent.right

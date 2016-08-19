@@ -77,5 +77,9 @@ BaseView {
         color: "red"
         wrapMode: Text.Wrap
     }
+
+    Component.onCompleted: {
+        searchInput.forceActiveFocus();
+    }
 }
 

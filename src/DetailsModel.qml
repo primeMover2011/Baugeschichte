@@ -51,12 +51,16 @@ JsonModel {
     }
 
     onNewobject: {
-        clear();
-
         if (magneto.version !== "1") {
             console.warn("Unknown version for details: "+magneto.version)
         }
 
+        if (magneto.title !== root.phrase) {
+            // reply is from annother (old) request
+            return;
+        }
+
+        clear();
         var section = -1;
 
         title = magneto.title

@@ -89,6 +89,7 @@ BaseView {
 
     DetailsModel {
         id: detailsModel
+        title: phrase
         phrase: root.visible ? root.searchFor : ""
         onPhraseChanged: {
             imagePathView.currentIndex = 0;

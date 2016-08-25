@@ -37,9 +37,13 @@ TestCase {
     }
 
     function cleanup() {
+        detailsModel.clear();
+        detailsModel.phrase = "";
+        detailsModel.title = "";
     }
 
     function test_load() {
+        detailsModel.title = "Hauptplatz_1";
         detailsModel.phrase = "details01.json";
         tryCompare(detailsModel, "isLoading", false, 1000, "Timed out readong json file");
 
@@ -54,12 +58,25 @@ TestCase {
     }
 
     function test_prevent_double_load() {
+        detailsModel.title = "Hauptplatz_1";
         detailsModel.phrase = "details01.json";
+        detailsModel.title = "";
         detailsModel.phrase = "";
+        detailsModel.title = "Hauptplatz_1";
         detailsModel.phrase = "details01.json";
         tryCompare(detailsModel, "isLoading", false, 1000, "Timed out readong json file");
 
         compare(detailsModel.modelDE.count, 3);
         compare(detailsModel.imagesModel.count, 5);
+    }
+
+    function test_do_not_load_other_details() {
+        detailsModel.title = "Hauptplatz_2";
+        detailsModel.phrase = "details01.json";
+        tryCompare(detailsModel, "isLoading", false, 1000, "Timed out readong json file");
+
+        compare(detailsModel.modelDE.count, 0);
+        compare(detailsModel.modelEN.count, 0);
+        compare(detailsModel.modelS1.count, 0);
     }
 }

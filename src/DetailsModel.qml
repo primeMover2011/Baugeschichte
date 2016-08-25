@@ -55,7 +55,7 @@ JsonModel {
             console.warn("Unknown version for details: "+magneto.version)
         }
 
-        if (magneto.title !== root.phrase) {
+        if (magneto.title !== root.title) {
             // reply is from annother (old) request
             return;
         }
@@ -63,7 +63,6 @@ JsonModel {
         clear();
         var section = -1;
 
-        title = magneto.title
         for (var key in magneto.payload) {
             var jsonObject = magneto.payload[key];
             if (jsonObject.title === null) {

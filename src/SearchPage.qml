@@ -60,10 +60,15 @@ BaseView {
         delegate: SearchResultDelegate {
             text: title
             onSelected: {
-                appCore.selectedHouse = title;
-                appCore.showDetails = true;
-                appCore.centerSelectedHouse();
-                uiStack.pop(null);
+                if (isBuilding) {
+                    appCore.selectedHouse = title;
+                    appCore.showDetails = true;
+                    appCore.centerSelectedHouse();
+                    uiStack.pop(null);
+                } else {
+                    searchInput.text = title;
+                    searchModel.phrase = title;
+                }
             }
         }
     }

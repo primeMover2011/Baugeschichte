@@ -29,7 +29,7 @@ import QtTest 1.1
 import "../../src"
 
 TestCase {
-    name: "DetailsModelTests"
+    name: "SearchModelTests"
 
     SearchModel {
         id: searchModel
@@ -44,5 +44,14 @@ TestCase {
         tryCompare(searchModel, "isLoading", false, 1000, "Timed out readong json file");
 
         compare(searchModel.model.count, 10);
+        compare(searchModel.model.get(0).isBuilding, true);
+    }
+
+    function test_load_suggestions() {
+        searchModel.phrase = "search02.json";
+        tryCompare(searchModel, "isLoading", false, 1000, "Timed out readong json file");
+
+        compare(searchModel.model.count, 2);
+        compare(searchModel.model.get(0).isBuilding, false);
     }
 }

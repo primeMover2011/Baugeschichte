@@ -37,9 +37,15 @@ JsonModel {
         }
 
         var titles = magneto[1];
+        var idx = 0;
         for (var key in titles) {
             var jsonObject = {};
             jsonObject.title = titles[key];
+
+            var url = magneto[3][idx];
+            jsonObject.url = url;
+            jsonObject.isBuilding = url != "";
+
             model.append(jsonObject);
         }
     }

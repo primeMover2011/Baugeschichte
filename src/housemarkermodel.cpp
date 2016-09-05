@@ -57,6 +57,11 @@ void HouseMarkerModel::append(const QVector<HouseMarker>& aHouseTrail)
     }
 
     int insertEnd = rowCount() + static_cast<int>(newHouses.size()) - 1;
+
+    if (insertEnd < rowCount()) {
+        return;
+    }
+
     beginInsertRows(QModelIndex(), rowCount(), insertEnd);
     foreach (const HouseMarker& house, newHouses) {
         HouseMarker* newHouse = new HouseMarker(house);

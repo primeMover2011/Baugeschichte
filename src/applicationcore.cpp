@@ -418,7 +418,6 @@ void ApplicationCore::loadMarkers()
 
     QFile file(markerFile);
     if (!file.exists()) {
-        qWarning() << Q_FUNC_INFO << "file does not exist" << markerFile;
         return;
     }
     file.open(QIODevice::ReadOnly);

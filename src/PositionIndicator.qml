@@ -24,9 +24,9 @@
  ** SOFTWARE.
  **/
 
-import QtQuick 2.4
-import QtLocation 5.6
-import QtPositioning 5.6
+import QtQuick 2.5
+import QtLocation 5.5
+import QtPositioning 5.5
 
 /**
  MapItem to indicate the current position
@@ -40,7 +40,7 @@ MapQuickItem {
 
     anchorPoint.x: positionCircle.width / 2
     anchorPoint.y: positionCircle.height / 2
-    
+
     DensityHelpers {
         id: localHelper
     }
@@ -55,7 +55,7 @@ MapQuickItem {
         width: localHelper.dp(90)
         height: width
         radius: width/2
-        
+
         SequentialAnimation on width {
             loops: Animation.Infinite
             NumberAnimation {

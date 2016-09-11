@@ -24,7 +24,7 @@
  ** SOFTWARE.
  **/
 
-import QtQuick 2.6
+import QtQuick 2.5
 
 /**
  Carousel in the details view showing the fotos of the building

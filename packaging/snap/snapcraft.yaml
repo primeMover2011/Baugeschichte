@@ -1,5 +1,5 @@
 name: baugeschichte
-version: 2.0.2.2
+version: 2.0.2.7
 summary: See images and the history of builings in a city
 description: See images and the history of builings in a city downloaded from www.housetrails.org
 confinement: strict
@@ -7,8 +7,8 @@ grade: stable
 
 apps:
     baugeschichte:
-        command: qt5-launch opt/Baugeschichte/bin/Baugeschichte
-        plugs: [x11, unity7, home, opengl, network, network-bind]
+        command: desktop-launch $SNAP/opt/Baugeschichte/bin/Baugeschichte
+        plugs: [unity7, home, opengl, network, location-observe]
 
 parts:
     baugeschichte:
@@ -34,9 +34,13 @@ parts:
             - libqt5svg5
             - libqt5x11extras5
             - libqt5xml5
+            - qml-module-qt-labs-settings
+            - qml-module-qtlocation
+            - qml-module-qtpositioning
             - qml-module-qtquick2
-            - qml-module-qtquick-layouts
             - qml-module-qtquick-controls
+            - qml-module-qtquick-dialogs
+            - qml-module-qtquick-layouts
             - qml-module-qtquick-xmllistmodel
-        after: [qt5conf] # for qt5conf see https://github.com/dplanella/qt5conf
+        after: [desktop/qt5]
 

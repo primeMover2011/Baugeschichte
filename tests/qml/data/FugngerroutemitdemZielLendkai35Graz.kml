@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.2">
+<Document>
+  <name>Fußgängerroute mit dem Ziel Lendkai 35, Graz</name>
+  <description><![CDATA[]]></description>
+  <Style id="style2">
+    <IconStyle>
+      <Icon>
+        <href></href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Style id="style4">
+    <LineStyle>
+      <color>73FF0000</color>
+      <width>5</width>
+    </LineStyle>
+  </Style>
+  <Style id="style1">
+    <IconStyle>
+      <Icon>
+        <href></href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Style id="style5">
+    <LineStyle>
+      <color>73FF0000</color>
+      <width>5</width>
+    </LineStyle>
+  </Style>
+  <Style id="style3">
+    <IconStyle>
+      <Icon>
+        <href></href>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Placemark>
+    <name>Von: Lendplatz 23, Graz</name>
+    <styleUrl>#style2</styleUrl>
+    <Point>
+      <coordinates>15.428657,47.076889,0.000000</coordinates>
+    </Point>
+  </Placemark>
+  <Placemark>
+    <name>Fußgängerroute mit dem Ziel Lendplatz 45, Graz</name>
+    <styleUrl>#style4</styleUrl>
+    <ExtendedData>
+      <Data name="_SnapToRoads">
+        <value>true</value>
+      </Data>
+    </ExtendedData>
+    <LineString>
+      <tessellate>1</tessellate>
+      <coordinates>
+        15.428657,47.076889,0.000000
+        15.428764,47.076729,0.000000
+        15.428764,47.076729,0.000000
+        15.428892,47.076782,0.000000
+        15.428892,47.076782,0.000000
+        15.429621,47.076164,0.000000
+        15.429902,47.075779,0.000000
+        15.430640,47.075066,0.000000
+        15.430640,47.075066,0.000000
+        15.430895,47.075176,0.000000
+        15.431192,47.075233,0.000000
+        15.431872,47.074665,0.000000
+      </coordinates>
+    </LineString>
+  </Placemark>
+  <Placemark>
+    <name>Nach: Lendplatz 45, Graz</name>
+    <styleUrl>#style1</styleUrl>
+    <Point>
+      <coordinates>15.431872,47.074665,0.000000</coordinates>
+    </Point>
+  </Placemark>
+  <Placemark>
+    <name>Fußgängerroute mit dem Ziel Lendkai 35, Graz</name>
+    <styleUrl>#style5</styleUrl>
+    <ExtendedData>
+      <Data name="_SnapToRoads">
+        <value>true</value>
+      </Data>
+    </ExtendedData>
+    <LineString>
+      <tessellate>1</tessellate>
+      <coordinates>
+        15.431872,47.074665,0.000000
+        15.431736,47.074764,0.000000
+        15.431736,47.074764,0.000000
+        15.432232,47.075005,0.000000
+        15.433393,47.075336,0.000000
+        15.433393,47.075336,0.000000
+        15.433674,47.074600,0.000000
+      </coordinates>
+    </LineString>
+  </Placemark>
+  <Placemark>
+    <name>Nach: Lendkai 35, Graz</name>
+    <styleUrl>#style3</styleUrl>
+    <Point>
+      <coordinates>15.433674,47.074600,0.000000</coordinates>
+    </Point>
+  </Placemark>
+</Document>
+</kml>

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Baugeschichte
+Exec=baugeschichte
+GenericName=Baugeschichte
+Comment=View images and history of buildings
+Type=Application
+Icon=${SNAP}/meta/gui/icon.png
+Categories=Qt;
+StartupNotify=true
+

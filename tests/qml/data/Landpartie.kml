@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+	<Document>
+		<name>GPS Visualizer data</name>
+		<Style id="waypoint">
+			<IconStyle>
+				<color>ffffffff</color>
+				<scale>1</scale>
+				<Icon><href>http://maps.google.com/mapfiles/kml/pal4/icon56.png</href></Icon>
+				<hotSpot x="0.5" xunits="fraction" y="0.5" yunits="fraction" />
+			</IconStyle>
+			<BalloonStyle>
+				<text><![CDATA[<p align="left" style="white-space:nowrap;"><font size="+1"><b>$[name]</b></font></p> <p align="left">$[description]</p>]]></text>
+			</BalloonStyle>
+		</Style>
+		<Style id="track">
+			<LineStyle>
+				<color>ff0000ff</color>
+				<width>3</width>
+			</LineStyle>
+		</Style>
+		<Style id="polygon">
+			<LineStyle>
+				<color>ff9900ff</color>
+				<width>3</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>409900ff</color>
+				<colorMode>normal</colorMode>
+				<fill>1</fill>
+				<outline>1</outline>
+			</PolyStyle>
+		</Style>
+		<Folder>
+			<name>Tracks</name>
+		<Placemark>
+				<name>Landpartie</name>
+				<description>Length: 4.438 km (2.758 mi)</description>
+				<visibility>1</visibility>
+				<open>0</open>
+				<styleUrl>#track</styleUrl>
+				<LineString>
+					<extrude>0</extrude>
+					<tessellate>1</tessellate>
+					<altitudeMode>clampedToGround</altitudeMode>
+					<coordinates>
+						15.4445565,47.0661720 15.4440790,47.0659418 15.4444706,47.0654485 15.4443580,47.0657408 15.4452860,47.0660770 15.4460800,47.0663291 15.4468578,47.0663693 15.4472548,47.0658651 15.4478073,47.0652695 15.4474908,47.0650758 15.4482472,47.0634789 15.4487300,47.0626604 15.4509133,47.0633876 15.4512942,47.0626896 15.4517770,47.0619880 15.4517770,47.0610818 15.4519486,47.0600074 15.4521525,47.0591595 15.4526031,47.0582605 15.4532897,47.0568572 15.4536331,47.0563090 15.4541910,47.0557973 15.4544914,47.0555049 15.4551297,47.0558448 15.4554570,47.0555561 15.4558754,47.0551358 15.4564333,47.0544560 15.4589438,47.0554136 15.4606766,47.0561007 15.4619962,47.0544268 15.4657888,47.0558192 15.4664111,47.0560568 15.4664487,47.0559618 15.4676878,47.0564734 15.4682136,47.0558850 15.4715127,47.0571824 15.4723227,47.0564881 15.4727626,47.0560056 15.4724407,47.0565319 15.4730791,47.0566891 15.4735780,47.0566306 15.4739588,47.0565648 15.4743183,47.0565685 15.4744577,47.0564369 15.4750049,47.0561884 15.4753429,47.0559325 15.4755735,47.0554538 15.4760671,47.0548581 15.4765069,47.0542587 15.4766518,47.0537324 15.4775906,47.0539663 
+					</coordinates>
+				</LineString>
+			</Placemark>
+		</Folder>
+	</Document>
+</kml>

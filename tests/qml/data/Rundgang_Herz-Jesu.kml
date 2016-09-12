@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>Rundgang Herz-Jesu</name>
+	<Style id="icon-ci-2">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>icon-2.png</href>
+			</Icon>
+		</IconStyle>
+	</Style>
+	<Style id="icon-ci-3">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>icon-3.png</href>
+			</Icon>
+		</IconStyle>
+	</Style>
+	<Style id="icon-ci-1">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>icon-1.png</href>
+			</Icon>
+		</IconStyle>
+	</Style>
+	<Style id="line-1267FF-5">
+		<LineStyle>
+			<color>ffff6712</color>
+			<width>5</width>
+		</LineStyle>
+	</Style>
+	<Style id="icon-ci-5">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>icon-5.png</href>
+			</Icon>
+		</IconStyle>
+	</Style>
+	<Style id="icon-ci-4">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>icon-4.png</href>
+			</Icon>
+		</IconStyle>
+	</Style>
+	<Folder>
+		<name>Unbenannte Ebene</name>
+	</Folder>
+	<Folder>
+		<name>Rundgang Herz-Jesu</name>
+		<Placemark>
+			<name>Route von Petersgasse 12, Graz nach Rechbauerstraße, Graz</name>
+			<styleUrl>#line-1267FF-5</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<LineString>
+				<tessellate>1</tessellate>
+				<coordinates>
+					15.45345,47.06575,0 15.45307,47.06602,0 15.45325,47.06603,0 15.45381,47.0661,0 15.45418,47.06613,0 15.4546,47.06617,0 15.4552,47.06620000000001,0 15.45554,47.06624,0 15.45553,47.06625999999999,0 15.45554,47.06627,0 15.45554,47.06628,0 15.45555,47.06629,0 15.45556,47.0663,0 15.45557,47.06631000000001,0 15.45558,47.06631000000001,0 15.4556,47.06631999999999,0 15.45554,47.06644,0 15.45529,47.06691,0 15.45498,47.06747,0 15.45664,47.06806999999999,0 15.45632,47.06831,0 15.45553,47.06889,0 15.45435,47.06967,0 15.45364,47.06931000000001,0 15.45273,47.06884000000001,0 15.45216,47.06851,0 15.4512,47.068,0 15.45045,47.0676,0 15.45003,47.06737,0 15.4486,47.06677,0 15.44825,47.06663,0 15.4479,47.06654,0 15.44756,47.06646,0 15.4472,47.06642000000001,0 15.44684,47.06642999999999,0 15.44721,47.06592,0 15.44726,47.06587,0 
+				</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark>
+			<name>Petersgasse 12, Graz</name>
+			<description>Technische Universität Graz, Petersgasse 12, 8010 Graz, Österreich</description>
+			<styleUrl>#icon-ci-1</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<Point>
+				<coordinates>15.4534531,47.0657526,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Rechbauerstraße 63a, Graz</name>
+			<description>Sparbersbachgasse 42, 8010 Graz, Österreich</description>
+			<styleUrl>#icon-ci-2</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<Point>
+				<coordinates>15.455287,47.0669105,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Naglergasse 56a, Graz</name>
+			<styleUrl>#icon-ci-3</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<Point>
+				<coordinates>15.456319,47.0683066,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>Herz Jesu Kirche, Graz</name>
+			<styleUrl>#icon-ci-4</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<Point>
+				<coordinates>15.4543517,47.0696725,0</coordinates>
+			</Point>
+		</Placemark>
+		<Placemark>
+			<name>münzgrabenstraße 8a, Graz</name>
+			<styleUrl>#icon-ci-5</styleUrl>
+			<ExtendedData>
+			</ExtendedData>
+			<Point>
+				<coordinates>15.4472603,47.06586969999999,0</coordinates>
+			</Point>
+		</Placemark>
+	</Folder>
+</Document>
+</kml>

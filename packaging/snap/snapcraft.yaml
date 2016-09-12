@@ -1,0 +1,46 @@
+name: baugeschichte
+version: 2.0.2.7
+summary: See images and the history of builings in a city
+description: See images and the history of builings in a city downloaded from www.housetrails.org
+confinement: strict
+grade: stable
+
+apps:
+    baugeschichte:
+        command: desktop-launch $SNAP/opt/Baugeschichte/bin/Baugeschichte
+        plugs: [unity7, home, opengl, network, location-observe]
+
+parts:
+    baugeschichte:
+        plugin: qmake
+        qt-version: qt5
+        source: src
+#        source: https://github.com/gschwann/Baugeschichte.git
+#        source-type: git
+#        source-branch: master
+        build-packages:
+            - build-essential
+            - qttools5-dev-tools
+            - qtbase5-dev
+            - qtdeclarative5-dev
+        stage-packages:
+            - libqt5concurrent5
+            - libqt5core5a
+            - libqt5declarative5
+            - libqt5gui5
+            - libqt5network5
+            - libqt5qml5
+            - libqt5quick5
+            - libqt5svg5
+            - libqt5x11extras5
+            - libqt5xml5
+            - qml-module-qt-labs-settings
+            - qml-module-qtlocation
+            - qml-module-qtpositioning
+            - qml-module-qtquick2
+            - qml-module-qtquick-controls
+            - qml-module-qtquick-dialogs
+            - qml-module-qtquick-layouts
+            - qml-module-qtquick-xmllistmodel
+        after: [desktop/qt5]
+

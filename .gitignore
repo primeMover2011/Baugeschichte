@@ -32,3 +32,8 @@ Makefile*
 
 # backup files
 *~
+
+# snapcraft directories
+parts
+prime
+stage

@@ -24,10 +24,10 @@
  ** SOFTWARE.
  **/
 
-import QtQuick 2.6
+import QtQuick 2.5
 import QtQuick.XmlListModel 2.0
-import QtLocation 5.6
-import QtPositioning 5.6
+import QtLocation 5.5
+import QtPositioning 5.5
 
 MapPolyline {
     id: root

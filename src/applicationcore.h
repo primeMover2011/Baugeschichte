@@ -88,6 +88,8 @@ public:
     QString detailsLanguage() const;
     void setDetailsLanguage(QString detailsLanguage);
 
+    Q_INVOKABLE void openExternalLink(const QString& link);
+
 public slots:
     void handleApplicationStateChange(Qt::ApplicationState state);
 

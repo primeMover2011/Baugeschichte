@@ -32,6 +32,7 @@
 
 #include <QApplication>
 #include <QDebug>
+#include <QDesktopServices>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -225,6 +226,11 @@ void ApplicationCore::setDetailsLanguage(QString detailsLanguage)
 
     m_detailsLanguage = detailsLanguage;
     emit detailsLanguageChanged(m_detailsLanguage);
+}
+
+void ApplicationCore::openExternalLink(const QString& link)
+{
+    QDesktopServices::openUrl(QUrl(link));
 }
 
 void ApplicationCore::handleApplicationStateChange(Qt::ApplicationState state)

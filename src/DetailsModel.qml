@@ -57,6 +57,7 @@ JsonModel {
 
         if (magneto.title !== root.title) {
             // reply is from annother (old) request
+            console.warn("Title do not match: "+magneto.title + " != " + root.title)
             return;
         }
 
@@ -73,7 +74,7 @@ JsonModel {
             resultObject.title = jsonObject.title;
 
             if (jsonObject.title.trim() !== "Info") {
-                resultObject.detailText = jsonObject.text
+                resultObject.detailText = convertToHTML(jsonObject.text);
 
                 if (jsonObject.lang === undefined) {
                     jsonObject.lang = ""
@@ -104,5 +105,39 @@ JsonModel {
             var jsonObject = {"detailText": error, "title": qsTr("Load error")};
             model.append(jsonObject);
         }
+    }
+
+    function convertToHTML(input) {
+        return "<HTML><BODY>"+convertToLink(input, 0)+"</BODY></HTML>";
+    }
+
+
+    function convertToLink(input, startIdx) {
+        var linkIdx = input.indexOf("<ref>")
+
+        if (linkIdx === -1) {
+            return input;
+        }
+
+        var linkEndIdx = input.indexOf("</ref>", linkIdx)
+
+        if (linkEndIdx === -1) {
+            return input;
+        }
+
+        var preLink = input.substring(0, linkIdx);
+        var link = input.substring(linkIdx+5, linkEndIdx)
+        var postLink = input.substring(linkEndIdx+6, input.length)
+
+        var linkText = link;
+        var linkLink = link;
+        var linkTerm = link.indexOf(" ");
+        if (linkTerm > -1) {
+            linkLink = link.substring(0, linkTerm);
+            linkText = link.substring(linkTerm+1, link.length);
+        }
+
+        var output = preLink + "<a href=\"" + linkLink + "\">" + linkText + "</a>" + postLink;
+        return convertToLink(output, linkEndIdx+1);
     }
 }

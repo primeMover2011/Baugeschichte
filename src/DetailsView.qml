@@ -229,7 +229,12 @@ BaseView {
                         horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
                         wrapMode: TextEdit.WordWrap
                         text: (detailText.length > 0) ? detailText : qsTr("Kein Text")
+                        textFormat: TextEdit.RichText
                         font.pixelSize: localHelper.smallFontSize
+
+                        onLinkActivated: {
+                            appCore.openExternalLink(link);
+                        }
                     }
 
                     Keys.onLeftPressed: console.log("onLeft Details")

@@ -79,4 +79,18 @@ TestCase {
         compare(detailsModel.modelEN.count, 0);
         compare(detailsModel.modelS1.count, 0);
     }
+
+    function test_convert_to_html() {
+        detailsModel.title = "Liebiggasse 9";
+        detailsModel.phrase = "details_external_link.json";
+        tryCompare(detailsModel, "isLoading", false, 1000, "Timed out readong json file");
+
+        var detailText = detailsModel.modelDE.get(0).detailText;
+        var linkStart = detailText.indexOf("<a ");
+        verify(linkStart > -1 );
+
+        var link = detailText.substr(linkStart, 115);
+        var origLink = "<a href=\"http://www.gat.st/pages/de/nachrichten/5178.htm\">Artikel zur Aufstockung auf gat.st Artikel auf gat.st</a>"
+        compare(link, origLink);
+    }
 }

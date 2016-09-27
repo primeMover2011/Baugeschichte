@@ -13,7 +13,3 @@ TESTDATA += \
 
 OTHER_FILES += \
     $$PWD/data/*
-
-DISTFILES += \
-    tst_SearchModel.qml \
-    data/search02.json

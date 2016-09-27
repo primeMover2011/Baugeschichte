@@ -81,6 +81,8 @@ Item {
                     if (req.status == 200)
                     {
                         var responseText = req.responseText;
+//                        console.log("responseText: "+responseText)
+
                         try {
                             var searchResult = JSON.parse(responseText);
                             if (searchResult.errors !== undefined) {

@@ -165,6 +165,14 @@ BaseView {
                     }
                 }
             }
+
+            Text {
+                anchors.centerIn: parent
+                text: qsTr("No image")
+                color: "white"
+                visible: imagePathView.model.count === 0 && !detailsModel.isLoading
+            }
+
         }
 
         ListView {

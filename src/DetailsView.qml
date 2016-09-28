@@ -110,7 +110,7 @@ BaseView {
     Rectangle {
         id: initialTextbackground
         width: parent.width
-        height:  imagePathView.height
+        height:  mainListView.height
         anchors.bottom: parent.bottom
 
         color: "#FFFCF2"
@@ -131,7 +131,6 @@ BaseView {
         ImageCarousel {
             id: imagePathView
 
-            width: parent.width
             height: parent.height / 2
             Layout.fillHeight: true
             Layout.maximumHeight: parent.height * 0.75
@@ -178,7 +177,6 @@ BaseView {
         ListView {
             id: mainListView
 
-            width: parent.width
             height: parent.height / 2
             Layout.fillHeight: true
             Layout.maximumHeight: parent.height * 0.75
@@ -196,7 +194,7 @@ BaseView {
 
             delegate: Item {
                 width: mainListView.width
-                height: mainListView.height
+                height: Math.max(mainListView.height, splitView.height * 0.25)
 
                 Rectangle {
                     id: textBase

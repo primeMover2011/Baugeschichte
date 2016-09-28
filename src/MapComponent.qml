@@ -236,7 +236,7 @@ BaseView {
                     }
                     MouseArea {
                         anchors.fill: image
-                        onPressed: changeCurrentItem()
+                        onClicked: changeCurrentItem()
 
                         function changeCurrentItem() {
                             var showDetails = false;

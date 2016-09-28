@@ -239,8 +239,10 @@ BaseView {
                         onPressed: changeCurrentItem()
 
                         function changeCurrentItem() {
+                            var showDetails = false;
                             if (map.markerLabel) {
                                 map.markerLabel.destroy();
+                                showDetails = map.markerLabel.title === title;
                             }
 
                             var component = Qt.createComponent("MarkerLabel.qml");
@@ -250,10 +252,14 @@ BaseView {
 
                             map.markerLabel.coordinate = mqItem.coordinate;
                             map.markerLabel.z = 9999;
-                            map.markerLabel.title = title
+                            map.markerLabel.title = title;
                             map.markerLabel.visible = true;
 
                             appCore.selectedHouse = title;
+                            if (showDetails) {
+                                appCore.showDetails = true;
+                                appCore.centerSelectedHouse();
+                            }
                         }
                     }
                 }

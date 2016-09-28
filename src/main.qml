@@ -59,10 +59,6 @@ Item {
         active: false
     }
 
-    DensityHelpers {
-        id: localHelper
-    }
-
     Action {
         id: reloadAction
         shortcut: "Ctrl+R"
@@ -85,7 +81,7 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        height: localHelper.dp(50)
+        height: Theme.buttonHeight
 
         Rectangle {
             id: toolBarBackground

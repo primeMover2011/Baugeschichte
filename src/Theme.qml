@@ -24,6 +24,8 @@
  ** SOFTWARE.
  **/
 
+pragma Singleton
+
 import QtQuick 2.5
 
 Item {
@@ -32,6 +34,12 @@ Item {
     readonly property int smallFontSize: Math.floor(fm.font.pixelSize * 1.1 * textScaleFactor)
     readonly property int defaultFontSize: Math.floor(fm.font.pixelSize * 1.3 * textScaleFactor)
     readonly property int largeFontSize: Math.floor(fm.font.pixelSize * 1.8 * textScaleFactor)
+
+    readonly property int smallMargin: fm.font.pixelSize / 4.0
+    readonly property int defaultMargin: fm.font.pixelSize / 2.0
+    readonly property int largeMargin: fm.font.pixelSize
+
+    readonly property int buttonHeight: dp(50)
 
     property real contentScaleFactor: fm.font.pixelSize / 16.0
     property real textScaleFactor: 1

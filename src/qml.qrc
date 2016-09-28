@@ -23,7 +23,7 @@
         <file>SearchPage.qml</file>
         <file>SearchResultDelegate.qml</file>
         <file>JsonModel.qml</file>
-        <file>DensityHelpers.qml</file>
+        <file>Theme.qml</file>
         <file>RouteView.qml</file>
         <file>resources/scale_end.png</file>
         <file>resources/scale.png</file>
@@ -50,5 +50,6 @@
         <file>resources/arrow-left.svg</file>
         <file>resources/arrow-right.svg</file>
         <file>SearchModel.qml</file>
+        <file>qmldir</file>
     </qresource>
 </RCC>

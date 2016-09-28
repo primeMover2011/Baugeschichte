@@ -97,10 +97,6 @@ BaseView {
         }
     }
 
-    DensityHelpers {
-        id:localHelper
-    }
-
     Rectangle {
         id: background
         anchors.fill: parent
@@ -209,11 +205,11 @@ BaseView {
                         id: titleText
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        anchors.margins: localHelper.dp(5)
+                        anchors.margins: Theme.dp(5)
                         horizontalAlignment: Text.AlignHCenter
                         text: (poiName !== "") ? (poiName + ": " + title) : title
 //                        smooth: true
-                        font.pixelSize: localHelper.defaultFontSize
+                        font.pixelSize: Theme.defaultFontSize
                         wrapMode: Text.Wrap
                     }
 
@@ -228,7 +224,7 @@ BaseView {
                         wrapMode: TextEdit.WordWrap
                         text: (detailText.length > 0) ? detailText : qsTr("Kein Text")
                         textFormat: TextEdit.RichText
-                        font.pixelSize: localHelper.smallFontSize
+                        font.pixelSize: Theme.smallFontSize
 
                         onLinkActivated: {
                             appCore.openExternalLink(link);
@@ -245,8 +241,8 @@ BaseView {
     Image {
         id:prevImage
         anchors { left: parent.left; bottom: parent.bottom; margins: 10 }
-        width: localHelper.dp(50)
-        height: localHelper.dp(50)
+        width: height
+        height: Theme.buttonHeight
 
         source: "resources/Go-previous.svg"
         fillMode: Image.PreserveAspectFit
@@ -273,8 +269,8 @@ BaseView {
             horizontalCenter: parent.horizontalCenter;
             margins: 10
         }
-        width: localHelper.dp(50)
-        height: width
+        width: height
+        height: Theme.buttonHeight
 
         source: mainListView.model === detailsModel.modelDE ? "resources/Flag_of_Germany.png" :
                                              mainListView.model === detailsModel.modelEN ? "resources/Flag_of_United_Kingdom.png"
@@ -350,8 +346,8 @@ BaseView {
     Image {
         id:nextImage
         anchors { right: parent.right; bottom: parent.bottom; margins: 10 }
-        width: localHelper.dp(50)
-        height: localHelper.dp(50)
+        width: height
+        height: Theme.buttonHeight
 
         source: "resources/Go-next.svg"
         fillMode: Image.PreserveAspectFit

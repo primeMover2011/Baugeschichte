@@ -25,11 +25,12 @@
  **/
 
 import QtQuick 2.4
+import "."
 
 Item {
     id: root
     width: parent.width
-    height: textitem.height * 2.2
+    height: textitem.height + 2 * Theme.largeMargin
 
     property alias text: textitem.text
     signal selected(string wot)
@@ -42,25 +43,29 @@ Item {
 
     Text {
         id: textitem
+        wrapMode: Text.Wrap
         color: "white"
-        font.pixelSize: localHelper.largeFontSize
+        font.pixelSize: Theme.largeFontSize
         text: modelData
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
-        anchors.leftMargin: 30
+        anchors.leftMargin: Theme.largeMargin
+        anchors.right: arrow.left
+        anchors.rightMargin: Theme.defaultMargin
     }
 
     Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: 15
+        anchors.margins: Theme.defaultMargin
         height: 1
         color: "#424246"
     }
 
     Image {
+        id: arrow
         anchors.right: parent.right
-        anchors.rightMargin: 20
+        anchors.rightMargin: Theme.defaultMargin
         anchors.verticalCenter: parent.verticalCenter
         source: "resources/navigation_next_item.png"
     }
@@ -71,9 +76,5 @@ Item {
         onClicked: {
             selected(textitem.text)
         }
-    }
-
-    DensityHelpers {
-        id: localHelper
     }
 }

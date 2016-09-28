@@ -91,10 +91,6 @@ BaseView {
         minDistance: locationFilter.minDistance
     }
 
-    DensityHelpers {
-        id: localHelper
-    }
-
     PositionSource {
         id: myPosition
         preferredPositioningMethods: PositionSource.AllPositioningMethods
@@ -128,7 +124,7 @@ BaseView {
 
         property MarkerLabel markerLabel
 
-        readonly property int markerSize: localHelper.dp(50) / map.scale
+        readonly property int markerSize: Theme.buttonHeight / map.scale
         readonly property real defaultZoomLevel: 16
 
         center: QtPositioning.coordinate(47.0666667, 15.45)

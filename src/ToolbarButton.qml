@@ -25,6 +25,7 @@
  **/
 
 import QtQuick 2.4
+import "."
 
 Item {
     id: root
@@ -33,8 +34,8 @@ Item {
 
     signal clicked(var mouse)
 
-    width: localHelper.dp(50)
-    height: localHelper.dp(50)
+    width: height
+    height: Theme.buttonHeight
 
     opacity: enabled ? 1 : 0.3
 
@@ -42,7 +43,7 @@ Item {
         id: icon
         anchors.fill: parent
     }
-    
+
     MouseArea {
         anchors.fill: parent
         onClicked: {

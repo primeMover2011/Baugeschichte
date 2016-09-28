@@ -25,6 +25,7 @@
  **/
 
 import QtQuick 2.5
+import "."
 
 /**
  Carousel in the details view showing the fotos of the building
@@ -107,7 +108,7 @@ ListView {
                 width: Math.min(implicitWidth, imageContainer.width)
                 text: imageDescription
                 smooth: true
-                font.pixelSize: localHelper.smallFontSize
+                font.pixelSize: Theme.smallFontSize
                 horizontalAlignment: Text.AlignHCenter
                 wrapMode: Text.Wrap
             }
@@ -117,8 +118,8 @@ ListView {
     Image {
         id: previousButton
 
-        width: localHelper.dp(50)
-        height: width
+        width: height
+        height: Theme.buttonHeight
         sourceSize: Qt.size(width, height)
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
@@ -130,7 +131,7 @@ ListView {
         MouseArea {
             id: previousClickArea
             anchors.fill: parent
-            anchors.margins: -localHelper.dp(5)
+            anchors.margins: -Theme.dp(5)
 
             onClicked: {
                 decrementCurrentIndex();
@@ -141,8 +142,8 @@ ListView {
     Image {
         id: nextButton
 
-        width: localHelper.dp(50)
-        height: width
+        width: height
+        height: Theme.buttonHeight
         sourceSize: Qt.size(width, height)
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
@@ -154,7 +155,7 @@ ListView {
         MouseArea {
             id: nextClickArea
             anchors.fill: parent
-            anchors.margins: -localHelper.dp(5)
+            anchors.margins: -Theme.dp(5)
 
             onClicked: {
                 incrementCurrentIndex();

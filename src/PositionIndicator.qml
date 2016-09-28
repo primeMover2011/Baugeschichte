@@ -27,6 +27,7 @@
 import QtQuick 2.5
 import QtLocation 5.5
 import QtPositioning 5.5
+import "."
 
 /**
  MapItem to indicate the current position
@@ -41,10 +42,6 @@ MapQuickItem {
     anchorPoint.x: positionCircle.width / 2
     anchorPoint.y: positionCircle.height / 2
 
-    DensityHelpers {
-        id: localHelper
-    }
-
     sourceItem: Rectangle {
         id: positionCircle
         color: "#00a200"
@@ -52,7 +49,7 @@ MapQuickItem {
         border.width: 2
         smooth: true
         opacity: 0.5
-        width: localHelper.dp(90)
+        width: Theme.dp(90)
         height: width
         radius: width/2
 

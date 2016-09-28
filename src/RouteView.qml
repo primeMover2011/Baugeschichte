@@ -39,9 +39,8 @@ BaseView {
                 model.append(jsonObject);
             }
         }
-        searchString: "http://baugeschichte.at/api.php?action=query&format=json&list=categorymembers&cmtitle=Category:Liste_(Routen)&cmsort=timestamp&cmdir=desc&cmlimit=50"
+        searchString: "http://baugeschichte.at/api.php?action=query&format=json&list=categorymembers&cmtitle=Category:Liste_(Routen)&cmsort=timestamp&cmdir=desc&cmlimit=100"
         Component.onCompleted: phrase = " " //fires a searchrequest
-
     }
 
 //    disable route searching for now

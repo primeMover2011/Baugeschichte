@@ -50,11 +50,7 @@ FocusScope {
 
     signal accepted
 
-    height: localHelper.dp(60)
-
-    DensityHelpers {
-        id:localHelper
-    }
+    height: Theme.dp(60)
 
     Rectangle {
         id: background
@@ -77,7 +73,7 @@ FocusScope {
             anchors { fill: parent; leftMargin: 14 }
             verticalAlignment: Text.AlignVCenter
             text: qsTr("Enter word")
-            font.pixelSize: localHelper.smallFontSize
+            font.pixelSize: Theme.smallFontSize
             color: "#707070"
             visible: input.length === 0 && !input.activeFocus
         }
@@ -86,7 +82,7 @@ FocusScope {
             id: prefix
             anchors { left: parent.left; leftMargin: 14; verticalCenter: parent.verticalCenter }
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: localHelper.largeFontSize
+            font.pixelSize: Theme.largeFontSize
             color: "#707070"
             opacity: !hintText.opacity
         }
@@ -96,7 +92,7 @@ FocusScope {
             focus: true
             anchors { left: prefix.right; right: parent.right; top: parent.top; bottom: parent.bottom }
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: localHelper.largeFontSize
+            font.pixelSize: Theme.largeFontSize
             color: "#707070"
             onAccepted: {
                 if (Qt.inputMethod.visible) {

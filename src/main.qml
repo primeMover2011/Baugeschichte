@@ -43,7 +43,8 @@ Item {
 
     visible: true
 
-    readonly property bool loading: uiStack.currentItem.loading || markerLoader.loading ||
+    readonly property bool loading: (uiStack.currentItem && uiStack.currentItem.loading) ||
+                                    markerLoader.loading ||
                                     categoryLoader.isLoading || routeLoader.loading
 
     property MapComponent mainMap: null

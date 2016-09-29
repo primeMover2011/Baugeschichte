@@ -113,6 +113,10 @@ JsonModel {
         input = convertBoldItalicText(input, 0);
         input = convertBoldText(input, 0);
         input = convertItalicText(input, 0);
+        input = convertHeading1Text(input, 0);
+        input = convertHeading2Text(input, 0);
+        input = convertHeading3Text(input, 0);
+        input = convertHeading4Text(input, 0);
         return "<HTML><BODY>"+input+"</BODY></HTML>";
     }
 
@@ -201,6 +205,58 @@ JsonModel {
             var text = splitup[1];
             var postText = splitup[2];
             var output = preText + "<b><i>" + text + "</i></b>" + postText;
+            return convertInternalLink(output, output.length - postText.length);
+        } else {
+            return input;
+        }
+    }
+
+    function convertHeading1Text(input, startIdx) {
+        var splitup = getTokenSplit(input, startIdx, "==", "==")
+        if (splitup.length === 3) {
+            var preText = splitup[0];
+            var text = splitup[1];
+            var postText = splitup[2];
+            var output = preText + "<h1>" + text + "</h1>" + postText;
+            return convertInternalLink(output, output.length - postText.length);
+        } else {
+            return input;
+        }
+    }
+
+    function convertHeading2Text(input, startIdx) {
+        var splitup = getTokenSplit(input, startIdx, "===", "===")
+        if (splitup.length === 3) {
+            var preText = splitup[0];
+            var text = splitup[1];
+            var postText = splitup[2];
+            var output = preText + "<h2>" + text + "</h2>" + postText;
+            return convertInternalLink(output, output.length - postText.length);
+        } else {
+            return input;
+        }
+    }
+
+    function convertHeading3Text(input, startIdx) {
+        var splitup = getTokenSplit(input, startIdx, "====", "====")
+        if (splitup.length === 3) {
+            var preText = splitup[0];
+            var text = splitup[1];
+            var postText = splitup[2];
+            var output = preText + "<h3>" + text + "</h3>" + postText;
+            return convertInternalLink(output, output.length - postText.length);
+        } else {
+            return input;
+        }
+    }
+
+    function convertHeading4Text(input, startIdx) {
+        var splitup = getTokenSplit(input, startIdx, "=====", "=====")
+        if (splitup.length === 3) {
+            var preText = splitup[0];
+            var text = splitup[1];
+            var postText = splitup[2];
+            var output = preText + "<h4>" + text + "</h4>" + postText;
             return convertInternalLink(output, output.length - postText.length);
         } else {
             return input;

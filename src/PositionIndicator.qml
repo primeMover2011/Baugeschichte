@@ -49,22 +49,22 @@ MapQuickItem {
         border.width: 2
         smooth: true
         opacity: 0.5
-        width: Theme.dp(90)
+        width: Theme.buttonHeight
         height: width
         radius: width/2
 
         SequentialAnimation on width {
             loops: Animation.Infinite
             NumberAnimation {
-                from: positionCircle.width
-                to: positionCircle.width * 1.8
-                duration: 800
+                from: Theme.buttonHeight
+                to: Theme.buttonHeight * 1.2
+                duration: 1600
                 easing.type: Easing.InOutQuad
             }
             NumberAnimation {
-                from: positionCircle.width * 1.8
-                to: positionCircle.width
-                duration: 1000
+                from: Theme.buttonHeight * 1.2
+                to: Theme.buttonHeight
+                duration: 2000
                 easing.type: Easing.InOutQuad
             }
         }

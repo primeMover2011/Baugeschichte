@@ -99,7 +99,6 @@ BaseView {
 
         // even when not following - jump to current position on first position reveice
         property bool firstUpdate: true
-        onFirstUpdateChanged: console.log("firstUpdate: "+firstUpdate)
         onActiveChanged: {
             if (active) {
                 firstUpdate = true;

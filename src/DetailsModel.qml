@@ -110,57 +110,100 @@ JsonModel {
     function convertToHTML(input) {
         input = convertExternalLink(input, 0);
         input = convertInternalLink(input, 0);
+        input = convertBoldItalicText(input, 0);
+        input = convertBoldText(input, 0);
+        input = convertItalicText(input, 0);
         return "<HTML><BODY>"+input+"</BODY></HTML>";
     }
 
+    function getTokenSplit(input, startIdx, startTag, endTag) {
+        var tagIdx = input.indexOf(startTag)
+        if (tagIdx === -1) {
+            return [];
+        }
+
+        var tagEndIdx = input.indexOf(endTag, tagIdx + startTag.length)
+        if (tagEndIdx === -1) {
+            return [];
+        }
+
+        var preToken = input.substring(0, tagIdx);
+        var tocken = input.substring(tagIdx + startTag.length, tagEndIdx)
+        var postToken = input.substring(tagEndIdx + endTag.length, input.length)
+
+        return [preToken, tocken, postToken];
+    }
+
     function convertExternalLink(input, startIdx) {
-        var linkIdx = input.indexOf("<ref>[")
+        var splitup = getTokenSplit(input, startIdx, "<ref>[", "]</ref>")
+        if (splitup.length === 3) {
+            var preLink = splitup[0];
+            var link = splitup[1];
+            var postLink = splitup[2];
 
-        if (linkIdx === -1) {
+            var linkText = link;
+            var linkLink = link;
+            var linkTerm = link.indexOf(" ");
+            if (linkTerm > -1) {
+                linkLink = link.substring(0, linkTerm);
+                linkText = link.substring(linkTerm+1, link.length);
+            }
+            var output = preLink + "<a href=\"" + linkLink + "\">" + linkText + "</a>" + postLink;
+            return convertExternalLink(output, output.length - postLink.length);
+        } else {
             return input;
         }
-
-        var linkEndIdx = input.indexOf("]</ref>", linkIdx)
-
-        if (linkEndIdx === -1) {
-            return input;
-        }
-
-        var preLink = input.substring(0, linkIdx);
-        var link = input.substring(linkIdx+6, linkEndIdx)
-        var postLink = input.substring(linkEndIdx+7, input.length)
-
-        var linkText = link;
-        var linkLink = link;
-        var linkTerm = link.indexOf(" ");
-        if (linkTerm > -1) {
-            linkLink = link.substring(0, linkTerm);
-            linkText = link.substring(linkTerm+1, link.length);
-        }
-
-        var output = preLink + "<a href=\"" + linkLink + "\">" + linkText + "</a>" + postLink;
-        return convertExternalLink(output, linkEndIdx+1);
     }
 
     function convertInternalLink(input, startIdx) {
-        var linkIdx = input.indexOf("[[")
-
-        if (linkIdx === -1) {
+        var splitup = getTokenSplit(input, startIdx, "[[", "]]")
+        if (splitup.length === 3) {
+            var preLink = splitup[0];
+            var link = splitup[1];
+            var postLink = splitup[2];
+            var output = preLink + "<a href=\"internal://" + link + "\">" + link + "</a>" + postLink;
+            return convertInternalLink(output, output.length - postLink.length);
+        } else {
             return input;
         }
+    }
 
-        var linkEndIdx = input.indexOf("]]", linkIdx)
-
-        if (linkEndIdx === -1) {
+    function convertBoldText(input, startIdx) {
+        var splitup = getTokenSplit(input, startIdx, "'''", "'''")
+        if (splitup.length === 3) {
+            var preText = splitup[0];
+            var text = splitup[1];
+            var postText = splitup[2];
+            var output = preText + "<b>" + text + "</b>" + postText;
+            return convertInternalLink(output, output.length - postText.length);
+        } else {
             return input;
         }
+    }
 
-        var preLink = input.substring(0, linkIdx);
-        var link = input.substring(linkIdx+2, linkEndIdx)
-        var postLink = input.substring(linkEndIdx+2, input.length)
+    function convertItalicText(input, startIdx) {
+        var splitup = getTokenSplit(input, startIdx, "''", "''")
+        if (splitup.length === 3) {
+            var preText = splitup[0];
+            var text = splitup[1];
+            var postText = splitup[2];
+            var output = preText + "<i>" + text + "</i>" + postText;
+            return convertInternalLink(output, output.length - postText.length);
+        } else {
+            return input;
+        }
+    }
 
-
-        var output = preLink + "<a href=\"internal://" + link + "\">" + link + "</a>" + postLink;
-        return convertInternalLink(output, linkEndIdx+1);
+    function convertBoldItalicText(input, startIdx) {
+        var splitup = getTokenSplit(input, startIdx, "'''''", "'''''")
+        if (splitup.length === 3) {
+            var preText = splitup[0];
+            var text = splitup[1];
+            var postText = splitup[2];
+            var output = preText + "<b><i>" + text + "</i></b>" + postText;
+            return convertInternalLink(output, output.length - postText.length);
+        } else {
+            return input;
+        }
     }
 }

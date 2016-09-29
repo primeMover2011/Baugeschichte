@@ -107,4 +107,46 @@ TestCase {
         var origLink = "<a href=\"internal://Schillerstra\u00dfe 29\">Schillerstra\u00dfe 29</a>"
         compare(link, origLink);
     }
+
+    function test_convert_to_html_bold() {
+        detailsModel.title = "Dummystreet_1";
+        detailsModel.phrase = "details_formats.json";
+        tryCompare(detailsModel, "isLoading", false, 1000, "Timed out readong json file");
+
+        var detailText = detailsModel.modelDE.get(0).detailText;
+        var linkStart = detailText.indexOf("<b>");
+        verify(linkStart > -1 );
+
+        var boldText = detailText.substr(linkStart, 22);
+        var origText = "<b>Wolfgang Alkier</b>"
+        compare(boldText, origText);
+    }
+
+    function test_convert_to_html_italic() {
+        detailsModel.title = "Dummystreet_1";
+        detailsModel.phrase = "details_formats.json";
+        tryCompare(detailsModel, "isLoading", false, 1000, "Timed out readong json file");
+
+        var detailText = detailsModel.modelDE.get(0).detailText;
+        var linkStart = detailText.indexOf("<i>");
+        verify(linkStart > -1 );
+
+        var boldText = detailText.substr(linkStart, 21);
+        var origText = "<i>Lisenenordnung</i>"
+        compare(boldText, origText);
+    }
+
+    function test_convert_to_html_bold_italic() {
+        detailsModel.title = "Dummystreet_1";
+        detailsModel.phrase = "details_formats.json";
+        tryCompare(detailsModel, "isLoading", false, 1000, "Timed out readong json file");
+
+        var detailText = detailsModel.modelDE.get(0).detailText;
+        var linkStart = detailText.indexOf("<b><i>");
+        verify(linkStart > -1 );
+
+        var boldText = detailText.substr(linkStart, 26);
+        var origText = "<b><i>Parapetzonen</i></b>"
+        compare(boldText, origText);
+    }
 }

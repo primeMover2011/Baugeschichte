@@ -108,8 +108,9 @@ JsonModel {
     }
 
     function convertToHTML(input) {
-        input = convertExternalLink(input, 0);
+        input = filterUnused(input);
         input = convertInternalLink(input, 0);
+        input = convertExternalLink(input, 0);
         input = convertBoldItalicText(input, 0);
         input = convertBoldText(input, 0);
         input = convertItalicText(input, 0);
@@ -120,8 +121,24 @@ JsonModel {
         return "<HTML><BODY>"+input+"</BODY></HTML>";
     }
 
+    function filterUnused(input) {
+        var unusedTags = ["<ref>", "</ref>"];
+        for (var idx in unusedTags) {
+            var tag = unusedTags[idx];
+
+            var startIdx = 0;
+            while (startIdx >= 0) {
+                startIdx = input.indexOf(tag, startIdx);
+                if (startIdx >= 0) {
+                    input = input.substring(0, startIdx) + input.substring(startIdx + tag.length, input.length);
+                }
+            }
+        }
+        return input;
+    }
+
     function getTokenSplit(input, startIdx, startTag, endTag) {
-        var tagIdx = input.indexOf(startTag)
+        var tagIdx = input.indexOf(startTag, startIdx)
         if (tagIdx === -1) {
             return [];
         }
@@ -139,7 +156,7 @@ JsonModel {
     }
 
     function convertExternalLink(input, startIdx) {
-        var splitup = getTokenSplit(input, startIdx, "<ref>[", "]</ref>")
+        var splitup = getTokenSplit(input, startIdx, "[", "]")
         if (splitup.length === 3) {
             var preLink = splitup[0];
             var link = splitup[1];

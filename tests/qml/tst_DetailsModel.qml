@@ -80,7 +80,7 @@ TestCase {
         compare(detailsModel.modelS1.count, 0);
     }
 
-    function test_convert_to_html() {
+    function test_convert_to_html_external_link() {
         detailsModel.title = "Liebiggasse_9";
         detailsModel.phrase = "details_external_link.json";
         tryCompare(detailsModel, "isLoading", false, 1000, "Timed out readong json file");
@@ -91,6 +91,20 @@ TestCase {
 
         var link = detailText.substr(linkStart, 115);
         var origLink = "<a href=\"http://www.gat.st/pages/de/nachrichten/5178.htm\">Artikel zur Aufstockung auf gat.st Artikel auf gat.st</a>"
+        compare(link, origLink);
+    }
+
+    function test_convert_to_html_internal_link() {
+        detailsModel.title = "Schillerstra\u00dfe_27";
+        detailsModel.phrase = "details_internal_link.json";
+        tryCompare(detailsModel, "isLoading", false, 1000, "Timed out readong json file");
+
+        var detailText = detailsModel.modelDE.get(0).detailText;
+        var linkStart = detailText.indexOf("<a ");
+        verify(linkStart > -1 );
+
+        var link = detailText.substr(linkStart, 60);
+        var origLink = "<a href=\"internal://Schillerstra\u00dfe 29\">Schillerstra\u00dfe 29</a>"
         compare(link, origLink);
     }
 }

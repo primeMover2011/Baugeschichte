@@ -66,6 +66,7 @@ ApplicationCore::ApplicationCore(QObject* parent)
     , m_screenDpi(calculateScreenDpi())
     , m_mapProvider("osm")
     , m_selectedHouse("")
+    , m_selectedHousePosition(-1.0, -1.0)
     , m_currentMapPosition(-1.0, -1.0)
     , m_showDetails(false)
     , m_housePositionLoader(new QNetworkAccessManager(this))
@@ -141,6 +142,11 @@ QString ApplicationCore::selectedHouse() const
     return m_selectedHouse;
 }
 
+const QGeoCoordinate& ApplicationCore::selectedHousePosition() const
+{
+    return m_selectedHousePosition;
+}
+
 const QGeoCoordinate& ApplicationCore::currentMapPosition() const
 {
     return m_currentMapPosition;
@@ -149,6 +155,12 @@ const QGeoCoordinate& ApplicationCore::currentMapPosition() const
 bool ApplicationCore::showDetails() const
 {
     return m_showDetails;
+}
+
+void ApplicationCore::selectAndCenterHouse(const QString& selectedHouse)
+{
+    setSelectedHouse(selectedHouse);
+    centerSelectedHouse();
 }
 
 void ApplicationCore::centerSelectedHouse()
@@ -256,6 +268,12 @@ void ApplicationCore::setSelectedHouse(const QString& selectedHouse)
 
     m_selectedHouse = selectedHouse;
     emit selectedHouseChanged(selectedHouse);
+
+    HouseMarker* house = m_houseMarkerModel->getHouseByTitle(m_selectedHouse);
+    if (house != nullptr) {
+        m_selectedHousePosition = house->location();
+        emit selectedHousePositionChanged(m_selectedHousePosition);
+    }
 
     if (m_selectedHouse.isEmpty()) {
         setShowDetails(false);

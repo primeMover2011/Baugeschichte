@@ -47,6 +47,7 @@ class ApplicationCore : public QObject
 {
     Q_PROPERTY(QString mapProvider READ mapProvider WRITE setMapProvider NOTIFY mapProviderChanged)
     Q_PROPERTY(QString selectedHouse READ selectedHouse WRITE setSelectedHouse NOTIFY selectedHouseChanged)
+    Q_PROPERTY(QGeoCoordinate selectedHousePosition READ selectedHousePosition NOTIFY selectedHousePositionChanged)
     Q_PROPERTY(QGeoCoordinate currentMapPosition READ currentMapPosition WRITE setCurrentMapPosition NOTIFY
             currentMapPositionChanged)
     Q_PROPERTY(bool showDetails READ showDetails WRITE setShowDetails NOTIFY showDetailsChanged)
@@ -67,10 +68,13 @@ public:
     void setMapProvider(QString mapProvider);
 
     QString selectedHouse() const;
+    const QGeoCoordinate& selectedHousePosition() const;
+
     const QGeoCoordinate& currentMapPosition() const;
 
     bool showDetails() const;
 
+    Q_INVOKABLE void selectAndCenterHouse(const QString& selectedHouse);
     Q_INVOKABLE void centerSelectedHouse();
 
     Q_INVOKABLE void loadCategory(QString category);
@@ -103,6 +107,7 @@ public slots:
 signals:
     void mapProviderChanged(QString mapProvider);
     void selectedHouseChanged(QString selectedHouse);
+    void selectedHousePositionChanged(QGeoCoordinate selectedHousePosition);
     void currentMapPositionChanged(QGeoCoordinate currentMapPosition);
     void showDetailsChanged(bool showDetails);
     void requestFullZoomIn();
@@ -131,6 +136,7 @@ private:
     int m_screenDpi;
     QString m_mapProvider;
     QString m_selectedHouse;
+    QGeoCoordinate m_selectedHousePosition;
     QGeoCoordinate m_currentMapPosition;
     bool m_showDetails;
     QNetworkAccessManager* m_housePositionLoader;

@@ -108,11 +108,12 @@ JsonModel {
     }
 
     function convertToHTML(input) {
-        return "<HTML><BODY>"+convertToLink(input, 0)+"</BODY></HTML>";
+        input = convertExternalLink(input, 0);
+        input = convertInternalLink(input, 0);
+        return "<HTML><BODY>"+input+"</BODY></HTML>";
     }
 
-
-    function convertToLink(input, startIdx) {
+    function convertExternalLink(input, startIdx) {
         var linkIdx = input.indexOf("<ref>[")
 
         if (linkIdx === -1) {
@@ -138,6 +139,28 @@ JsonModel {
         }
 
         var output = preLink + "<a href=\"" + linkLink + "\">" + linkText + "</a>" + postLink;
-        return convertToLink(output, linkEndIdx+1);
+        return convertExternalLink(output, linkEndIdx+1);
+    }
+
+    function convertInternalLink(input, startIdx) {
+        var linkIdx = input.indexOf("[[")
+
+        if (linkIdx === -1) {
+            return input;
+        }
+
+        var linkEndIdx = input.indexOf("]]", linkIdx)
+
+        if (linkEndIdx === -1) {
+            return input;
+        }
+
+        var preLink = input.substring(0, linkIdx);
+        var link = input.substring(linkIdx+2, linkEndIdx)
+        var postLink = input.substring(linkEndIdx+2, input.length)
+
+
+        var output = preLink + "<a href=\"internal://" + link + "\">" + link + "</a>" + postLink;
+        return convertInternalLink(output, linkEndIdx+1);
     }
 }

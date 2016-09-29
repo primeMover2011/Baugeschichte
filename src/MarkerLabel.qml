@@ -31,13 +31,16 @@ import "."
 MapQuickItem {
     id: root
 
-    property alias title: textItem.text
+    readonly property string title: textItem.text
     property Map mapItem
 
     anchorPoint.x: coco.width / 2
     anchorPoint.y: (coco.height + (mapItem ? mapItem.markerSize / mapItem.scale : 0)) + 2
 
     scale: mapItem ? (1.0 / mapItem.scale) : 1.0
+    visible: title !== ""
+
+    coordinate: appCore.selectedHousePosition
 
     sourceItem: Rectangle {
         id: coco
@@ -53,7 +56,7 @@ MapQuickItem {
             id: textItem
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
-            text: "Text"
+            text: appCore.selectedHouse
             font.pixelSize: Theme.defaultFontSize
             color: "#0063DD"
             font.bold: true
@@ -69,7 +72,6 @@ MapQuickItem {
                 appCore.selectedHouse = root.title;
                 appCore.showDetails = true;
                 appCore.centerSelectedHouse();
-                root.destroy();
             }
         }
     }

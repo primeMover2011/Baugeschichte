@@ -208,7 +208,6 @@ BaseView {
                         anchors.margins: Theme.dp(5)
                         horizontalAlignment: Text.AlignHCenter
                         text: (poiName !== "") ? (poiName + ": " + title) : title
-//                        smooth: true
                         font.pixelSize: Theme.defaultFontSize
                         wrapMode: Text.Wrap
                     }
@@ -227,7 +226,12 @@ BaseView {
                         font.pixelSize: Theme.smallFontSize
 
                         onLinkActivated: {
-                            appCore.openExternalLink(link);
+                            if (link.substr(0, 11) === "internal://") {
+                                var newBuilding = link.substring(11, link.length);
+                                appCore.selectAndCenterHouse(newBuilding);
+                            } else {
+                                appCore.openExternalLink(link);
+                            }
                         }
                     }
 
@@ -236,7 +240,7 @@ BaseView {
                 }
             }
         }
-    } //SplitView
+    }
 
     Image {
         id:prevImage

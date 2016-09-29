@@ -113,21 +113,21 @@ JsonModel {
 
 
     function convertToLink(input, startIdx) {
-        var linkIdx = input.indexOf("<ref>")
+        var linkIdx = input.indexOf("<ref>[")
 
         if (linkIdx === -1) {
             return input;
         }
 
-        var linkEndIdx = input.indexOf("</ref>", linkIdx)
+        var linkEndIdx = input.indexOf("]</ref>", linkIdx)
 
         if (linkEndIdx === -1) {
             return input;
         }
 
         var preLink = input.substring(0, linkIdx);
-        var link = input.substring(linkIdx+5, linkEndIdx)
-        var postLink = input.substring(linkEndIdx+6, input.length)
+        var link = input.substring(linkIdx+6, linkEndIdx)
+        var postLink = input.substring(linkEndIdx+7, input.length)
 
         var linkText = link;
         var linkLink = link;

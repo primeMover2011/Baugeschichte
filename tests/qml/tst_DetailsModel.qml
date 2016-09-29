@@ -81,7 +81,7 @@ TestCase {
     }
 
     function test_convert_to_html() {
-        detailsModel.title = "Liebiggasse 9";
+        detailsModel.title = "Liebiggasse_9";
         detailsModel.phrase = "details_external_link.json";
         tryCompare(detailsModel, "isLoading", false, 1000, "Timed out readong json file");
 

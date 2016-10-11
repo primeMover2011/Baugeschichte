@@ -32,7 +32,6 @@ import QtQuick.Controls.Styles 1.4
 import QtPositioning 5.5
 import QtLocation 5.5
 import Qt.labs.settings 1.0
-import QtQuick.Dialogs 1.2
 import "./"
 
 Item {
@@ -220,17 +219,14 @@ Item {
     //    PositionSource
     property variant locationGraz: QtPositioning.coordinate(47.0666667, 15.45)
 
-    MessageDialog {
+    Loader {
         id: shutDownDialog
-        icon: StandardIcon.Question
-        standardButtons: StandardButton.Yes | StandardButton.No
-        modality: Qt.WindowModal
-        title: qsTr("Baugeschichte App beenden?")
-        onYes: {
-            Qt.quit();
-        }
-        onNo: {
-            visible = false;
+
+        function open() {
+            if (source == "") {
+                source = "ShutDownDialog.qml";
+            }
+            item.visible = true;
         }
     }
 
@@ -252,7 +248,7 @@ Item {
                     if (uiStack.depth > 1) {
                         uiStack.pop()
                     } else {
-                        shutDownDialog.visible = true
+                        shutDownDialog.open();
                     }
                 }
             }
@@ -312,7 +308,7 @@ Item {
                     }
                 }
 
-                DetailsView {
+                Loader {
                     id: details
 
                     x: visible ? (parent.splitScreen ? parent.width / 2 : 0) : parent.width
@@ -321,6 +317,11 @@ Item {
 
                     clip: true
                     visible: appCore.showDetails
+                    onVisibleChanged: {
+                        if (visible && source == "") {
+                            setSource("DetailsView.qml");
+                        }
+                    }
                 }
             }
         }

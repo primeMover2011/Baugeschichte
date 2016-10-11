@@ -51,5 +51,6 @@
         <file>resources/arrow-right.svg</file>
         <file>SearchModel.qml</file>
         <file>qmldir</file>
+        <file>ShutDownDialog.qml</file>
     </qresource>
 </RCC>

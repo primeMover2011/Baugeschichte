@@ -47,7 +47,7 @@ BaseView {
     id: root
 
     property real itemSize: width / 3
-    property string searchFor: ""
+    property string searchFor: appCore.selectedHouse
     property string poiName: detailsModel.title
 
     loading: detailsModel.isLoading
@@ -218,8 +218,9 @@ BaseView {
                     TextArea {
                         anchors { top: titleText.bottom;
                             bottom: parent.bottom; left: parent.left;
-                            right: parent.right; margins: 5
+                            right: parent.right
                         }
+                        textMargin:Theme.smallMargin
                         readOnly: true
                         verticalScrollBarPolicy: Qt.ScrollBarAsNeeded
                         horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
@@ -231,8 +232,10 @@ BaseView {
                         onLinkActivated: {
                             if (link.substr(0, 11) === "internal://") {
                                 var newBuilding = link.substring(11, link.length);
+                                console.debug("Open internal link: "+newBuilding);
                                 appCore.selectAndCenterHouse(newBuilding);
                             } else {
+                                console.debug("Open external link: "+link);
                                 appCore.openExternalLink(link);
                             }
                         }

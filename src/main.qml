@@ -321,7 +321,6 @@ Item {
 
                     clip: true
                     visible: appCore.showDetails
-                    searchFor: appCore.selectedHouse
                 }
             }
         }

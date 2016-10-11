@@ -52,10 +52,6 @@
 #include <QVector>
 #include <QtQml>
 
-#if defined(Q_OS_ANDROID)
-#include <QAndroidJniObject>
-#endif
-
 #include <cmath>
 
 ApplicationCore::ApplicationCore(QObject* parent)
@@ -63,7 +59,6 @@ ApplicationCore::ApplicationCore(QObject* parent)
     , m_view(new QQuickView())
     , m_houseMarkerModel(new HouseMarkerModel(this))
     , m_markerLoader(new MarkerLoader(this))
-    , m_screenDpi(calculateScreenDpi())
     , m_mapProvider("osm")
     , m_selectedHouse("")
     , m_selectedHousePosition(-1.0, -1.0)
@@ -91,7 +86,6 @@ ApplicationCore::ApplicationCore(QObject* parent)
     context->setContextProperty(QStringLiteral("appCore"), this);
     context->setContextProperty(QStringLiteral("markerLoader"), m_markerLoader);
     context->setContextProperty(QStringLiteral("houseTrailModel"), m_houseMarkerModel);
-    context->setContextProperty(QStringLiteral("screenDpi"), m_screenDpi);
     context->setContextProperty(QStringLiteral("categoryLoader"), m_categoryLoader);
 
     connect(m_markerLoader, SIGNAL(newHousetrail(QVector<HouseMarker>)), m_houseMarkerModel,
@@ -382,27 +376,6 @@ QString ApplicationCore::mainQMLFile() const
         qDebug() << "Load UI from embedded resource";
         return QStringLiteral("qrc:/main.qml");
     }
-}
-
-int ApplicationCore::calculateScreenDpi() const
-{
-#if defined(Q_OS_ANDROID)
-    QAndroidJniObject qtActivity = QAndroidJniObject::callStaticObjectMethod(
-        "org/qtproject/qt5/android/QtNative", "activity", "()Landroid/app/Activity;");
-    QAndroidJniObject resources = qtActivity.callObjectMethod("getResources", "()Landroid/content/res/Resources;");
-    QAndroidJniObject displayMetrics
-        = resources.callObjectMethod("getDisplayMetrics", "()Landroid/util/DisplayMetrics;");
-    int density = displayMetrics.getField<int>("densityDpi");
-    return density;
-#else
-    QGuiApplication* uiApp = qobject_cast<QGuiApplication*>(qApp);
-    qreal dpi = uiApp->primaryScreen()->physicalDotsPerInch() * uiApp->devicePixelRatio();
-    if (uiApp) {
-        return static_cast<int>(floor(dpi));
-    } else {
-        return 96;
-    }
-#endif
 }
 
 void ApplicationCore::saveMarkers()

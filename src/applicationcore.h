@@ -126,14 +126,12 @@ private slots:
 
 private:
     QString mainQMLFile() const;
-    int calculateScreenDpi() const;
     void saveMarkers();
     void loadMarkers();
 
     QQuickView* m_view;
     HouseMarkerModel* m_houseMarkerModel;
     MarkerLoader* m_markerLoader;
-    int m_screenDpi;
     QString m_mapProvider;
     QString m_selectedHouse;
     QGeoCoordinate m_selectedHousePosition;

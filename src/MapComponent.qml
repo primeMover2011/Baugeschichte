@@ -26,6 +26,7 @@
 
 import QtQuick 2.4
 import QtQuick.Controls 1.4
+import QtQuick.Window 2.2
 import QtLocation 5.5
 import QtPositioning 5.5
 import "./"
@@ -119,7 +120,7 @@ BaseView {
         anchors.centerIn: parent
         width: parent.width / scale
         height: parent.height / scale
-        scale: screenDpi > 200 ? 2 :1
+        scale: Screen.devicePixelRatio
 
         property MarkerLabel markerLabel
 

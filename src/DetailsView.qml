@@ -162,9 +162,12 @@ BaseView {
             }
 
             Text {
-                anchors.centerIn: parent
-                text: qsTr("No image")
+                anchors.fill: parent
+                text: qsTr("No image available for "+detailsModel.title)
                 color: "white"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.Wrap
                 visible: imagePathView.model.count === 0 && !detailsModel.isLoading
             }
 

@@ -30,6 +30,8 @@
 
 int main(int argc, char* argv[])
 {
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
+
     QGuiApplication app(argc, argv);
     app.setApplicationDisplayName(QStringLiteral("Baugeschichte.at"));
 

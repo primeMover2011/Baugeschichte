@@ -2,18 +2,31 @@ TEMPLATE = app
 
 TARGET = Baugeschichte
 
-QT += qml quick location positioning concurrent svg xml
+QT += qml quick location positioning concurrent sensors svg xml
 android {
     QT += androidextras
 }
 ios {
-#  LIBS += -L$$[QT_INSTALL_PLUGINS]/geoservices
-#  QTPLUGIN += qtgeoservices_mapbox
+    QMAKE_INFO_PLIST = $$PWD/iOS/Info.plist
+    ios_icon.files = $$files($$PWD/iOS/AppIcons/*.png)
+    QMAKE_BUNDLE_DATA += ios_icon
+#    ios_artwork.files = $$files($$PWD/iOS/Screenshots/*.png)
+#    QMAKE_BUNDLE_DATA += ios_artwork
+#    app_launch_images.files = $$files($$PWD/iOS/splash*.png)
+#    QMAKE_BUNDLE_DATA += app_launch_images
+    app_launch_screen.files = $$files($$PWD/iOS/LaunchScreen.xib)
+    QMAKE_BUNDLE_DATA += app_launch_screen
+
+    QMAKE_IOS_DEPLOYMENT_TARGET = 8.2
+    # Note for devices: 1=iPhone, 2=iPad, 1,2=Universal.
+    QMAKE_IOS_TARGETED_DEVICE_FAMILY = 1,2
 }
+
 
 CONFIG += c++11
 
 RESOURCES += qml.qrc \
+    images.qrc \
     ../translations/translations.qrc
 
 SOURCES += main.cpp \

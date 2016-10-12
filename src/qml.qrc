@@ -1,58 +1,30 @@
 <RCC>
     <qresource prefix="/">
-        <file>resources/Edit-find-cats.svg</file>
-        <file>resources/Go-previous.svg</file>
-        <file>resources/Go-next.svg</file>
-        <file>resources/gps_follow.svg</file>
-        <file>resources/gps_off.svg</file>
-        <file>resources/gps_on.svg</file>
-        <file>resources/icon-clear.png</file>
-        <file>resources/icon-loading.png</file>
-        <file>resources/icon-refresh.png</file>
-        <file>resources/icon-search.png</file>
-        <file>resources/Map-icon.svg</file>
-        <file>resources/marker.png</file>
-        <file>resources/marker-2.svg</file>
-        <file>resources/marker-2-blue.svg</file>
-        <file>resources/navigation_next_item.png</file>
-        <file>resources/System-search.svg</file>
+        <file>BaseView.qml</file>
+        <file>CategoryselectionView.qml</file>
+        <file>DetailsModel.qml</file>
+        <file>DetailsTextArea.qml</file>
+        <file>DetailsView.qml</file>
+        <file>ImageCarousel.qml</file>
+        <file>JsonModel.qml</file>
+        <file>LineInput.qml</file>
+        <file>LoadIndicator.qml</file>
         <file>main.qml</file>
         <file>MapComponent.qml</file>
-        <file>DetailsView.qml</file>
-        <file>LineInput.qml</file>
+        <file>MapScale.qml</file>
+        <file>MarkerLabel.qml</file>
+        <file>PositionIndicator.qml</file>
+        <file>RouteLine.qml</file>
+        <file>RouteLoader.qml</file>
+        <file>RouteView.qml</file>
+        <file>qmldir</file>
+        <file>SearchModel.qml</file>
         <file>SearchPage.qml</file>
         <file>SearchResultDelegate.qml</file>
-        <file>JsonModel.qml</file>
-        <file>Theme.qml</file>
-        <file>RouteView.qml</file>
-        <file>resources/scale_end.png</file>
-        <file>resources/scale.png</file>
-        <file>CategoryselectionView.qml</file>
-        <file>resources/Edit-check-sheet.svg</file>
-        <file>RouteLoader.qml</file>
-        <file>ToolbarButton.qml</file>
-        <file>BaseView.qml</file>
-        <file>MarkerLabel.qml</file>
-        <file>resources/spinner.png</file>
         <file>SettingsView.qml</file>
-        <file>RouteLine.qml</file>
-        <file>resources/marker-2-red.svg</file>
-        <file>MapScale.qml</file>
-        <file>PositionIndicator.qml</file>
-        <file>ImageCarousel.qml</file>
-        <file>SizeTracer.qml</file>
-        <file>resources/marker-blue.svg</file>
-        <file>resources/marker-red.svg</file>
-        <file>resources/marker.svg</file>
-        <file>DetailsModel.qml</file>
-        <file>resources/Flag_of_Germany.png</file>
-        <file>resources/Flag_of_United_Kingdom.png</file>
-        <file>resources/arrow-left.svg</file>
-        <file>resources/arrow-right.svg</file>
-        <file>SearchModel.qml</file>
-        <file>qmldir</file>
         <file>ShutDownDialog.qml</file>
-        <file>LoadIndicator.qml</file>
-        <file>DetailsTextArea.qml</file>
+        <file>SizeTracer.qml</file>
+        <file>Theme.qml</file>
+        <file>ToolbarButton.qml</file>
     </qresource>
 </RCC>

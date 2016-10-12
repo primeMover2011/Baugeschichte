@@ -55,6 +55,7 @@ MapQuickItem {
 
         SequentialAnimation on width {
             loops: Animation.Infinite
+            running: root.visible
             NumberAnimation {
                 from: Theme.buttonHeight
                 to: Theme.buttonHeight * 1.2

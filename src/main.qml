@@ -25,10 +25,8 @@
  **/
 
 import QtQuick 2.4
-import QtQuick.Window 2.2
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.4
+import QtQuick.Controls 1.4 as Controls1
 import QtPositioning 5.5
 import QtLocation 5.5
 import Qt.labs.settings 1.0
@@ -48,24 +46,20 @@ Item {
 
     property MapComponent mainMap: null
 
-    ExclusiveGroup {
-          id: categoryGroup
-    }
-
     PositionSource {
         id: positionCheck
         preferredPositioningMethods: PositionSource.AllPositioningMethods
         active: false
     }
 
-    Action {
+    Controls1.Action {
         id: reloadAction
         shortcut: "Ctrl+R"
         onTriggered: {
             appCore.reloadUI();
         }
     }
-    Action {
+    Controls1.Action {
         id: settingsMenuAction
         shortcut: "Ctrl+M"
         onTriggered: {
@@ -186,33 +180,16 @@ Item {
             }
         }
 
-        Item {
-            id: loadingIndicator
-            width: height
-            height: toolBar.height
-
+        LoadIndicator {
+            id: busyIndicator
+            anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
-            anchors.top: parent.top
+            anchors.rightMargin: toolBar.height * 0.1
 
-            BusyIndicator {
-                anchors.fill: parent
-                anchors.margins: toolBar.height * 0.1
+            height: toolBar.height * 0.8
+            width: height
 
-                running: root.loading
-
-                style: BusyIndicatorStyle {
-                    indicator: Image {
-                        visible: control.running
-                        source: "resources/spinner.png"
-                        RotationAnimator on rotation {
-                            running: control.running
-                            loops: Animation.Infinite
-                            duration: 1000
-                            from: 0 ; to: 360
-                        }
-                    }
-                }
-            }
+            running: root.loading
         }
     }
 
@@ -266,7 +243,7 @@ Item {
         id: routeLoader
     }
 
-    StackView {
+    Controls1.StackView {
         id: uiStack
         anchors.fill: background
         objectName: "theStackView"
@@ -285,7 +262,7 @@ Item {
                 property bool splitScreen: width > height
                 readonly property bool detailsOpen: details.visible
 
-                loading: details.loading
+                loading: details.item ? details.item.loading : false
 
                 MapComponent {
                     id: mapOfEurope

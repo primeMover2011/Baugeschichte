@@ -52,5 +52,6 @@
         <file>SearchModel.qml</file>
         <file>qmldir</file>
         <file>ShutDownDialog.qml</file>
+        <file>LoadIndicator.qml</file>
     </qresource>
 </RCC>

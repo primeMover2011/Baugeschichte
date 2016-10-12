@@ -25,7 +25,6 @@
  **/
 
 import QtQuick 2.4
-import QtQuick.Controls 1.4
 
 /**
  Indicator for the Map to show the scale/distances
@@ -76,7 +75,7 @@ Item {
 
     height: scaleText.height * 2
     width: scaleImage.width
-    
+
     Image {
         id: scaleImageLeft
         source: "resources/scale_end.png"
@@ -95,10 +94,10 @@ Item {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
     }
-    Label {
+    Text {
         id: scaleText
-        color: "#004EAE"
         anchors.centerIn: parent
+        color: "#004EAE"
         text: "0 m"
     }
 }

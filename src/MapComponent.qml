@@ -25,7 +25,7 @@
  **/
 
 import QtQuick 2.4
-import QtQuick.Controls 1.4
+import QtQuick.Controls 1.4 as Controls1
 import QtQuick.Window 2.2
 import QtLocation 5.5
 import QtPositioning 5.5
@@ -270,7 +270,7 @@ BaseView {
         }
     }
 
-    Slider {
+    Controls1.Slider {
         id: zoomSlider
         minimumValue: map.minimumZoomLevel
         maximumValue: map.maximumZoomLevel

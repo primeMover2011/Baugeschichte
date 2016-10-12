@@ -24,8 +24,8 @@
  ** SOFTWARE.
  **/
 
-import QtQuick 2.6
-import QtQuick.Controls 1.4
+import QtQuick 2.5
+import QtQuick.Controls 2.0
 
 Item {
     id: root
@@ -50,10 +50,11 @@ Item {
         }
         ComboBox {
             width: mapText.width * 2
+            textRole: "key"
             model: ListModel {
                 id: providerModel
-                ListElement { text: qsTr("OpenStreetMap"); value: "osm" }
-                ListElement { text: qsTr("MapBox"); value: "mapbox" }
+                ListElement { key: qsTr("OpenStreetMap"); value: "osm" }
+                ListElement { key: qsTr("MapBox"); value: "mapbox" }
             }
             currentIndex: appCore.mapProvider === "osm" ? 0 : 1
             onCurrentIndexChanged: {

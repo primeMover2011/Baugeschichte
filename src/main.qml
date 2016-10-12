@@ -24,7 +24,7 @@
  ** SOFTWARE.
  **/
 
-import QtQuick 2.4
+import QtQuick 2.5
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.4 as Controls1
 import QtPositioning 5.5
@@ -52,17 +52,17 @@ Item {
         active: false
     }
 
-    Controls1.Action {
+    Shortcut {
         id: reloadAction
-        shortcut: "Ctrl+R"
-        onTriggered: {
+        sequence: "Ctrl+R"
+        onActivated: {
             appCore.reloadUI();
         }
     }
-    Controls1.Action {
+    Shortcut {
         id: settingsMenuAction
-        shortcut: "Ctrl+M"
-        onTriggered: {
+        sequence: "Ctrl+M"
+        onActivated: {
             uiStack.push({
                              item: Qt.resolvedUrl("SettingsView.qml")
                          });
@@ -249,9 +249,6 @@ Item {
         objectName: "theStackView"
 
         initialItem: loader_mapOfEurope
-        onDepthChanged: {
-            console.log("Depth changed:" + depth)
-        }
 
         Component {
             id: component_mapOfEurope

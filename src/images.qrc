@@ -2,8 +2,6 @@
     <qresource prefix="/">
         <file>resources/arrow-left.svg</file>
         <file>resources/arrow-right.svg</file>
-        <file>resources/Edit-check-sheet.svg</file>
-        <file>resources/Edit-find-cats.svg</file>
         <file>resources/Flag_of_Germany.png</file>
         <file>resources/Flag_of_United_Kingdom.png</file>
         <file>resources/Go-next.svg</file>
@@ -11,22 +9,17 @@
         <file>resources/gps_follow.svg</file>
         <file>resources/gps_off.svg</file>
         <file>resources/gps_on.svg</file>
-        <file>resources/icon-clear.png</file>
-        <file>resources/icon-loading.png</file>
-        <file>resources/icon-refresh.png</file>
+        <file>resources/icon-categories.svg</file>
+        <file>resources/icon-map.svg</file>
+        <file>resources/icon-route.svg</file>
         <file>resources/icon-search.png</file>
-        <file>resources/Map-icon.svg</file>
-        <file>resources/marker.png</file>
+        <file>resources/icon-search.svg</file>
         <file>resources/marker-blue.svg</file>
         <file>resources/marker-red.svg</file>
         <file>resources/marker.svg</file>
-        <file>resources/marker-2-blue.svg</file>
-        <file>resources/marker-2-red.svg</file>
-        <file>resources/marker-2.svg</file>
         <file>resources/navigation_next_item.png</file>
         <file>resources/scale_end.png</file>
         <file>resources/scale.png</file>
         <file>resources/spinner.png</file>
-        <file>resources/System-search.svg</file>
     </qresource>
 </RCC>

@@ -90,7 +90,7 @@ Item {
 
             ToolbarButton {
                 id: mapButton
-                source: "resources/Map-icon.svg"
+                source: "resources/icon-map.svg"
                 onClicked: {
                     if (appCore.showDetails) {
                         appCore.showDetails = false;
@@ -106,7 +106,7 @@ Item {
 
             ToolbarButton {
                 id: searchButton
-                source: "resources/System-search.svg"
+                source: "resources/icon-search.svg"
                 onClicked: {
                     mainMap.resetToMainModel();
                     appCore.selectedHouse = "";
@@ -122,7 +122,7 @@ Item {
 
             ToolbarButton {
                 id: categoriesButton
-                source: "resources/Edit-find-cats.svg"
+                source: "resources/icon-categories.svg"
                 onClicked: {
                     mainMap.useCategoryModel();
                     appCore.selectedHouse = "";
@@ -138,7 +138,7 @@ Item {
 
             ToolbarButton {
                 id: routesButton
-                source: "resources/Edit-check-sheet.svg"
+                source: "resources/icon-route.svg"
                 onClicked: {
                     mainMap.resetToMainModel();
                     appCore.selectedHouse = "";

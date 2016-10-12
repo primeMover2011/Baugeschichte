@@ -53,5 +53,6 @@
         <file>qmldir</file>
         <file>ShutDownDialog.qml</file>
         <file>LoadIndicator.qml</file>
+        <file>DetailsTextArea.qml</file>
     </qresource>
 </RCC>

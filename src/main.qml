@@ -27,6 +27,7 @@
 import QtQuick 2.5
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.4 as Controls1
+import QtQuick.Controls.Material 2.0
 import QtPositioning 5.5
 import QtLocation 5.5
 import Qt.labs.settings 1.0
@@ -39,6 +40,8 @@ Item {
     height: 800
 
     visible: true
+
+    Material.accent: Material.LightBlue
 
     readonly property bool loading: (uiStack.currentItem && uiStack.currentItem.loading) ||
                                     markerLoader.loading ||

@@ -39,7 +39,8 @@
 ****************************************************************************/
 
 import QtQuick 2.4
-import QtQuick.Controls 1.4
+import QtQuick.Controls 1.4 as Controls1
+import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.1
 import "./"
 
@@ -113,7 +114,7 @@ BaseView {
         border.color: "#8E8E8E"
     }
 
-    SplitView {
+    Controls1.SplitView {
         id: splitView
         anchors {
             top: parent.top
@@ -215,34 +216,13 @@ BaseView {
                         wrapMode: Text.Wrap
                     }
 
-                    TextArea {
-                        anchors { top: titleText.bottom;
-                            bottom: parent.bottom; left: parent.left;
-                            right: parent.right
-                        }
-                        textMargin:Theme.smallMargin
-                        readOnly: true
-                        verticalScrollBarPolicy: Qt.ScrollBarAsNeeded
-                        horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-                        wrapMode: TextEdit.WordWrap
-                        text: (detailText.length > 0) ? detailText : qsTr("Kein Text")
-                        textFormat: TextEdit.RichText
-                        font.pixelSize: Theme.smallFontSize
-
-                        onLinkActivated: {
-                            if (link.substr(0, 11) === "internal://") {
-                                var newBuilding = link.substring(11, link.length);
-                                console.debug("Open internal link: "+newBuilding);
-                                appCore.selectAndCenterHouse(newBuilding);
-                            } else {
-                                console.debug("Open external link: "+link);
-                                appCore.openExternalLink(link);
-                            }
-                        }
+                    DetailsTextArea {
+                        anchors.top: titleText.bottom
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: 1
                     }
-
-                    Keys.onLeftPressed: console.log("onLeft Details")
-                    Keys.onRightPressed: console.log("onLeft Details")
                 }
             }
         }

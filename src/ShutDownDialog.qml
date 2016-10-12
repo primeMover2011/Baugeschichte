@@ -30,7 +30,7 @@ MessageDialog {
     icon: StandardIcon.Question
     standardButtons: StandardButton.Yes | StandardButton.No
     modality: Qt.WindowModal
-    title: qsTr("Baugeschichte App beenden?")
+    title: qsTr("Quit Baugeschichte App?")
     onYes: {
         Qt.quit();
     }

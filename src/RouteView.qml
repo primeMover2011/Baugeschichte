@@ -46,7 +46,7 @@ BaseView {
 //    LineInput {
 //        id: searchInput
 //        width: parent.width
-//        hint: qsTr("Suchbegriff...")
+//        hint: qsTr("Search ...")
 //        focus: true //flipBar.opened
 //        onAccepted: {
 //            searchModel.phrase = "";

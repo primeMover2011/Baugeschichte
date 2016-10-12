@@ -61,7 +61,7 @@ Item {
                 textFormat: TextEdit.RichText
                 font.pixelSize: Theme.smallFontSize
 
-                text: (detailText.length > 0) ? detailText : qsTr("Kein Text")
+                text: (detailText.length > 0) ? detailText : qsTr("No text")
 
                 onLinkActivated: {
                     if (link.substr(0, 11) === "internal://") {

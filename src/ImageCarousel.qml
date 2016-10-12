@@ -90,7 +90,7 @@ ListView {
                 color: "red"
                 wrapMode: Text.Wrap
                 horizontalAlignment: Text.AlignHCenter
-                text:qsTr("Failure loading iamge from\n") + myImage.source
+                text:qsTr("Failure loading image from")+"\n" + myImage.source
                 visible: myImage.status === Image.Error
             }
         }

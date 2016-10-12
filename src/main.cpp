@@ -26,7 +26,9 @@
 
 #include "applicationcore.h"
 
+#include <QDebug>
 #include <QGuiApplication>
+#include <QTranslator>
 
 int main(int argc, char* argv[])
 {
@@ -37,6 +39,24 @@ int main(int argc, char* argv[])
 
     QGuiApplication app(argc, argv);
     app.setApplicationDisplayName(QStringLiteral("Baugeschichte.at"));
+
+    QTranslator appTranslator;
+    bool ok = appTranslator.load(
+        QLocale(), QStringLiteral("Baugeschichte"), QStringLiteral("_"), QStringLiteral(":/"), QStringLiteral(".qm"));
+    if (ok) {
+        app.installTranslator(&appTranslator);
+    } else {
+        qDebug() << "cannot load app translator " << QLocale::system().name() << " check content of translations.qrc";
+    }
+    QTranslator qtTranslator;
+    qtTranslator.load(
+        QLocale(), QStringLiteral("qtbase"), QStringLiteral("_"), QStringLiteral(":/"), QStringLiteral(".qm"));
+    if (ok) {
+        app.installTranslator(&qtTranslator);
+    } else {
+        qDebug() << "cannot load qtbase translator " << QLocale::system().name()
+                 << " check content of translations.qrc";
+    }
 
     ApplicationCore appCore;
     QObject::connect(

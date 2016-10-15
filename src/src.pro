@@ -12,8 +12,8 @@ ios {
     QMAKE_BUNDLE_DATA += ios_icon
 #    ios_artwork.files = $$files($$PWD/iOS/Screenshots/*.png)
 #    QMAKE_BUNDLE_DATA += ios_artwork
-#    app_launch_images.files = $$files($$PWD/iOS/splash*.png)
-#    QMAKE_BUNDLE_DATA += app_launch_images
+    app_launch_images.files = $$files($$PWD/iOS/splash*.png)
+    QMAKE_BUNDLE_DATA += app_launch_images
     app_launch_screen.files = $$files($$PWD/iOS/LaunchScreen.xib)
     QMAKE_BUNDLE_DATA += app_launch_screen
 

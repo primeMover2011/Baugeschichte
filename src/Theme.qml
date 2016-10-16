@@ -27,7 +27,7 @@
 pragma Singleton
 
 import QtQuick 2.5
-import QtQuick.Window 2.2
+//import QtQuick.Window 2.2
 
 Item {
     id: defaultHelper
@@ -56,17 +56,17 @@ Item {
     FontMetrics {
         id: fm
 
-        Component.onCompleted: {
-            console.log("Screen/Layout/sizes info:")
-            console.log("Default font height height: "+height);
-            console.log("Default font pixelSize: "+fm.font.pixelSize);
-            console.log("Screen.devicePixelRatio "+Screen.devicePixelRatio)
-            console.log("Screen.logicalPixelDensity "+Screen.logicalPixelDensity)
-            console.log("Screen.pixelDensity "+Screen.pixelDensity)
-            console.log("Screen.height: "+Screen.height)
-            console.log("Screen.width: "+Screen.width)
-            console.log("dp(50): "+dp(50));
-            console.log("mm(8): "+mm(8));
-        }
+//        Component.onCompleted: {
+//            console.log("Screen/Layout/sizes info:")
+//            console.log("Default font height height: "+height);
+//            console.log("Default font pixelSize: "+fm.font.pixelSize);
+//            console.log("Screen.devicePixelRatio "+Screen.devicePixelRatio)
+//            console.log("Screen.logicalPixelDensity "+Screen.logicalPixelDensity)
+//            console.log("Screen.pixelDensity "+Screen.pixelDensity)
+//            console.log("Screen.height: "+Screen.height)
+//            console.log("Screen.width: "+Screen.width)
+//            console.log("dp(50): "+dp(50));
+//            console.log("mm(8): "+mm(8));
+//        }
     }
 }

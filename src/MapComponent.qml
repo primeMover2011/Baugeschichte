@@ -125,17 +125,13 @@ BaseView {
         property MarkerLabel markerLabel
 
         readonly property int markerSize: Theme.buttonHeight / map.scale
-        readonly property real defaultZoomLevel: 16
 
-        center: QtPositioning.coordinate(47.0666667, 15.45)
         onCenterChanged: {
             if (autoUpdatePois) {
                 markerLoader.setLocation(center.latitude, center.longitude);
             }
             appCore.currentMapPosition = center;
         }
-
-        zoomLevel: defaultZoomLevel
 
         onZoomLevelChanged: {
             root.updateRadius();

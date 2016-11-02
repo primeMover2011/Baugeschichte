@@ -196,9 +196,6 @@ Item {
         }
     }
 
-    //    PositionSource
-    property variant locationGraz: QtPositioning.coordinate(47.0666667, 15.45)
-
     Loader {
         id: shutDownDialog
 
@@ -272,16 +269,15 @@ Item {
 
                     visible: parent.splitScreen || !details.visible
 
-                    Settings {
-                        id: settings
-                        property alias lastSeenLat: mapOfEurope.center.latitude
-                        property alias lastSeenLon: mapOfEurope.center.longitude
-                        property alias lastZoomLevel: mapOfEurope.zoomLevel
-                    }
-
-                    center: locationGraz
+                    center: QtPositioning.coordinate(settings.lastSeenLat, settings.lastSeenLon)
+                    zoomLevel: settings.lastZoomLevel
                     Component.onCompleted: {
                         root.mainMap = mapOfEurope;
+                    }
+                    Component.onDestruction: {
+                        settings.lastSeenLat = mapOfEurope.center.latitude
+                        settings.lastSeenLon = mapOfEurope.center.longitude
+                        settings.lastZoomLevel = mapOfEurope.zoomLevel
                     }
                 }
 
@@ -320,5 +316,12 @@ Item {
                 }
             }
         }
+    }
+
+    Settings {
+        id: settings
+        property double lastSeenLat: 47.0666667 // graz
+        property double lastSeenLon: 15.45
+        property double lastZoomLevel: 16 // default zoom level
     }
 }

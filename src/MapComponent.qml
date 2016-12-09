@@ -261,7 +261,6 @@ BaseView {
         }
 
         Component.onCompleted: {
-            zoomLevel = defaultZoomLevel;
             root.updateRadius();
         }
     }

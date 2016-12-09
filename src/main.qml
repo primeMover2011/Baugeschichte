@@ -1,4 +1,4 @@
-/**
+﻿/**
  ** This file is part of the Baugeschichte.at project.
  **
  ** The MIT License (MIT)
@@ -278,6 +278,15 @@ Item {
                         settings.lastSeenLat = mapOfEurope.center.latitude
                         settings.lastSeenLon = mapOfEurope.center.longitude
                         settings.lastZoomLevel = mapOfEurope.zoomLevel
+                    }
+
+                    Timer {
+                        // workaround for bug QTBUG-52030 / QTBUG-55424
+                        interval: 5
+                        running: true
+                        onTriggered: {
+                            mapOfEurope.center = QtPositioning.coordinate(settings.lastSeenLat, settings.lastSeenLon);
+                        }
                     }
                 }
 

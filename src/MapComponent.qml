@@ -25,7 +25,8 @@
  **/
 
 import QtQuick 2.4
-import QtQuick.Controls 2.0
+//import QtQuick.Controls 2.0
+import QtQuick.Controls 1.2
 import QtQuick.Window 2.2
 import QtLocation 5.5
 import QtPositioning 5.5
@@ -267,20 +268,15 @@ BaseView {
 
     Slider {
         id: zoomSlider
-        from: map.minimumZoomLevel
-        to: map.maximumZoomLevel
+        minimumValue: map.minimumZoomLevel
+        maximumValue: map.maximumZoomLevel
         anchors.margins: 10
         anchors.bottom: scaleItem.top
         anchors.top: parent.top
         anchors.right: parent.right
         orientation: Qt.Vertical
-        onPositionChanged: {
-            map.zoomLevel = position2value(position);
-        }
-        function position2value(pos) {
-            return from + (to - from) * pos
-        }
-
+        value: map.zoomLevel
+        onValueChanged: map.zoomLevel = value;
         Connections{
             target: map
             onZoomLevelChanged: {
@@ -289,11 +285,37 @@ BaseView {
                 }
             }
         }
-
-        Component.onCompleted: {
-            zoomSlider.value = map.zoomLevel;
-        }
     }
+// Controls 2
+//    Slider {
+//        id: zoomSlider
+//        from: map.minimumZoomLevel
+//        to: map.maximumZoomLevel
+//        anchors.margins: 10
+//        anchors.bottom: scaleItem.top
+//        anchors.top: parent.top
+//        anchors.right: parent.right
+//        orientation: Qt.Vertical
+//        onPositionChanged: {
+//            map.zoomLevel = position2value(position);
+//        }
+//        function position2value(pos) {
+//            return from + (to - from) * pos
+//        }
+
+//        Connections{
+//            target: map
+//            onZoomLevelChanged: {
+//                if (!zoomSlider.pressed) {
+//                    zoomSlider.value = map.zoomLevel;
+//                }
+//            }
+//        }
+
+//        Component.onCompleted: {
+//            zoomSlider.value = map.zoomLevel;
+//        }
+//    }
 
     MapScale {
         id: scaleItem

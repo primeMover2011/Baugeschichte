@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
 
     // style for Controls2
-    qputenv("QT_QUICK_CONTROLS_STYLE", "Material");
+//    qputenv("QT_QUICK_CONTROLS_STYLE", "Material");
 
     QGuiApplication app(argc, argv);
     app.setApplicationDisplayName(QStringLiteral("Baugeschichte.at"));

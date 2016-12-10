@@ -71,8 +71,9 @@ LANGUAGES = de en
      return($$result)
  }
 # Available translations
-tsroot = $$join(TARGET,,,.ts)
-tstarget = $$join(TARGET,,,_)
+TSNAME = Baugeschichte
+tsroot = $$join(TSNAME,,,.ts)
+tstarget = $$join(TSNAME,,,_)
 TRANSLATIONS = $$PWD/../translations/$$tsroot
 TRANSLATIONS += $$prependAll(LANGUAGES, $$PWD/../translations/$$tstarget, .ts)
 

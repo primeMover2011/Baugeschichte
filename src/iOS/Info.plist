@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>GrazWiki</string>
+	<string>Baugeschichte</string>
 	<key>CFBundleExecutable</key>
-	<string>at-bitschmiede-grazwiki</string>
+	<string>Baugeschichte</string>
 	<key>CFBundleGetInfoString</key>
 	<string>Created by Qt/QMake</string>
 	<key>CFBundleIconFile</key>
@@ -30,7 +30,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>at.bitschmiede.grazwiki</string>
 	<key>CFBundleName</key>
-	<string>GrazWiki</string>
+	<string>Baugeschichte</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -38,7 +38,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>12</string>
+	<string>13</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NOTE</key>

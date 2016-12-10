@@ -417,6 +417,14 @@ void ApplicationCore::loadMarkers()
     if (!file.exists()) {
         return;
     }
+
+    // Some weired error with old markers leads to a crash when filtering them
+    QFileInfo fi(file);
+    QDateTime roughBuild(QDate(2016, 12, 9));
+    if (fi.lastModified() > roughBuild ) {
+        return;
+    }
+
     file.open(QIODevice::ReadOnly);
     if (!file.isOpen()) {
         qWarning() << Q_FUNC_INFO << "unable to open file" << markerFile;

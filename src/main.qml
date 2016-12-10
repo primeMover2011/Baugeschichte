@@ -1,4 +1,4 @@
-/**
+﻿/**
  ** This file is part of the Baugeschichte.at project.
  **
  ** The MIT License (MIT)
@@ -27,7 +27,7 @@
 import QtQuick 2.5
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.4 as Controls1
-import QtQuick.Controls.Material 2.0
+//import QtQuick.Controls.Material 2.0
 import QtPositioning 5.5
 import QtLocation 5.5
 import Qt.labs.settings 1.0
@@ -41,7 +41,7 @@ Item {
 
     visible: true
 
-    Material.accent: Material.LightBlue
+//    Material.accent: Material.LightBlue
 
     readonly property bool loading: (uiStack.currentItem && uiStack.currentItem.loading) ||
                                     markerLoader.loading ||
@@ -278,6 +278,15 @@ Item {
                         settings.lastSeenLat = mapOfEurope.center.latitude
                         settings.lastSeenLon = mapOfEurope.center.longitude
                         settings.lastZoomLevel = mapOfEurope.zoomLevel
+                    }
+
+                    Timer {
+                        // workaround for bug QTBUG-52030 / QTBUG-55424
+                        interval: 5
+                        running: true
+                        onTriggered: {
+                            mapOfEurope.center = QtPositioning.coordinate(settings.lastSeenLat, settings.lastSeenLon);
+                        }
                     }
                 }
 

@@ -25,7 +25,8 @@
  **/
 
 import QtQuick 2.4
-import QtQuick.Controls 2.0
+//import QtQuick.Controls 2.0
+import QtQuick.Controls 1.2
 import "./"
 
 Item {
@@ -37,16 +38,17 @@ Item {
         color: "white"
     }
 
+    ScrollView {
+        anchors.fill: parent
     Flickable {
         id: textArea
-        anchors.fill: parent
 
         contentWidth: textItem.paintedWidth
         contentHeight: textItem.paintedHeight
         clip: true
 
         flickableDirection: Flickable.VerticalFlick
-        ScrollBar.vertical: ScrollBar {}
+//        ScrollBar.vertical: ScrollBar {}
 
         Item {
             width: textArea.width
@@ -75,5 +77,6 @@ Item {
                 }
             }
         }
+    }
     }
 }

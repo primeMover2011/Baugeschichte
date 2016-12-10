@@ -25,33 +25,34 @@
  **/
 
 import QtQuick 2.4
-import QtQuick.Controls 2.0
+//import QtQuick.Controls 2.0
+import QtQuick.Controls 1.2
 
 BusyIndicator {
     id: root
 
     visible: running
 
-    topPadding: 0
-    bottomPadding: 0
-    leftPadding: 0
-    rightPadding: 0
+//    topPadding: 0
+//    bottomPadding: 0
+//    leftPadding: 0
+//    rightPadding: 0
 
-    contentItem: Item {
-        implicitWidth: 64
-        implicitHeight: implicitWidth
+//    contentItem: Item {
+//        implicitWidth: 64
+//        implicitHeight: implicitWidth
 
-        Image {
-            width: parent.width
-            height: parent.height
-            source: "resources/spinner.png"
-            RotationAnimator on rotation {
-                running: root.visible && root.running
-                loops: Animation.Infinite
-                duration: 1000
-                from: 0
-                to: 360
-            }
-        }
-    }
+//        Image {
+//            width: parent.width
+//            height: parent.height
+//            source: "resources/spinner.png"
+//            RotationAnimator on rotation {
+//                running: root.visible && root.running
+//                loops: Animation.Infinite
+//                duration: 1000
+//                from: 0
+//                to: 360
+//            }
+//        }
+//    }
 }

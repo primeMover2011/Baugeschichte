@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>Baugeschichte</string>
+	<string>Baugeschichte - GrazWiki</string>
 	<key>CFBundleExecutable</key>
 	<string>Baugeschichte</string>
 	<key>CFBundleGetInfoString</key>
@@ -28,9 +28,9 @@
 		<string>Icon-152.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
-	<string>at.bitschmiede.grazwiki</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleName</key>
-	<string>Baugeschichte</string>
+	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

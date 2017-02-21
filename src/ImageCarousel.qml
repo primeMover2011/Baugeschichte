@@ -33,6 +33,8 @@ import "."
 ListView {
     id: root
 
+    property bool fullscreen: false
+
     focus: true
     clip: true
 
@@ -159,6 +161,36 @@ ListView {
 
             onClicked: {
                 incrementCurrentIndex();
+            }
+        }
+    }
+
+    Rectangle {
+        anchors.fill: fullViewButton
+
+        radius: width / 3
+        opacity: 0.3
+    }
+
+    Image {
+        id: fullViewButton
+
+        width: height
+        height: Theme.buttonHeight
+        sourceSize: Qt.size(width, height)
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.margins: Theme.dp(2)
+
+        source: root.fullscreen ? "resources/fullscreen_exit.svg" : "resources/fullscreen.svg"
+        opacity: fullViewButton.pressed ? 0.8 : 0.6
+
+        MouseArea {
+            anchors.fill: parent
+            anchors.margins: -Theme.dp(5)
+
+            onClicked: {
+                root.fullscreen = !root.fullscreen;
             }
         }
     }

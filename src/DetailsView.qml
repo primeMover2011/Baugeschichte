@@ -39,7 +39,6 @@
 ****************************************************************************/
 
 import QtQuick 2.4
-import QtQuick.Controls 1.4 as Controls1
 import QtQuick.Layouts 1.1
 import "./"
 
@@ -49,6 +48,8 @@ BaseView {
     property real itemSize: width / 3
     property string searchFor: appCore.selectedHouse
     property string poiName: detailsModel.title
+
+    property int animationDuration: 200 // ms
 
     loading: detailsModel.isLoading
     onLoadingChanged: {
@@ -111,245 +112,253 @@ BaseView {
 
         color: "#FFFCF2"
         border.color: "#8E8E8E"
+
+        opacity: mainListView.opacity
     }
 
-    Controls1.SplitView {
-        id: splitView
-        anchors {
-            top: parent.top
-            bottom: prevImage.visible || nextImage.visible || languageSwitch.visible ? languageSwitch.top : parent.bottom
-            left: parent.left
-            right: parent.right
+    ImageCarousel {
+        id: imagePathView
+
+        width: parent.width
+        height: fullscreen ? parent.height : mainListView.height
+        Behavior on height {
+            NumberAnimation { duration: root.animationDuration }
         }
 
-        orientation: Qt.Vertical
+        model: detailsModel.imagesModel
 
-        ImageCarousel {
-            id: imagePathView
+        onCurrentIndexChanged: {
+            if (currentIndex < 0 || currentIndex >= detailsModel.imagesModel.count) {
+                return;
+            }
 
-            height: parent.height / 2
-            Layout.fillHeight: true
-            Layout.maximumHeight: parent.height * 0.75
-            Layout.minimumHeight: parent.height * 0.25
+            var section = detailsModel.imagesModel.get(currentIndex).section;
+            if (mainListView !== section) {
+                mainListView.currentIndex = section;
+            }
+        }
 
-            model: detailsModel.imagesModel
+        function showImageForText() {
+            if (detailsModel.imagesModel.count === 0 ||
+                    detailsModel.imagesModel.get(currentIndex).section === mainListView.currentIndex) {
+                // already correct section
+                return;
+            }
 
-            onCurrentIndexChanged: {
-                if (currentIndex < 0 || currentIndex >= detailsModel.imagesModel.count) {
+            for (var i=0; i<model.count; ++i) {
+                var section = detailsModel.imagesModel.get(i).section;
+                if (section === mainListView.currentIndex) {
+                    currentIndex = i;
                     return;
                 }
-
-                var section = detailsModel.imagesModel.get(currentIndex).section;
-                if (mainListView !== section) {
-                    mainListView.currentIndex = section;
-                }
-            }
-
-            function showImageForText() {
-                if (detailsModel.imagesModel.count === 0 ||
-                        detailsModel.imagesModel.get(currentIndex).section === mainListView.currentIndex) {
-                    // already correct section
-                    return;
-                }
-
-                for (var i=0; i<model.count; ++i) {
-                    var section = detailsModel.imagesModel.get(i).section;
-                    if (section === mainListView.currentIndex) {
-                        currentIndex = i;
-                        return;
-                    }
-                }
-            }
-
-            Text {
-                anchors.fill: parent
-                text: qsTr("No image available for "+detailsModel.title)
-                color: "white"
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                wrapMode: Text.Wrap
-                visible: imagePathView.model.count === 0 && !detailsModel.isLoading
-            }
-
-        }
-
-        ListView {
-            id: mainListView
-
-            height: parent.height / 2
-            Layout.fillHeight: true
-            Layout.maximumHeight: parent.height * 0.75
-//            Layout.minimumHeight: parent.height * 0.25
-
-            interactive: false
-            orientation: ListView.Horizontal
-            highlightMoveDuration: 250
-            clip: false
-            model: detailsModel.modelDE
-
-            onCurrentIndexChanged: {
-                imagePathView.showImageForText()
-            }
-
-            delegate: Item {
-                width: mainListView.width
-                height: Math.max(mainListView.height, splitView.height * 0.25)
-
-                Rectangle {
-                    id: textBase
-
-                    width: parent.width
-                    height: parent.height
-
-                    color: initialTextbackground.color
-                    border.color: initialTextbackground.border.color
-
-                    Text {
-                        id: titleText
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.margins: Theme.dp(5)
-                        horizontalAlignment: Text.AlignHCenter
-                        text: (poiName !== "") ? (poiName + ": " + title) : title
-                        font.pixelSize: Theme.defaultFontSize
-                        wrapMode: Text.Wrap
-                    }
-
-                    DetailsTextArea {
-                        anchors.top: titleText.bottom
-                        anchors.bottom: parent.bottom
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.margins: 1
-                    }
-                }
             }
         }
-    }
-
-    Image {
-        id:prevImage
-        anchors { left: parent.left; bottom: parent.bottom; margins: 10 }
-        width: height
-        height: Theme.buttonHeight
-
-        source: "resources/Go-previous.svg"
-        fillMode: Image.PreserveAspectFit
-        smooth: true
-        visible: mainListView.model.count > 1
-
-        MouseArea {
-            anchors.fill: parent
-
-            onClicked: {
-                if ( mainListView.currentIndex != 0 ) {
-                    mainListView.decrementCurrentIndex()
-                } else {
-                    mainListView.currentIndex = mainListView.count - 1
-                }
-            }
-        }
-    }
-
-    Image {
-        id: languageSwitch
-        anchors {
-            bottom: parent.bottom;
-            horizontalCenter: parent.horizontalCenter;
-            margins: 10
-        }
-        width: height
-        height: Theme.buttonHeight
-
-        source: mainListView.model === detailsModel.modelDE ? "resources/Flag_of_Germany.png" :
-                                             mainListView.model === detailsModel.modelEN ? "resources/Flag_of_United_Kingdom.png"
-                                                                        : ""
-
-        visible: twoOrMoreLanguages()
 
         Text {
-            anchors.centerIn: parent
-            text: parent.source == "" ? "L1" : ""
-        }
-
-        MouseArea {
             anchors.fill: parent
-
-            onClicked: {
-                if (mainListView.model === detailsModel.modelDE) {
-                    if (detailsModel.modelEN.count > 0) {
-                        mainListView.model = detailsModel.modelEN;
-                        appCore.detailsLanguage = "EN";
-                        return;
-                    }
-                    if (detailsModel.modelS1.count > 0) {
-                        mainListView.model = detailsModel.modelS1;
-                        appCore.detailsLanguage = "S1";
-                        return;
-                    }
-                }
-
-                if (mainListView.model === detailsModel.modelEN) {
-                    if (detailsModel.modelS1.count > 0) {
-                        mainListView.model = detailsModel.modelS1;
-                        appCore.detailsLanguage = "S1";
-                        return;
-                    }
-                    if (detailsModel.modelDE.count > 0) {
-                        mainListView.model = detailsModel.modelDE;
-                        appCore.detailsLanguage = "DE";
-                        return;
-                    }
-                }
-
-                if (mainListView.model === detailsModel.modelS1) {
-                    if (detailsModel.modelDE.count > 0) {
-                        rmainListView.model = detailsModel.modelDE;
-                        appCore.detailsLanguage = "DE";
-                        return;
-                    }
-                    if (detailsModel.modelEN.count > 0) {
-                        mainListView.model = detailsModel.modelEN;
-                        appCore.detailsLanguage = "EN";
-                        return;
-                    }
-                }
-            }
+            text: qsTr("No image available for "+detailsModel.title)
+            color: "white"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            wrapMode: Text.Wrap
+            visible: imagePathView.model.count === 0 && !detailsModel.isLoading
         }
 
-        function twoOrMoreLanguages() {
-            var languages = 0;
-            if (detailsModel.modelDE.count > 0) {
-                languages += 1;
+    }
+
+    ListView {
+        id: mainListView
+
+        width: parent.width
+        height: (parent.height - bottomBar.height) / 2
+        anchors.bottom: bottomBar.top
+
+        opacity: imagePathView.fullscreen ? 0 : 1
+        Behavior on opacity {
+            NumberAnimation { duration: root.animationDuration }
+        }
+
+        interactive: false
+        orientation: ListView.Horizontal
+        highlightMoveDuration: 250
+        clip: false
+        model: detailsModel.modelDE
+
+        onCurrentIndexChanged: {
+            imagePathView.showImageForText()
+        }
+
+        delegate: Item {
+            width: mainListView.width
+            height: Math.max(mainListView.height, root.height * 0.25)
+
+            Rectangle {
+                id: textBase
+
+                width: parent.width
+                height: parent.height
+
+                color: initialTextbackground.color
+                border.color: initialTextbackground.border.color
+
+                Text {
+                    id: titleText
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: Theme.dp(5)
+                    horizontalAlignment: Text.AlignHCenter
+                    text: (poiName !== "") ? (poiName + ": " + title) : title
+                    font.pixelSize: Theme.defaultFontSize
+                    wrapMode: Text.Wrap
+                }
+
+                DetailsTextArea {
+                    anchors.top: titleText.bottom
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 1
+                }
             }
-            if (detailsModel.modelEN.count > 0) {
-                languages += 1;
-            }
-            if (detailsModel.modelEN.count > 0) {
-                languages += 1;
-            }
-            return languages >= 2;
         }
     }
 
-    Image {
-        id:nextImage
-        anchors { right: parent.right; bottom: parent.bottom; margins: 10 }
-        width: height
-        height: Theme.buttonHeight
+    Item {
+        id: bottomBar
 
-        source: "resources/Go-next.svg"
-        fillMode: Image.PreserveAspectFit
-        smooth: true
-        visible: mainListView.model.count > 1
+        anchors.bottom: parent.bottom
+        width: parent.width
+        height: prevImage.visible || nextImage.visible || languageSwitch.visible ? prevImage.height+10 : 0
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                if ( mainListView.currentIndex != mainListView.count - 1 ) {
-                    mainListView.incrementCurrentIndex()
-                } else {
-                    mainListView.currentIndex = 0
+        opacity: imagePathView.fullscreen ? 0 : 1
+        Behavior on opacity {
+            NumberAnimation { duration: root.animationDuration }
+        }
+
+        Image {
+            id:prevImage
+            anchors { left: parent.left; bottom: parent.bottom; margins: 10 }
+            width: height
+            height: Theme.buttonHeight
+
+            source: "resources/Go-previous.svg"
+            fillMode: Image.PreserveAspectFit
+            smooth: true
+            visible: mainListView.model.count > 1
+
+            MouseArea {
+                anchors.fill: parent
+
+                onClicked: {
+                    if ( mainListView.currentIndex != 0 ) {
+                        mainListView.decrementCurrentIndex()
+                    } else {
+                        mainListView.currentIndex = mainListView.count - 1
+                    }
+                }
+            }
+        }
+
+        Image {
+            id: languageSwitch
+            anchors {
+                bottom: parent.bottom;
+                horizontalCenter: parent.horizontalCenter;
+                margins: 10
+            }
+            width: height
+            height: Theme.buttonHeight
+
+            source: mainListView.model === detailsModel.modelDE ? "resources/Flag_of_Germany.png" :
+                                                 mainListView.model === detailsModel.modelEN ? "resources/Flag_of_United_Kingdom.png"
+                                                                            : ""
+
+            visible: twoOrMoreLanguages()
+
+            Text {
+                anchors.centerIn: parent
+                text: parent.source == "" ? "L1" : ""
+            }
+
+            MouseArea {
+                anchors.fill: parent
+
+                onClicked: {
+                    if (mainListView.model === detailsModel.modelDE) {
+                        if (detailsModel.modelEN.count > 0) {
+                            mainListView.model = detailsModel.modelEN;
+                            appCore.detailsLanguage = "EN";
+                            return;
+                        }
+                        if (detailsModel.modelS1.count > 0) {
+                            mainListView.model = detailsModel.modelS1;
+                            appCore.detailsLanguage = "S1";
+                            return;
+                        }
+                    }
+
+                    if (mainListView.model === detailsModel.modelEN) {
+                        if (detailsModel.modelS1.count > 0) {
+                            mainListView.model = detailsModel.modelS1;
+                            appCore.detailsLanguage = "S1";
+                            return;
+                        }
+                        if (detailsModel.modelDE.count > 0) {
+                            mainListView.model = detailsModel.modelDE;
+                            appCore.detailsLanguage = "DE";
+                            return;
+                        }
+                    }
+
+                    if (mainListView.model === detailsModel.modelS1) {
+                        if (detailsModel.modelDE.count > 0) {
+                            rmainListView.model = detailsModel.modelDE;
+                            appCore.detailsLanguage = "DE";
+                            return;
+                        }
+                        if (detailsModel.modelEN.count > 0) {
+                            mainListView.model = detailsModel.modelEN;
+                            appCore.detailsLanguage = "EN";
+                            return;
+                        }
+                    }
+                }
+            }
+
+            function twoOrMoreLanguages() {
+                var languages = 0;
+                if (detailsModel.modelDE.count > 0) {
+                    languages += 1;
+                }
+                if (detailsModel.modelEN.count > 0) {
+                    languages += 1;
+                }
+                if (detailsModel.modelEN.count > 0) {
+                    languages += 1;
+                }
+                return languages >= 2;
+            }
+        }
+
+        Image {
+            id:nextImage
+            anchors { right: parent.right; bottom: parent.bottom; margins: 10 }
+            width: height
+            height: Theme.buttonHeight
+
+            source: "resources/Go-next.svg"
+            fillMode: Image.PreserveAspectFit
+            smooth: true
+            visible: mainListView.model.count > 1
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    if ( mainListView.currentIndex != mainListView.count - 1 ) {
+                        mainListView.incrementCurrentIndex()
+                    } else {
+                        mainListView.currentIndex = 0
+                    }
                 }
             }
         }

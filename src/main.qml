@@ -28,7 +28,7 @@ import QtQuick 2.5
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.4 as Controls1
 import QtQuick.Controls.Styles 1.4
-//import QtQuick.Controls.Material 2.0
+import QtQuick.Controls.Material 2.0
 import QtPositioning 5.5
 import QtLocation 5.5
 import Qt.labs.settings 1.0
@@ -42,7 +42,7 @@ Item {
 
     visible: true
 
-//    Material.accent: Material.LightBlue
+    Material.accent: Material.LightBlue
 
     readonly property bool loading: (uiStack.currentItem && uiStack.currentItem.loading) ||
                                     markerLoader.loading ||
@@ -192,27 +192,13 @@ Item {
 
             LoadIndicator {
                 id: busyIndicator
-                anchors.fill: parent
-                anchors.margins: toolBar.height * 0.1
-                style: BusyIndicatorStyle {
-                    indicator: Image {
-                        visible: control.running
-                        source: "resources/spinner.png"
-                        RotationAnimator on rotation {
-                            running: control.running
-                            loops: Animation.Infinite
-                            duration: 1000
-                            from: 0 ; to: 360
-                        }
-                    }
-                }
 
-//                anchors.verticalCenter: parent.verticalCenter
-//                anchors.right: parent.right
-//                anchors.rightMargin: toolBar.height * 0.1
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: toolBar.height * 0.1
 
-//                height: toolBar.height * 0.8
-//                width: height
+                height: toolBar.height * 0.8
+                width: height
 
                 running: root.loading
             }

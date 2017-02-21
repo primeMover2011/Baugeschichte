@@ -23,6 +23,9 @@ ui_*.h
 Makefile*
 *build-*
 
+# QML cache files
+*.qmlc
+
 # translation files
 translations/*.qm
 

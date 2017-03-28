@@ -302,8 +302,10 @@ Item {
                 Loader {
                     id: details
 
-                    x: visible ? (parent.splitScreen ? parent.width / 2 : 0) : parent.width
-                    width: parent.splitScreen ? parent.width / 2 : parent.width
+                    property bool fullscreen: item ? item.fullscreen : false
+
+                    x: visible ? (parent.splitScreen && !fullscreen ? parent.width / 2 : 0) : parent.width
+                    width: parent.splitScreen && !fullscreen ? parent.width / 2 : parent.width
                     height: parent.height
 
                     clip: true

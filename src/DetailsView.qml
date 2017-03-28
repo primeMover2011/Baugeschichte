@@ -51,6 +51,8 @@ BaseView {
 
     property int animationDuration: 200 // ms
 
+    readonly property bool fullscreen: imagePathView.fullscreen
+
     loading: detailsModel.isLoading
     onLoadingChanged: {
         if (!loading) {

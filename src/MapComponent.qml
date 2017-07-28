@@ -120,7 +120,8 @@ BaseView {
         anchors.centerIn: parent
         width: parent.width / scale
         height: parent.height / scale
-        scale: Screen.devicePixelRatio
+// disable "manual" scaling of the map
+//        scale: Screen.devicePixelRatio
 
         property MarkerLabel markerLabel
 

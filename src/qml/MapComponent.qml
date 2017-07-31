@@ -27,7 +27,7 @@
 import QtQuick 2.4
 import QtQuick.Controls 2.0
 import QtQuick.Window 2.2
-import QtLocation 5.5
+import QtLocation 5.9
 import QtPositioning 5.5
 import "./"
 import Baugeschichte 1.0
@@ -182,6 +182,10 @@ BaseView {
             PluginParameter {
                 name: "mapboxgl.access_token"
                 value: "pk.eyJ1IjoiYmF1Z2VzY2hpY2h0ZSIsImEiOiJjaXFqdXU4OG8wMDAxaHltYnVmcHV2bjVjIn0.C2joRbxcvAQGbF9I-KhgnA"
+            }
+            PluginParameter {
+                name: "mapboxgl.mapping.use_fbo"
+                value: false
             }
         }
 

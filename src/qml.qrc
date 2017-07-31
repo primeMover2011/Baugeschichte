@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/qml">
+    <qresource prefix="/">
         <file>qml/BaseView.qml</file>
         <file>qml/CategoryselectionView.qml</file>
         <file>qml/DetailsModel.qml</file>

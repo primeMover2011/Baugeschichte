@@ -218,12 +218,12 @@ BaseView {
 
                         function getSource() {
                             if (title === appCore.selectedHouse) {
-                                return "resources/marker-blue.svg";
+                                return "qrc:/resources/marker-blue.svg";
                             }
                             if (routeLoader.isRouteHouse(title)) {
-                                return "resources/marker-red.svg";
+                                return "qrc:/resources/marker-red.svg";
                             }
-                            return "resources/marker.svg"
+                            return "qrc:/resources/marker.svg"
                         }
 
                         Connections {

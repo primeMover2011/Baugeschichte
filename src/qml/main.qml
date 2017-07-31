@@ -91,7 +91,7 @@ Item {
 
             ToolbarButton {
                 id: mapButton
-                source: "resources/icon-map.svg"
+                source: "qrc:/resources/icon-map.svg"
                 onClicked: {
                     if (appCore.showDetails) {
                         appCore.showDetails = false;
@@ -107,7 +107,7 @@ Item {
 
             ToolbarButton {
                 id: searchButton
-                source: "resources/icon-search.svg"
+                source: "qrc:/resources/icon-search.svg"
                 onClicked: {
                     mainMap.resetToMainModel();
                     appCore.selectedHouse = "";
@@ -123,7 +123,7 @@ Item {
 
             ToolbarButton {
                 id: categoriesButton
-                source: "resources/icon-categories.svg"
+                source: "qrc:/resources/icon-categories.svg"
                 onClicked: {
                     mainMap.useCategoryModel();
                     appCore.selectedHouse = "";
@@ -139,7 +139,7 @@ Item {
 
             ToolbarButton {
                 id: routesButton
-                source: "resources/icon-route.svg"
+                source: "qrc:/resources/icon-route.svg"
                 onClicked: {
                     mainMap.resetToMainModel();
                     appCore.selectedHouse = "";

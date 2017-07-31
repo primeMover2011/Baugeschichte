@@ -3,7 +3,7 @@
  **
  ** The MIT License (MIT)
  **
- ** Copyright (c) 2016 Guenter Schwann
+ ** Copyright (c) 2015 primeMover2011
  **
  ** Permission is hereby granted, free of charge, to any person obtaining a copy
  ** of this software and associated documentation files (the "Software"), to deal
@@ -25,33 +25,56 @@
  **/
 
 import QtQuick 2.4
-import QtQuick.Controls 2.0
+import "."
 
-BusyIndicator {
+Item {
     id: root
+    width: parent.width
+    height: textitem.height + 2 * Theme.largeMargin
 
-    visible: running
+    property alias text: textitem.text
+    signal selected(string wot)
 
-    topPadding: 0
-    bottomPadding: 0
-    leftPadding: 0
-    rightPadding: 0
+    Rectangle {
+        anchors.fill: parent
+        color: "#d6d6d6"
+        visible: mouse.pressed
+    }
 
-    contentItem: Item {
-        implicitWidth: 64
-        implicitHeight: implicitWidth
+    Text {
+        id: textitem
+        wrapMode: Text.Wrap
+        color: "white"
+        font.pixelSize: Theme.largeFontSize
+        text: modelData
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
+        anchors.leftMargin: Theme.largeMargin
+        anchors.right: arrow.left
+        anchors.rightMargin: Theme.defaultMargin
+    }
 
-        Image {
-            width: parent.width
-            height: parent.height
-            source: "resources/spinner.png"
-            RotationAnimator on rotation {
-                running: root.visible && root.running
-                loops: Animation.Infinite
-                duration: 1000
-                from: 0
-                to: 360
-            }
+    Rectangle {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: Theme.defaultMargin
+        height: 1
+        color: "#424246"
+    }
+
+    Image {
+        id: arrow
+        anchors.right: parent.right
+        anchors.rightMargin: Theme.defaultMargin
+        anchors.verticalCenter: parent.verticalCenter
+        source: "qrc:/resources/navigation_next_item.png"
+    }
+
+    MouseArea {
+        id: mouse
+        anchors.fill: parent
+        onClicked: {
+            selected(textitem.text)
         }
     }
 }

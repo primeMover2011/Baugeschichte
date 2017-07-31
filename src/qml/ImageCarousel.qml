@@ -126,7 +126,7 @@ ListView {
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
 
-        source: "resources/arrow-left.svg"
+        source: "qrc:/resources/arrow-left.svg"
         opacity: previousClickArea.pressed ? 0.8 : 0.6
         visible: root.currentIndex > 0
 
@@ -150,7 +150,7 @@ ListView {
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
 
-        source: "resources/arrow-right.svg"
+        source: "qrc:/resources/arrow-right.svg"
         opacity: previousClickArea.pressed ? 0.8 : 0.6
         visible: root.currentIndex < root.model.count - 1
 
@@ -182,7 +182,7 @@ ListView {
         anchors.right: parent.right
         anchors.margins: Theme.dp(2)
 
-        source: root.fullscreen ? "resources/fullscreen_exit.svg" : "resources/fullscreen.svg"
+        source: root.fullscreen ? "qrc:/resources/fullscreen_exit.svg" : "qrc:/resources/fullscreen.svg"
         opacity: fullViewButton.pressed ? 0.8 : 0.6
 
         MouseArea {

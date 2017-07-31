@@ -368,13 +368,13 @@ void ApplicationCore::handleLoadedHouseCoordinates(QNetworkReply* reply)
 
 QString ApplicationCore::mainQMLFile() const
 {
-    QFileInfo mainFile(QStringLiteral("../../Baugeschichte/src/main.qml"));
+    QFileInfo mainFile(QStringLiteral("../../Baugeschichte/src/qml/main.qml"));
     if (mainFile.exists()) {
         qDebug() << "Load UI from" << mainFile.absoluteFilePath();
         return mainFile.absoluteFilePath();
     } else {
         qDebug() << "Load UI from embedded resource";
-        return QStringLiteral("qrc:/main.qml");
+        return QStringLiteral("qrc:/qml/main.qml");
     }
 }
 

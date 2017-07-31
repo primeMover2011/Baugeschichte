@@ -78,19 +78,19 @@ Item {
 
     Image {
         id: scaleImageLeft
-        source: "resources/scale_end.png"
+        source: "qrc:/resources/scale_end.png"
         anchors.bottom: parent.bottom
         anchors.right: scaleImage.left
     }
     Image {
         id: scaleImage
-        source: "resources/scale.png"
+        source: "qrc:/resources/scale.png"
         anchors.bottom: parent.bottom
         anchors.right: scaleImageRight.left
     }
     Image {
         id: scaleImageRight
-        source: "resources/scale_end.png"
+        source: "qrc:/resources/scale_end.png"
         anchors.bottom: parent.bottom
         anchors.right: parent.right
     }

@@ -1,30 +1,30 @@
 <RCC>
-    <qresource prefix="/">
-        <file>BaseView.qml</file>
-        <file>CategoryselectionView.qml</file>
-        <file>DetailsModel.qml</file>
-        <file>DetailsTextArea.qml</file>
-        <file>DetailsView.qml</file>
-        <file>ImageCarousel.qml</file>
-        <file>JsonModel.qml</file>
-        <file>LineInput.qml</file>
-        <file>LoadIndicator.qml</file>
-        <file>main.qml</file>
-        <file>MapComponent.qml</file>
-        <file>MapScale.qml</file>
-        <file>MarkerLabel.qml</file>
-        <file>PositionIndicator.qml</file>
-        <file>RouteLine.qml</file>
-        <file>RouteLoader.qml</file>
-        <file>RouteView.qml</file>
-        <file>qmldir</file>
-        <file>SearchModel.qml</file>
-        <file>SearchPage.qml</file>
-        <file>SearchResultDelegate.qml</file>
-        <file>SettingsView.qml</file>
-        <file>ShutDownDialog.qml</file>
-        <file>SizeTracer.qml</file>
-        <file>Theme.qml</file>
-        <file>ToolbarButton.qml</file>
+    <qresource prefix="/qml">
+        <file>qml/BaseView.qml</file>
+        <file>qml/CategoryselectionView.qml</file>
+        <file>qml/DetailsModel.qml</file>
+        <file>qml/DetailsTextArea.qml</file>
+        <file>qml/DetailsView.qml</file>
+        <file>qml/ImageCarousel.qml</file>
+        <file>qml/JsonModel.qml</file>
+        <file>qml/LineInput.qml</file>
+        <file>qml/LoadIndicator.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/MapComponent.qml</file>
+        <file>qml/MapScale.qml</file>
+        <file>qml/MarkerLabel.qml</file>
+        <file>qml/PositionIndicator.qml</file>
+        <file>qml/RouteLine.qml</file>
+        <file>qml/RouteLoader.qml</file>
+        <file>qml/RouteView.qml</file>
+        <file>qml/qmldir</file>
+        <file>qml/SearchModel.qml</file>
+        <file>qml/SearchPage.qml</file>
+        <file>qml/SearchResultDelegate.qml</file>
+        <file>qml/SettingsView.qml</file>
+        <file>qml/ShutDownDialog.qml</file>
+        <file>qml/SizeTracer.qml</file>
+        <file>qml/Theme.qml</file>
+        <file>qml/ToolbarButton.qml</file>
     </qresource>
 </RCC>

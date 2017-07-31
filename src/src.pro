@@ -63,7 +63,7 @@ include(deployment.pri)
 # Supported languages
 # qml sources
 lupdate_only {
-    SOURCES += *.qml
+    SOURCES += qml/*.qml
 }
 LANGUAGES = de en
 # used to create .ts files

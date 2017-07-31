@@ -243,7 +243,7 @@ BaseView {
             width: height
             height: Theme.buttonHeight
 
-            source: "resources/Go-previous.svg"
+            source: "qrc:/resources/Go-previous.svg"
             fillMode: Image.PreserveAspectFit
             smooth: true
             visible: mainListView.model.count > 1
@@ -271,8 +271,8 @@ BaseView {
             width: height
             height: Theme.buttonHeight
 
-            source: mainListView.model === detailsModel.modelDE ? "resources/Flag_of_Germany.png" :
-                                                 mainListView.model === detailsModel.modelEN ? "resources/Flag_of_United_Kingdom.png"
+            source: mainListView.model === detailsModel.modelDE ? "qrc:/resources/Flag_of_Germany.png" :
+                                                 mainListView.model === detailsModel.modelEN ? "qrc:/resources/Flag_of_United_Kingdom.png"
                                                                             : ""
 
             visible: twoOrMoreLanguages()
@@ -348,7 +348,7 @@ BaseView {
             width: height
             height: Theme.buttonHeight
 
-            source: "resources/Go-next.svg"
+            source: "qrc:/resources/Go-next.svg"
             fillMode: Image.PreserveAspectFit
             smooth: true
             visible: mainListView.model.count > 1

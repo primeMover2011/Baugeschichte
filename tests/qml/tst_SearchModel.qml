@@ -34,7 +34,7 @@ TestCase {
     SearchModel {
         id: searchModel
 //        searchString: "../../../Baugeschichte/tests/qml/data/"
-        searchString: "data/"
+        searchString: "/home/travis/build/gschwann/Baugeschichte/tests/qml/data/"
     }
 
     function cleanup() {

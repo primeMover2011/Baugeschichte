@@ -26,7 +26,7 @@
 
 import QtQuick 2.6
 import QtTest 1.1
-import "../../src"
+import qml 1.0
 
 TestCase {
     name: "RouteLineTests"

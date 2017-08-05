@@ -63,6 +63,7 @@ DISTFILES += \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew.bat \
+    qml/qmldir
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 

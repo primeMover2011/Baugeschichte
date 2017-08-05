@@ -1,3 +1,5 @@
+[![BCH compliance](https://bettercodehub.com/edge/badge/gschwann/Baugeschichte?branch=master)](https://bettercodehub.com/)
+
 # Baugeschichte
 This app is from the project "www.housetrails.org" (also known as "Baugeschichte" or "Grazwiki").
 

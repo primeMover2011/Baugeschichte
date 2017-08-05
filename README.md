@@ -1,3 +1,4 @@
+[![Build Status](https://api.travis-ci.org/gschwann/Baugeschichte.png)](https://travis-ci.org/gschwann/Baugeschichte)
 [![BCH compliance](https://bettercodehub.com/edge/badge/gschwann/Baugeschichte?branch=master)](https://bettercodehub.com/)
 
 # Baugeschichte

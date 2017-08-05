@@ -39,6 +39,7 @@ install:
   - sudo apt-get install -y  qt59base qt59declarative qt59location qt59quickcontrols qt59quickcontrols2 qt59sensors qt59svg qt59tools
   - source /opt/qt59/bin/qt59-env.sh
   - export QTHOME=/opt/qt59
+  - export export QML2_IMPORT_PATH=src
 
 script:
   - qmake . -recursive

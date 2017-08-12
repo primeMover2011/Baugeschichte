@@ -21,5 +21,7 @@
         <file>resources/scale_end.png</file>
         <file>resources/scale.png</file>
         <file>resources/spinner.png</file>
+        <file>resources/fullscreen.svg</file>
+        <file>resources/fullscreen_exit.svg</file>
     </qresource>
 </RCC>

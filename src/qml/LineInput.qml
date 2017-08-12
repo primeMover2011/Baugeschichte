@@ -104,7 +104,7 @@ FocusScope {
         }
 
         Image {
-            source: "resources/icon-search.png"
+            source: "qrc:/resources/icon-search.png"
             anchors.right: parent.right
             anchors.rightMargin: 12
             anchors.verticalCenter: parent.verticalCenter

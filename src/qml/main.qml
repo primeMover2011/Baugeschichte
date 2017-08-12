@@ -27,7 +27,8 @@
 import QtQuick 2.5
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.4 as Controls1
-//import QtQuick.Controls.Material 2.0
+import QtQuick.Controls.Styles 1.4
+import QtQuick.Controls.Material 2.0
 import QtPositioning 5.5
 import QtLocation 5.5
 import Qt.labs.settings 1.0
@@ -41,7 +42,7 @@ Item {
 
     visible: true
 
-//    Material.accent: Material.LightBlue
+    Material.accent: Material.LightBlue
 
     readonly property bool loading: (uiStack.currentItem && uiStack.currentItem.loading) ||
                                     markerLoader.loading ||
@@ -90,7 +91,7 @@ Item {
 
             ToolbarButton {
                 id: mapButton
-                source: "resources/icon-map.svg"
+                source: "qrc:/resources/icon-map.svg"
                 onClicked: {
                     if (appCore.showDetails) {
                         appCore.showDetails = false;
@@ -106,7 +107,7 @@ Item {
 
             ToolbarButton {
                 id: searchButton
-                source: "resources/icon-search.svg"
+                source: "qrc:/resources/icon-search.svg"
                 onClicked: {
                     mainMap.resetToMainModel();
                     appCore.selectedHouse = "";
@@ -122,7 +123,7 @@ Item {
 
             ToolbarButton {
                 id: categoriesButton
-                source: "resources/icon-categories.svg"
+                source: "qrc:/resources/icon-categories.svg"
                 onClicked: {
                     mainMap.useCategoryModel();
                     appCore.selectedHouse = "";
@@ -138,7 +139,7 @@ Item {
 
             ToolbarButton {
                 id: routesButton
-                source: "resources/icon-route.svg"
+                source: "qrc:/resources/icon-route.svg"
                 onClicked: {
                     mainMap.resetToMainModel();
                     appCore.selectedHouse = "";
@@ -183,16 +184,24 @@ Item {
             }
         }
 
-        LoadIndicator {
-            id: busyIndicator
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.right: parent.right
-            anchors.rightMargin: toolBar.height * 0.1
-
-            height: toolBar.height * 0.8
+        Item {
+            height: toolBar.height
             width: height
+            anchors.right: parent.right
+            anchors.top: parent.top
 
-            running: root.loading
+            LoadIndicator {
+                id: busyIndicator
+
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: toolBar.height * 0.1
+
+                height: toolBar.height * 0.8
+                width: height
+
+                running: root.loading
+            }
         }
     }
 
@@ -293,8 +302,10 @@ Item {
                 Loader {
                     id: details
 
-                    x: visible ? (parent.splitScreen ? parent.width / 2 : 0) : parent.width
-                    width: parent.splitScreen ? parent.width / 2 : parent.width
+                    property bool fullscreen: item ? item.fullscreen : false
+
+                    x: visible ? (parent.splitScreen && !fullscreen ? parent.width / 2 : 0) : parent.width
+                    width: parent.splitScreen && !fullscreen ? parent.width / 2 : parent.width
                     height: parent.height
 
                     clip: true

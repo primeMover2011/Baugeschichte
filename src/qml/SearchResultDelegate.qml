@@ -67,7 +67,7 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: Theme.defaultMargin
         anchors.verticalCenter: parent.verticalCenter
-        source: "resources/navigation_next_item.png"
+        source: "qrc:/resources/navigation_next_item.png"
     }
 
     MouseArea {

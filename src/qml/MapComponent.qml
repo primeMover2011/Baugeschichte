@@ -25,10 +25,9 @@
  **/
 
 import QtQuick 2.4
-//import QtQuick.Controls 2.0
-import QtQuick.Controls 1.2
+import QtQuick.Controls 2.0
 import QtQuick.Window 2.2
-import QtLocation 5.5
+import QtLocation 5.9
 import QtPositioning 5.5
 import "./"
 import Baugeschichte 1.0
@@ -121,7 +120,8 @@ BaseView {
         anchors.centerIn: parent
         width: parent.width / scale
         height: parent.height / scale
-        scale: Screen.devicePixelRatio
+// disable "manual" scaling of the map
+//        scale: Screen.devicePixelRatio
 
         property MarkerLabel markerLabel
 
@@ -157,12 +157,8 @@ BaseView {
 
         plugin: initPlugin()
         function initPlugin() {
-//            return appCore.mapProvider === "osm" ? osmPlugin : mapBoxPlugin;
-            return mapBoxPlugin;
-        }
-        Plugin {
-            id: osmPlugin
-            name: "osm"
+//            return appCore.mapProvider === "mapboxgl" ? mapboxGlPlugin : mapBoxPlugin;
+            return mapboxGlPlugin;
         }
         Plugin {
             id: mapBoxPlugin
@@ -174,6 +170,22 @@ BaseView {
             PluginParameter {
                 name: "mapbox.access_token"
                 value: "pk.eyJ1IjoiYmF1Z2VzY2hpY2h0ZSIsImEiOiJjaXFqdXU4OG8wMDAxaHltYnVmcHV2bjVjIn0.C2joRbxcvAQGbF9I-KhgnA"
+            }
+        }
+        Plugin {
+            id: mapboxGlPlugin
+            name: "mapboxgl"
+            PluginParameter {
+                name: "mapbox.map_id"
+                value: "mapbox.streets"
+            }
+            PluginParameter {
+                name: "mapboxgl.access_token"
+                value: "pk.eyJ1IjoiYmF1Z2VzY2hpY2h0ZSIsImEiOiJjaXFqdXU4OG8wMDAxaHltYnVmcHV2bjVjIn0.C2joRbxcvAQGbF9I-KhgnA"
+            }
+            PluginParameter {
+                name: "mapboxgl.mapping.use_fbo"
+                value: false
             }
         }
 
@@ -210,12 +222,12 @@ BaseView {
 
                         function getSource() {
                             if (title === appCore.selectedHouse) {
-                                return "resources/marker-blue.svg";
+                                return "qrc:/resources/marker-blue.svg";
                             }
                             if (routeLoader.isRouteHouse(title)) {
-                                return "resources/marker-red.svg";
+                                return "qrc:/resources/marker-red.svg";
                             }
-                            return "resources/marker.svg"
+                            return "qrc:/resources/marker.svg"
                         }
 
                         Connections {
@@ -268,15 +280,20 @@ BaseView {
 
     Slider {
         id: zoomSlider
-        minimumValue: map.minimumZoomLevel
-        maximumValue: map.maximumZoomLevel
+        from: map.minimumZoomLevel
+        to: map.maximumZoomLevel
         anchors.margins: 10
         anchors.bottom: scaleItem.top
         anchors.top: parent.top
         anchors.right: parent.right
         orientation: Qt.Vertical
-        value: map.zoomLevel
-        onValueChanged: map.zoomLevel = value;
+        onPositionChanged: {
+            map.zoomLevel = position2value(position);
+        }
+        function position2value(pos) {
+            return from + (to - from) * pos
+        }
+
         Connections{
             target: map
             onZoomLevelChanged: {
@@ -285,37 +302,11 @@ BaseView {
                 }
             }
         }
+
+        Component.onCompleted: {
+            zoomSlider.value = map.zoomLevel;
+        }
     }
-// Controls 2
-//    Slider {
-//        id: zoomSlider
-//        from: map.minimumZoomLevel
-//        to: map.maximumZoomLevel
-//        anchors.margins: 10
-//        anchors.bottom: scaleItem.top
-//        anchors.top: parent.top
-//        anchors.right: parent.right
-//        orientation: Qt.Vertical
-//        onPositionChanged: {
-//            map.zoomLevel = position2value(position);
-//        }
-//        function position2value(pos) {
-//            return from + (to - from) * pos
-//        }
-
-//        Connections{
-//            target: map
-//            onZoomLevelChanged: {
-//                if (!zoomSlider.pressed) {
-//                    zoomSlider.value = map.zoomLevel;
-//                }
-//            }
-//        }
-
-//        Component.onCompleted: {
-//            zoomSlider.value = map.zoomLevel;
-//        }
-//    }
 
     MapScale {
         id: scaleItem

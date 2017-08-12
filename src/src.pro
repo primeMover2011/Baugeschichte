@@ -2,9 +2,18 @@ TEMPLATE = app
 
 TARGET = Baugeschichte
 
-QT += qml quick location positioning concurrent sensors svg xml
+QT += qml quick location positioning concurrent sensors svg xml sql
 android {
     QT += androidextras
+    # Qt does not deplay MapboxGL automaticly? :(
+    contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
+        ANDROID_EXTRA_LIBS = \
+            /opt/Qt/5.9.1/android_armv7/plugins/geoservices/libplugins_geoservices_libqtgeoservices_mapboxgl.so
+    }
+    contains(ANDROID_TARGET_ARCH,x86) {
+        ANDROID_EXTRA_LIBS = \
+            /opt/Qt/5.9.1/android_x86/plugins/geoservices/libplugins_geoservices_libqtgeoservices_mapboxgl.so
+    }
 }
 ios {
     QMAKE_INFO_PLIST = $$PWD/iOS/Info.plist
@@ -54,6 +63,7 @@ DISTFILES += \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew.bat \
+    qml/qmldir
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
@@ -63,7 +73,7 @@ include(deployment.pri)
 # Supported languages
 # qml sources
 lupdate_only {
-    SOURCES += *.qml
+    SOURCES += qml/*.qml
 }
 LANGUAGES = de en
 # used to create .ts files

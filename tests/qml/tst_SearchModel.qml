@@ -26,14 +26,15 @@
 
 import QtQuick 2.6
 import QtTest 1.1
-import "../../src"
+import qml 1.0
 
 TestCase {
     name: "SearchModelTests"
 
     SearchModel {
         id: searchModel
-        searchString: "../../Baugeschichte/tests/qml/data/"
+//        searchString: "../../../Baugeschichte/tests/qml/data/"
+        searchString: "/home/travis/build/gschwann/Baugeschichte/tests/qml/data/"
     }
 
     function cleanup() {

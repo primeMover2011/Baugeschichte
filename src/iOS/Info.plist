@@ -38,7 +38,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>13</string>
+	<string>15</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NOTE</key>
@@ -47,6 +47,8 @@
 	<string>Get Your Location For </string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Get Your Location </string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Baugeschichte uses photos</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UISupportedInterfaceOrientations</key>

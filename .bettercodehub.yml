@@ -1,0 +1,8 @@
+- name: cpp
+  production:
+    exclude:
+      - .*/tests/*
+  test:
+    include:
+      - .*/tests/*
+

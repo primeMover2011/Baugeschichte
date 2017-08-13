@@ -5,7 +5,7 @@ languages:
 - name: cpp
   production:
     exclude:
-      - .*/tests/*
+      - /tests/.*
   test:
     include:
-      - .*/tests/*
+      - /tests/.*

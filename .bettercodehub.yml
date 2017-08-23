@@ -1,0 +1,13 @@
+# https://bettercodehub.com
+
+languages:
+- name: cpp
+  production:
+    exclude:
+      - /doc/.*
+      - /src/qml/.
+      - /tests/.*
+      - /translations/.*
+  test:
+    include:
+      - /tests/.*\.cpp

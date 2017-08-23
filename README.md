@@ -8,3 +8,16 @@ It does the communication with the server and displayes objects that are linked 
 and also contain images and descriptions. It makes use of the Wikimedia API.
 
 ![Screenshot](doc/Screenshot.jpg)
+
+## Build instructions
+### Android
+For building the Andoird use src/src.pro as the project.
+
+For MapBoxGL support openssl is needed (Google removed it since Android 7?)
+Best use [https://github.com/ekke/android-openssl-qt](https://github.com/ekke/android-openssl-qt)
+
+This repo is cloned/built next to Baugeschichte.
+
+Another guide is in [http://doc.qt.io/qt-5/opensslsupport.html](http://doc.qt.io/qt-5/opensslsupport.html)
+
+### iOS

@@ -183,10 +183,10 @@ BaseView {
                 name: "mapboxgl.access_token"
                 value: "pk.eyJ1IjoiYmF1Z2VzY2hpY2h0ZSIsImEiOiJjaXFqdXU4OG8wMDAxaHltYnVmcHV2bjVjIn0.C2joRbxcvAQGbF9I-KhgnA"
             }
-            PluginParameter {
-                name: "mapboxgl.mapping.use_fbo"
-                value: false
-            }
+//            PluginParameter {
+//                name: "mapboxgl.mapping.use_fbo"
+//                value: false
+//            }
         }
 
         RouteLine {

@@ -38,7 +38,7 @@ BaseView {
         id: searchInput
         width: parent.width
         hint: qsTr("Address ...")
-        onAccepted: {
+        onTextChanged: {
             searchModel.phrase = "";
             searchModel.phrase = text;
         }

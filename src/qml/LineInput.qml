@@ -42,7 +42,7 @@ import QtQuick 2.4
 import "./"
 
 FocusScope {
-    id: wrapper
+    id: root
 
     property alias text: input.text
     property alias hint: hintText.text
@@ -99,7 +99,7 @@ FocusScope {
                     Qt.inputMethod.hide()
                 }
 
-                wrapper.accepted();
+                root.accepted();
             }
         }
 
@@ -110,7 +110,7 @@ FocusScope {
             anchors.verticalCenter: parent.verticalCenter
             MouseArea {
                 anchors { fill: parent; margins: -10 }
-                onClicked: wrapper.accepted()
+                onClicked: root.accepted()
             }
         }
     }

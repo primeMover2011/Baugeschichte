@@ -158,18 +158,24 @@ BaseView {
         plugin: initPlugin()
         function initPlugin() {
 //            return appCore.mapProvider === "mapboxgl" ? mapboxGlPlugin : mapBoxPlugin;
-            return mapboxGlPlugin;
+//            return mapboxGlPlugin;
+//            return mapBoxPlugin;
+            return osmPlugin;
         }
         Plugin {
             id: mapBoxPlugin
             name: "mapbox"
             PluginParameter {
-                name: "mapbox.map_id"
+                name: "mapbox.mapping.map_id"
                 value: "mapbox.streets"
             }
             PluginParameter {
                 name: "mapbox.access_token"
                 value: "pk.eyJ1IjoiYmF1Z2VzY2hpY2h0ZSIsImEiOiJjaXFqdXU4OG8wMDAxaHltYnVmcHV2bjVjIn0.C2joRbxcvAQGbF9I-KhgnA"
+            }
+            PluginParameter {
+                name: "mapbox.mapping.highdpi_tiles"
+                value: Screen.devicePixelRatio > 1
             }
         }
         Plugin {
@@ -183,10 +189,14 @@ BaseView {
                 name: "mapboxgl.access_token"
                 value: "pk.eyJ1IjoiYmF1Z2VzY2hpY2h0ZSIsImEiOiJjaXFqdXU4OG8wMDAxaHltYnVmcHV2bjVjIn0.C2joRbxcvAQGbF9I-KhgnA"
             }
-//            PluginParameter {
-//                name: "mapboxgl.mapping.use_fbo"
-//                value: false
-//            }
+        }
+        Plugin {
+            id: osmPlugin
+            name: "osm"
+            PluginParameter {
+                name: "osm.mapping.highdpi_tiles"
+                value: Screen.devicePixelRatio > 1
+            }
         }
 
         RouteLine {
@@ -282,16 +292,14 @@ BaseView {
         id: zoomSlider
         from: map.minimumZoomLevel
         to: map.maximumZoomLevel
+        live: true
         anchors.margins: 10
         anchors.bottom: scaleItem.top
         anchors.top: parent.top
         anchors.right: parent.right
         orientation: Qt.Vertical
-        onPositionChanged: {
-            map.zoomLevel = position2value(position);
-        }
-        function position2value(pos) {
-            return from + (to - from) * pos
+        onValueChanged: {
+            map.zoomLevel = value;
         }
 
         Connections{

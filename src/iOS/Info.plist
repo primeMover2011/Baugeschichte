@@ -28,7 +28,7 @@
 		<string>Icon-152.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+        <string>at.bitschmiede.grazwiki</string>
 	<key>CFBundleName</key>
 	<string>Baugeschichte</string>
 	<key>CFBundlePackageType</key>

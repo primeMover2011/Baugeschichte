@@ -44,7 +44,7 @@ import "./"
 FocusScope {
     id: root
 
-    property alias text: input.text
+    property string text: input.text != "" ? input.text : input.preeditText
     property alias hint: hintText.text
     property alias prefix: prefix.text
 

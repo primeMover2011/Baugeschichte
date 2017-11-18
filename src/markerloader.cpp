@@ -26,18 +26,25 @@
 
 #include "markerloader.h"
 
+#include <QByteArray>
 #include <QDateTime>
 #include <QDebug>
 #include <QElapsedTimer>
 #include <QGeoCoordinate>
 #include <QJsonArray>
+#include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
+#include <QJsonValue>
+#include <QList>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QTimer>
+#include <QUrl>
 #include <QtConcurrent>
 
+#include <cmath>
 #include <limits>
 
 class MarkerLoaderPrivate

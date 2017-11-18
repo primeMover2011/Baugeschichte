@@ -28,6 +28,14 @@
 #define HOUSEMARKERIMAGES_H
 
 #include <QAbstractListModel>
+#include <QHash>
+#include <QList>
+#include <QString>
+#include <QVariant>
+#include <QVector>
+
+class QByteArray;
+class QModelIndex;
 
 class HouseMarker;
 

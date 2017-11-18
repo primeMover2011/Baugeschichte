@@ -31,7 +31,6 @@
 #include <QGeoCoordinate>
 #include <QString>
 
-#include <algorithm>
 #include <set>
 
 HouseMarkerModel::HouseMarkerModel(QObject* parent)

@@ -38,7 +38,6 @@ class HouseMarkerModel;
 class QNetworkAccessManager;
 class QNetworkReply;
 class QQuickView;
-class QSortFilterProxyModel;
 
 /**
  * The central hub for QML <-> C++ communication

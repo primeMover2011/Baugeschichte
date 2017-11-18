@@ -31,6 +31,7 @@
 #include <QSortFilterProxyModel>
 #include <QString>
 
+class QModelIndex;
 class QVariant;
 
 class HouseLocationFilterPrivate;

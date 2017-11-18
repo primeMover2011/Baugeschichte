@@ -33,7 +33,7 @@
 #include <QString>
 #include <QVector>
 
-class QNetworkAccessManager;
+class QByteArray;
 class QNetworkReply;
 
 class CategoryLoaderPrivate;

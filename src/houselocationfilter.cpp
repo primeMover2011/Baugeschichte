@@ -27,9 +27,6 @@
 #include "houselocationfilter.h"
 #include "housemarkermodel.h"
 
-#include <QDebug>
-#include <QJSValue>
-#include <QJsonObject>
 #include <QList>
 #include <QStringList>
 #include <QTimer>

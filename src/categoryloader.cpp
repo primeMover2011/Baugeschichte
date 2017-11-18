@@ -26,13 +26,20 @@
 
 #include "categoryloader.h"
 
+#include <QByteArray>
+#include <QDebug>
 #include <QGeoCoordinate>
 #include <QJsonArray>
+#include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
+#include <QJsonValue>
 #include <QList>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QUrl>
+#include <QVariant>
 
 class CategoryLoaderPrivate
 {
@@ -40,7 +47,8 @@ public:
     CategoryLoaderPrivate()
         : m_manager(nullptr)
         , m_loading(false)
-    {}
+    {
+    }
 
     QString m_currentCategory;
     QNetworkAccessManager* m_manager;
@@ -106,7 +114,7 @@ void CategoryLoader::loadFromJsonText(const QByteArray& jsonText)
     QVector<HouseMarker> markers;
     QJsonObject infoObject = jsonDoc.object();
     QJsonObject result = infoObject["query"].toObject()["results"].toObject();
-    for(QJsonValue house: result) {
+    for (QJsonValue house : result) {
         QJsonObject obj = house.toObject();
         HouseMarker newHouse;
         newHouse.setTitle(obj["fulltext"].toString());

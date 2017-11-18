@@ -35,7 +35,7 @@
 #include <QList>
 #include <QSignalSpy>
 #include <QVector>
-#include <QtTest>
+#include <QTest>
 
 Q_DECLARE_METATYPE(QVector<HouseMarker>)
 

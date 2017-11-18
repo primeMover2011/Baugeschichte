@@ -27,32 +27,33 @@
 #include "applicationcore.h"
 #include "categoryloader.h"
 #include "houselocationfilter.h"
+#include "housemarker.h"
 #include "housemarkermodel.h"
 #include "markerloader.h"
 
 #include <QApplication>
+#include <QByteArray>
+#include <QDateTime>
 #include <QDebug>
 #include <QDesktopServices>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QGuiApplication>
-#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonParseError>
+#include <QJsonValue>
+#include <QJsonValueRef>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQmlEngine>
 #include <QQuickView>
-#include <QScreen>
-#include <QSortFilterProxyModel>
 #include <QStandardPaths>
+#include <QUrl>
 #include <QVector>
 #include <QtQml>
-
-#include <cmath>
 
 ApplicationCore::ApplicationCore(QObject* parent)
     : QObject(parent)
@@ -164,10 +165,9 @@ void ApplicationCore::centerSelectedHouse()
         setCurrentMapPosition(house->location());
         emit requestFullZoomIn();
     } else {
-        QString requestString
-            = QString(
-                  "http://baugeschichte.at/api.php?action=ask&query=[[%1]]|%3FKoordinaten|%3FPostleitzahl&format=json")
-                  .arg(m_selectedHouse);
+        QString requestString = QString(
+            "http://baugeschichte.at/api.php?action=ask&query=[[%1]]|%3FKoordinaten|%3FPostleitzahl&format=json")
+                                    .arg(m_selectedHouse);
         QNetworkRequest request = QNetworkRequest(QUrl(requestString));
         m_housePositionLoader->get(request);
     }
@@ -421,7 +421,7 @@ void ApplicationCore::loadMarkers()
     // Some weired error with old markers leads to a crash when filtering them
     QFileInfo fi(file);
     QDateTime roughBuild(QDate(2016, 12, 9));
-    if (fi.lastModified() > roughBuild ) {
+    if (fi.lastModified() > roughBuild) {
         return;
     }
 

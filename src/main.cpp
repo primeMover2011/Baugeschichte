@@ -28,7 +28,10 @@
 
 #include <QDebug>
 #include <QGuiApplication>
+#include <QLocale>
+#include <QString>
 #include <QTranslator>
+#include <QtGlobal>
 
 int main(int argc, char* argv[])
 {

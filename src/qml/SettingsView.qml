@@ -56,8 +56,9 @@ Item {
                 id: providerModel
                 ListElement { key: qsTr("OpenStreetMap"); value: "osm" }
                 ListElement { key: qsTr("MapBox"); value: "mapbox" }
+                ListElement { key: qsTr("MapBoxGL"); value: "mapboxGl" }
             }
-            currentIndex: appCore.mapProvider === "osm" ? 0 : 1
+            currentIndex: appCore.mapProvider === "osm" ? 0 : (appCore.mapProvider === "mapbox" ? 1 : 2)
             onCurrentIndexChanged: {
                 appCore.mapProvider = providerModel.get(currentIndex).value;
             }

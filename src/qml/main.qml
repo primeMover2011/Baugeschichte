@@ -239,12 +239,12 @@ Item {
                 }
             }
 // settings disabled for now
-//            if (event.key === Qt.Key_Menu) {
-//                event.accepted = true;
-//                uiStack.push({
-//                                 item: Qt.resolvedUrl("SettingsView.qml")
-//                             });
-//            }
+            if (event.key === Qt.Key_Menu) {
+                event.accepted = true;
+                uiStack.push({
+                                 item: Qt.resolvedUrl("SettingsView.qml")
+                             });
+            }
         }
     }
 

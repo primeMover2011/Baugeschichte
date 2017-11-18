@@ -121,7 +121,7 @@ BaseView {
         width: parent.width / scale
         height: parent.height / scale
 // disable "manual" scaling of the map
-//        scale: Screen.devicePixelRatio
+        scale: 2//appCore.mapProvider === "mapboxgl" ? 1 : Screen.devicePixelRatio
 
         property MarkerLabel markerLabel
 
@@ -157,7 +157,7 @@ BaseView {
 
         plugin: initPlugin()
         function initPlugin() {
-//            return appCore.mapProvider === "mapboxgl" ? mapboxGlPlugin : mapBoxPlugin;
+            return appCore.mapProvider === "mapboxgl" ? mapboxGlPlugin : (appCore.mapProvider === "mapbox" ? mapBoxPlugin : osmPlugin);
 //            return mapboxGlPlugin;
 //            return mapBoxPlugin;
             return osmPlugin;

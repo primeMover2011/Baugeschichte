@@ -35,7 +35,7 @@ MapQuickItem {
     property Map mapItem
 
     anchorPoint.x: coco.width / 2
-    anchorPoint.y: (coco.height + (mapItem ? mapItem.markerSize / mapItem.scale : 0)) + 2
+    anchorPoint.y: (coco.height + (mapItem ? mapItem.markerSize / mapItem.scale : 0) * 0.9) + 2
 
     scale: mapItem ? (1.0 / mapItem.scale) : 1.0
     visible: title !== ""

@@ -220,15 +220,16 @@ BaseView {
 
                 sourceItem: Item {
                     id: sourceItem
-                    width: image.width
-                    height: image.height
+                    width: map.markerSize
+                    height: width
 
                     Image {
                         id: image
-                        antialiasing: true
+                        width: map.markerSize * 0.8
+                        height: width
+                        anchors.centerIn: parent
                         source: getSource()
-                        width: map.markerSize
-                        height: map.markerSize
+                        antialiasing: true
 
                         sourceSize: Qt.size(width, height)
                         fillMode: Image.PreserveAspectFit
@@ -253,7 +254,7 @@ BaseView {
                         }
                     }
                     MouseArea {
-                        anchors.fill: image
+                        anchors.fill: parent
                         onClicked: changeCurrentItem()
 
                         function changeCurrentItem() {

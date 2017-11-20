@@ -1,0 +1,213 @@
+/**
+ ** This file is part of the Baugeschichte.at project.
+ **
+ ** The MIT License (MIT)
+ **
+ ** Copyright (c) 2015 primeMover2011
+ **
+ ** Permission is hereby granted, free of charge, to any person obtaining a copy
+ ** of this software and associated documentation files (the "Software"), to deal
+ ** in the Software without restriction, including without limitation the rights
+ ** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ ** copies of the Software, and to permit persons to whom the Software is
+ ** furnished to do so, subject to the following conditions:
+ **
+ ** The above copyright notice and this permission notice shall be included in all
+ ** copies or substantial portions of the Software.
+ **
+ ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ ** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ ** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ ** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ ** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ ** SOFTWARE.
+ **/
+
+import QtQuick 2.5
+import QtQuick.Controls 2.2
+import QtQuick.Layouts 1.1
+
+Item {
+    id: root
+
+    property MapComponent mapItem: null
+    property var stackView: null
+
+    height: Theme.buttonHeight
+    
+    Rectangle {
+        id: toolBarBackground
+        anchors.fill: parent
+        color: "#f8f8f8"
+    }
+    
+    RowLayout {
+        anchors.fill: parent
+        
+        ToolbarButton {
+            id: mapButton
+            source: "qrc:/resources/icon-map.svg"
+            onClicked: {
+                if (appCore.showDetails) {
+                    appCore.showDetails = false;
+                    return;
+                }
+                
+                mapItem.resetToMainModel();
+                stackView.pop(null);
+                appCore.routeKML = "";
+                routeLoader.reset();
+            }
+        }
+        
+        ToolbarButton {
+            id: searchButton
+            source: "qrc:/resources/icon-search.svg"
+            onClicked: {
+                mapItem.resetToMainModel();
+                appCore.selectedHouse = "";
+                appCore.showDetails = false;
+                appCore.routeKML = "";
+                routeLoader.routeHouses = [];
+                stackView.pop(null);
+                stackView.push({
+                                 item: Qt.resolvedUrl("SearchPage.qml")
+                             })
+            }
+        }
+        
+        ToolbarButton {
+            id: categoriesButton
+            source: "qrc:/resources/icon-categories.svg"
+            onClicked: {
+                mapItem.useCategoryModel();
+                appCore.selectedHouse = "";
+                appCore.showDetails = false;
+                appCore.routeKML = "";
+                routeLoader.routeHouses = [];
+                stackView.pop(null);
+                stackView.push({
+                                 item: Qt.resolvedUrl("CategoryselectionView.qml")
+                             })
+            }
+        }
+        
+        ToolbarButton {
+            id: routesButton
+            source: "qrc:/resources/icon-route.svg"
+            onClicked: {
+                mapItem.resetToMainModel();
+                appCore.selectedHouse = "";
+                appCore.showDetails = false;
+                appCore.routeKML = "";
+                routeLoader.routeHouses = [];
+                stackView.push({
+                                 item: Qt.resolvedUrl("RouteView.qml")
+                             })
+            }
+        }
+        
+        ToolbarButton {
+            id: followMeButton
+            source: iconFromState()
+            enabled: positionCheck.valid
+            
+            onClicked: {
+                if (!appCore.showPosition) {
+                    appCore.showPosition = true;
+                    appCore.followPosition = false;
+                } else {
+                    if (appCore.followPosition) {
+                        appCore.showPosition = false;
+                    } else {
+                        appCore.followPosition = true;
+                    }
+                }
+            }
+            
+            function iconFromState() {
+                if (!appCore.showPosition) {
+                    return "qrc:/resources/gps_off.svg"
+                } else {
+                    if (appCore.followPosition) {
+                        return "qrc:/resources/gps_follow.svg"
+                    } else {
+                        return "qrc:/resources/gps_on.svg"
+                    }
+                }
+            }
+        }
+    }
+
+    ToolbarButton {
+        id: menuButton
+
+        anchors.top: parent.top
+        anchors.right: parent.right
+
+        source: "qrc:/resources/menu.svg"
+        rotation: menuPopup.visible ? 90 : 0
+        onClicked: {
+            menuPopup.open();
+        }
+    }
+
+    Popup {
+        id: menuPopup
+
+        x: parent.width - width
+        y: menuButton.height
+
+        modal: true
+        focus: true
+
+        background: Rectangle{
+            color:"white"
+            border.color: "darkgray"
+            border.width: 1
+        }
+
+        Item {
+            width: Math.max(settingsItem.width, 100)
+            height: menuButton.height
+            implicitHeight: height
+            implicitWidth: width
+
+            Text {
+                id: settingsItem
+                text: qsTr("Settings")
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    stackView.push({
+                                     item: Qt.resolvedUrl("SettingsView.qml")
+                                 });
+                    menuPopup.close();
+                }
+            }
+        }
+    }
+    
+    Item {
+        height: root.height
+        width: height
+        anchors.right: parent.right
+        anchors.rightMargin: width * 1.1
+        anchors.top: parent.top
+        
+        LoadIndicator {
+            id: busyIndicator
+            
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
+            anchors.rightMargin: root.height * 0.1
+            
+            height: root.height * 0.8
+            width: height
+            
+            running: root.loading
+        }
+    }
+}

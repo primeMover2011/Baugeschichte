@@ -37,6 +37,7 @@ class HouseMarkerModel;
 
 class QNetworkAccessManager;
 class QNetworkReply;
+class QSettings;
 class QQuickView;
 
 /**
@@ -131,7 +132,6 @@ private:
     QQuickView* m_view;
     HouseMarkerModel* m_houseMarkerModel;
     MarkerLoader* m_markerLoader;
-    QString m_mapProvider;
     QString m_selectedHouse;
     QGeoCoordinate m_selectedHousePosition;
     QGeoCoordinate m_currentMapPosition;
@@ -143,6 +143,7 @@ private:
     bool m_showPosition;
     bool m_followPosition;
     QString m_detailsLanguage;
+    QSettings* m_settings;
 };
 
 #endif // APPLICATIONCORE_H

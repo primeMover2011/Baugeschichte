@@ -50,6 +50,7 @@
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QQuickView>
+#include <QSettings>
 #include <QStandardPaths>
 #include <QUrl>
 #include <QVector>
@@ -60,7 +61,6 @@ ApplicationCore::ApplicationCore(QObject* parent)
     , m_view(new QQuickView())
     , m_houseMarkerModel(new HouseMarkerModel(this))
     , m_markerLoader(new MarkerLoader(this))
-    , m_mapProvider("osm")
     , m_selectedHouse("")
     , m_selectedHousePosition(-1.0, -1.0)
     , m_currentMapPosition(-1.0, -1.0)
@@ -71,6 +71,7 @@ ApplicationCore::ApplicationCore(QObject* parent)
     , m_showPosition(false)
     , m_followPosition(false)
     , m_detailsLanguage("DE")
+    , m_settings(new QSettings(this))
 {
     qRegisterMetaType<HouseMarker>("HouseMarker");
     qRegisterMetaType<QVector<HouseMarker>>("QVector<HouseMarker>");
@@ -119,17 +120,18 @@ void ApplicationCore::reloadUI()
 
 QString ApplicationCore::mapProvider() const
 {
-    return m_mapProvider;
+    return m_settings->value("MapProvider", "osm").toString();
 }
 
 void ApplicationCore::setMapProvider(QString mapProvider)
 {
-    if (mapProvider == m_mapProvider) {
+    if (mapProvider == this->mapProvider()) {
         return;
     }
 
-    m_mapProvider = mapProvider;
-    emit mapProviderChanged(m_mapProvider);
+    m_settings->setValue("MapProvider", mapProvider);
+    m_settings->sync();
+    emit mapProviderChanged(mapProvider);
 }
 
 QString ApplicationCore::selectedHouse() const

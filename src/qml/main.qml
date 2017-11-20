@@ -73,136 +73,14 @@ Item {
         }
     }
 
-    Item {
+    ToolBar {
         id: toolBar
-        anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        height: Theme.buttonHeight
+        anchors.top: parent.top
 
-        Rectangle {
-            id: toolBarBackground
-            anchors.fill: parent
-            color: "#f8f8f8"
-        }
-
-        RowLayout {
-            anchors.fill: parent
-
-            ToolbarButton {
-                id: mapButton
-                source: "qrc:/resources/icon-map.svg"
-                onClicked: {
-                    if (appCore.showDetails) {
-                        appCore.showDetails = false;
-                        return;
-                    }
-
-                    mainMap.resetToMainModel();
-                    uiStack.pop(null);
-                    appCore.routeKML = "";
-                    routeLoader.reset();
-                }
-            }
-
-            ToolbarButton {
-                id: searchButton
-                source: "qrc:/resources/icon-search.svg"
-                onClicked: {
-                    mainMap.resetToMainModel();
-                    appCore.selectedHouse = "";
-                    appCore.showDetails = false;
-                    appCore.routeKML = "";
-                    routeLoader.routeHouses = [];
-                    uiStack.pop(null);
-                    uiStack.push({
-                                     item: Qt.resolvedUrl("SearchPage.qml")
-                                 })
-                }
-            }
-
-            ToolbarButton {
-                id: categoriesButton
-                source: "qrc:/resources/icon-categories.svg"
-                onClicked: {
-                    mainMap.useCategoryModel();
-                    appCore.selectedHouse = "";
-                    appCore.showDetails = false;
-                    appCore.routeKML = "";
-                    routeLoader.routeHouses = [];
-                    uiStack.pop(null);
-                    uiStack.push({
-                                     item: Qt.resolvedUrl("CategoryselectionView.qml")
-                                 })
-                }
-            }
-
-            ToolbarButton {
-                id: routesButton
-                source: "qrc:/resources/icon-route.svg"
-                onClicked: {
-                    mainMap.resetToMainModel();
-                    appCore.selectedHouse = "";
-                    appCore.showDetails = false;
-                    appCore.routeKML = "";
-                    routeLoader.routeHouses = [];
-                    uiStack.push({
-                                     item: Qt.resolvedUrl("RouteView.qml")
-                                 })
-                }
-            }
-
-            ToolbarButton {
-                id: followMeButton
-                source: iconFromState()
-                enabled: positionCheck.valid
-
-                onClicked: {
-                    if (!appCore.showPosition) {
-                        appCore.showPosition = true;
-                        appCore.followPosition = false;
-                    } else {
-                        if (appCore.followPosition) {
-                            appCore.showPosition = false;
-                        } else {
-                            appCore.followPosition = true;
-                        }
-                    }
-                }
-
-                function iconFromState() {
-                    if (!appCore.showPosition) {
-                        return "qrc:/resources/gps_off.svg"
-                    } else {
-                        if (appCore.followPosition) {
-                            return "qrc:/resources/gps_follow.svg"
-                        } else {
-                            return "qrc:/resources/gps_on.svg"
-                        }
-                    }
-                }
-            }
-        }
-
-        Item {
-            height: toolBar.height
-            width: height
-            anchors.right: parent.right
-            anchors.top: parent.top
-
-            LoadIndicator {
-                id: busyIndicator
-
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: toolBar.height * 0.1
-
-                height: toolBar.height * 0.8
-                width: height
-
-                running: root.loading
-            }
-        }
+        mapItem: root.mainMap
+        stackView: uiStack
     }
 
     Loader {

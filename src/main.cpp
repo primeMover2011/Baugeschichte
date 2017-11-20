@@ -40,6 +40,10 @@ int main(int argc, char* argv[])
     // style for Controls2
     qputenv("QT_QUICK_CONTROLS_STYLE", "Material");
 
+    QCoreApplication::setOrganizationName("GrazWiki");
+    QCoreApplication::setOrganizationDomain("baugeschichte.at");
+    QCoreApplication::setOrganizationName("Baugeschichte");
+
     QGuiApplication app(argc, argv);
     app.setApplicationDisplayName(QStringLiteral("Baugeschichte.at"));
 

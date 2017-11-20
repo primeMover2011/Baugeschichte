@@ -23,5 +23,6 @@
         <file>resources/spinner.png</file>
         <file>resources/fullscreen.svg</file>
         <file>resources/fullscreen_exit.svg</file>
+        <file>resources/menu.svg</file>
     </qresource>
 </RCC>

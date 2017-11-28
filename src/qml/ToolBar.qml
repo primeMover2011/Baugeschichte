@@ -174,9 +174,9 @@ Item {
 
         Item {
             width: Math.max(settingsItem.width, 100)
-            height: menuButton.height
-            implicitHeight: height
+            height: settingsItem.height
             implicitWidth: width
+            implicitHeight: height
 
             Text {
                 id: settingsItem
@@ -184,6 +184,7 @@ Item {
             }
             MouseArea {
                 anchors.fill: parent
+                anchors.margins: -Theme.smallMargin
                 onClicked: {
                     stackView.push({
                                      item: Qt.resolvedUrl("SettingsView.qml")

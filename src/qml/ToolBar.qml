@@ -34,6 +34,8 @@ Item {
     property MapComponent mapItem: null
     property var stackView: null
 
+    property bool loading: false
+
     height: Theme.buttonHeight
     
     Rectangle {
@@ -44,6 +46,8 @@ Item {
     
     RowLayout {
         anchors.fill: parent
+        anchors.rightMargin: menuButton.width
+
         
         ToolbarButton {
             id: mapButton

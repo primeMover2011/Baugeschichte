@@ -25,4 +25,5 @@ SearchResultDelegate 1.0 SearchResultDelegate.qml
 SettingsView 1.0 SettingsView.qml
 ShutDownDialog 1.0 ShutDownDialog.qml
 SizeTracer 1.0 SizeTracer.qml
+ToolBar 1.0 ToolBar.qml
 ToolbarButton 1.0 ToolbarButton.qml

@@ -26,5 +26,6 @@
         <file>qml/SizeTracer.qml</file>
         <file>qml/Theme.qml</file>
         <file>qml/ToolbarButton.qml</file>
+        <file>qml/ToolBar.qml</file>
     </qresource>
 </RCC>

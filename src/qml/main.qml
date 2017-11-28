@@ -81,6 +81,8 @@ Item {
 
         mapItem: root.mainMap
         stackView: uiStack
+
+        loading: root.loading
     }
 
     Loader {

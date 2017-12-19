@@ -120,7 +120,7 @@ BaseView {
         anchors.centerIn: parent
         width: parent.width / scale
         height: parent.height / scale
-        scale: appCore.mapProvider === "mapboxgl" ? 1 : Screen.devicePixelRatio
+        scale: appCore.extraScaling ? 2 : 1 //appCore.mapProvider === "mapboxgl" ? 1 : Screen.devicePixelRatio
 
         property MarkerLabel markerLabel
 

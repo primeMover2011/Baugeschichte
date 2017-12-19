@@ -56,6 +56,7 @@ class ApplicationCore : public QObject
     Q_PROPERTY(bool showPosition READ showPosition WRITE setShowPosition NOTIFY showPositionChanged)
     Q_PROPERTY(bool followPosition READ followPosition WRITE setFollowPosition NOTIFY followPositionChanged)
     Q_PROPERTY(QString detailsLanguage READ detailsLanguage WRITE setDetailsLanguage NOTIFY detailsLanguageChanged)
+    Q_PROPERTY(bool extraScaling READ extraScaling WRITE setExtraScaling NOTIFY extraScalingChanged)
     Q_OBJECT
 public:
     explicit ApplicationCore(QObject* parent = 0);
@@ -94,6 +95,9 @@ public:
 
     Q_INVOKABLE void openExternalLink(const QString& link);
 
+    bool extraScaling() const;
+    void setExtraScaling(bool extraScaling);
+
 public slots:
     void handleApplicationStateChange(Qt::ApplicationState state);
 
@@ -112,13 +116,11 @@ signals:
     void showDetailsChanged(bool showDetails);
     void requestFullZoomIn();
     void routeKMLChanged(QString routeKML);
-
     void categoryHousesChanged(HouseMarkerModel* categoryHouses);
-
     void showPositionChanged(bool showPosition);
     void followPositionChanged(bool followPosition);
-
     void detailsLanguageChanged(QString detailsLanguage);
+    void extraScalingChanged(bool extraScaling);
 
 private slots:
     void doReloadUI();
@@ -144,6 +146,7 @@ private:
     bool m_followPosition;
     QString m_detailsLanguage;
     QSettings* m_settings;
+    bool m_extraScaling;
 };
 
 #endif // APPLICATIONCORE_H

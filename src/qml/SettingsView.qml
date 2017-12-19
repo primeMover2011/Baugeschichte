@@ -30,6 +30,8 @@ import QtQuick.Controls 2.0
 Item {
     id: root
 
+    property bool __reloadUI: false
+
     Rectangle {
         id: background
         anchors.fill: parent
@@ -60,12 +62,41 @@ Item {
             }
             currentIndex: appCore.mapProvider === "osm" ? 0 : (appCore.mapProvider === "mapbox" ? 1 : 2)
             onCurrentIndexChanged: {
-                appCore.mapProvider = providerModel.get(currentIndex).value;
+                var newValue = providerModel.get(currentIndex).value;
+                if (newValue !== appCore.mapProvider) {
+                    appCore.mapProvider = newValue;
+                    __reloadUI = true;
+                }
+            }
+        }
+
+        CheckBox {
+            id: extraScaleItem
+            text: qsTr("Do extra scaling")
+            checked: appCore.extraScaling
+            onClicked: {
+                appCore.extraScaling = checked;
+            }
+        }
+
+        Item {
+            id: dummyItem
+            width: 10
+            height: 10
+        }
+
+        Button {
+            text: qsTr("Close")
+            onClicked: {
+                uiStack.pop();
             }
         }
     }
 
     Component.onDestruction: {
-        appCore.reloadUI();
+        if (__reloadUI) {
+            __reloadUI = false;
+            appCore.reloadUI();
+        }
     }
 }

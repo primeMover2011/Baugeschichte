@@ -53,6 +53,7 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QUrl>
+#include <QVariant>
 #include <QVector>
 #include <QtQml>
 
@@ -72,11 +73,17 @@ ApplicationCore::ApplicationCore(QObject* parent)
     , m_followPosition(false)
     , m_detailsLanguage("DE")
     , m_settings(new QSettings(this))
+    , m_extraScaling(false)
 {
     qRegisterMetaType<HouseMarker>("HouseMarker");
     qRegisterMetaType<QVector<HouseMarker>>("QVector<HouseMarker>");
     qmlRegisterType<HouseLocationFilter>("Baugeschichte", 1, 0, "HouseLocationFilter");
     qmlRegisterUncreatableType<HouseMarkerModel>("HouseMarkerModel", 1, 0, "HouseMarkerModel", "");
+
+    m_extraScaling = m_settings->value("MapExtraScaling", false).toBool();
+    QPointF lastPos = m_settings->value("CurrentMapPosition", QVariant::fromValue(QPointF(47.0667, 15.45))).toPointF();
+    m_currentMapPosition.setLatitude(lastPos.x());
+    m_currentMapPosition.setLongitude(lastPos.y());
 
     m_view->setWidth(1024);
     m_view->setHeight(800);
@@ -103,8 +110,12 @@ ApplicationCore::ApplicationCore(QObject* parent)
 
 ApplicationCore::~ApplicationCore()
 {
+    QVariant pos = QVariant::fromValue(QPointF(m_currentMapPosition.latitude(), m_currentMapPosition.longitude()));
+    m_settings->setValue("CurrentMapPosition", pos);
+    m_settings->setValue("MapExtraScaling", m_extraScaling);
     saveMarkers();
     delete (m_view);
+    m_settings->sync();
 }
 
 void ApplicationCore::showView()
@@ -239,6 +250,22 @@ void ApplicationCore::setDetailsLanguage(QString detailsLanguage)
 void ApplicationCore::openExternalLink(const QString& link)
 {
     QDesktopServices::openUrl(QUrl(link));
+}
+
+bool ApplicationCore::extraScaling() const
+{
+    return m_extraScaling;
+}
+
+void ApplicationCore::setExtraScaling(bool extraScaling)
+{
+    if (m_extraScaling == extraScaling) {
+        return;
+    }
+
+    m_extraScaling = extraScaling;
+    m_settings->sync();
+    emit extraScalingChanged(m_extraScaling);
 }
 
 void ApplicationCore::handleApplicationStateChange(Qt::ApplicationState state)

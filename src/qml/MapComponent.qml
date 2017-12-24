@@ -159,7 +159,8 @@ BaseView {
             switch (appCore.mapProvider) {
             case "mapboxGl": return mapboxGlPlugin;
             case "mapbox": return mapBoxPlugin;
-            default: return osmPlugin
+            case "osm": return osmPlugin;
+            default: return mapboxGlPlugin
             }
 //            return mapboxGlPlugin;
 //            return mapBoxPlugin;

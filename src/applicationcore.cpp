@@ -131,7 +131,8 @@ void ApplicationCore::reloadUI()
 
 QString ApplicationCore::mapProvider() const
 {
-    return m_settings->value("MapProvider", "osm").toString();
+    static QVariant defaultProvider = QVariant("mapboxGl");
+    return m_settings->value("MapProvider", defaultProvider).toString();
 }
 
 void ApplicationCore::setMapProvider(QString mapProvider)

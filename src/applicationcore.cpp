@@ -131,7 +131,11 @@ void ApplicationCore::reloadUI()
 
 QString ApplicationCore::mapProvider() const
 {
+#ifdef Q_OS_IOS
+    static QVariant defaultProvider = QVariant("osm");
+#else
     static QVariant defaultProvider = QVariant("mapboxGl");
+#endif
     return m_settings->value("MapProvider", defaultProvider).toString();
 }
 

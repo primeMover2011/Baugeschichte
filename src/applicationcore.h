@@ -108,6 +108,8 @@ public slots:
 
     void setRouteKML(const QString& routeKML);
 
+    void saveMapPosition();
+
 signals:
     void mapProviderChanged(QString mapProvider);
     void selectedHouseChanged(QString selectedHouse);

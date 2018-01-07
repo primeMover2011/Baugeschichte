@@ -110,9 +110,7 @@ ApplicationCore::ApplicationCore(QObject* parent)
 
 ApplicationCore::~ApplicationCore()
 {
-    QVariant pos = QVariant::fromValue(QPointF(m_currentMapPosition.latitude(), m_currentMapPosition.longitude()));
-    m_settings->setValue("CurrentMapPosition", pos);
-    m_settings->setValue("MapExtraScaling", m_extraScaling);
+    saveMapPosition();
     saveMarkers();
     delete (m_view);
     m_settings->sync();
@@ -145,6 +143,7 @@ void ApplicationCore::setMapProvider(QString mapProvider)
         return;
     }
 
+    saveMapPosition();
     m_settings->setValue("MapProvider", mapProvider);
     m_settings->sync();
     emit mapProviderChanged(mapProvider);
@@ -336,6 +335,13 @@ void ApplicationCore::setRouteKML(const QString& routeKML)
 
     m_routeKML = routeKML;
     emit routeKMLChanged(routeKML);
+}
+
+void ApplicationCore::saveMapPosition()
+{
+    QVariant pos = QVariant::fromValue(QPointF(m_currentMapPosition.latitude(), m_currentMapPosition.longitude()));
+    m_settings->setValue("CurrentMapPosition", pos);
+    m_settings->setValue("MapExtraScaling", m_extraScaling);
 }
 
 void ApplicationCore::doReloadUI()

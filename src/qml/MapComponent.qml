@@ -154,7 +154,7 @@ BaseView {
             }
         }
 
-        plugin: initPlugin()
+//        plugin: initPlugin() // is initialized in Component.onCompleted
         function initPlugin() {
             switch (appCore.mapProvider) {
             case "mapboxGl": return mapboxGlPlugin;
@@ -290,6 +290,7 @@ BaseView {
 
         Component.onCompleted: {
             root.updateRadius();
+            map.plugin = initPlugin();
         }
     }
 

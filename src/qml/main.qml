@@ -148,6 +148,9 @@ Item {
                 property bool splitScreen: width > height
                 readonly property bool detailsOpen: details.visible
 
+                property alias center: mapOfEurope.center
+                property alias zoomLevel: mapOfEurope.zoomLevel
+
                 loading: details.item ? details.item.loading : false
 
                 MapComponent {
@@ -205,6 +208,15 @@ Item {
             readonly property bool detailsOpen: item ? item.detailsOpen : false
 
             function reloadMapItem() {
+                posRestore.latitude = item.center.latitude;
+                posRestore.longitude = item.center.longitude;
+                posRestore.zoom = item.zoomLevel;
+                posRestore.start();
+
+                settings.lastSeenLat = item.center.latitude;
+                settings.lastSeenLon = item.center.longitude;
+                settings.lastZoomLevel = item.zoomLevel;
+
                 loader_mapOfEurope.sourceComponent = undefined;
                 loader_mapOfEurope.sourceComponent = component_mapOfEurope;
             }
@@ -215,6 +227,20 @@ Item {
                     loader_mapOfEurope.reloadMapItem();
                 }
             }
+        }
+    }
+
+    // used as workaround to restore the map position and zoom after the map provider changed
+    Timer {
+        id: posRestore
+        property double latitude: 0
+        property double longitude: 0
+        property double zoom: 0
+
+        interval: 200
+        onTriggered: {
+            loader_mapOfEurope.item.center = QtPositioning.coordinate(latitude, longitude);
+            loader_mapOfEurope.item.zoomLevel = zoom;
         }
     }
 

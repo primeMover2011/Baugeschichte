@@ -1,4 +1,4 @@
-lessThan(QT_VERSION, "5.7.1") {
+versionAtMost(QT_VERSION, "5.7.0") {
     warning("Qt 5.7.1 or above is required.")
 }
 

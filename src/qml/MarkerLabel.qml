@@ -62,11 +62,10 @@ MapQuickItem {
             font.bold: true
         }
 
-        MouseArea {
-            id: rectMouse
-            preventStealing: true
+        MultiPointTouchArea {
             anchors.fill: parent
-            onClicked: selectPoi()
+
+            onReleased:selectPoi();
 
             function selectPoi() {
                 appCore.selectedHouse = root.title;

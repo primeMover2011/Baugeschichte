@@ -69,6 +69,7 @@ public:
     void setMapProvider(QString mapProvider);
 
     QString selectedHouse() const;
+    Q_INVOKABLE void clearHouseSelection();
     const QGeoCoordinate& selectedHousePosition() const;
 
     const QGeoCoordinate& currentMapPosition() const;

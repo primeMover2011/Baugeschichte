@@ -154,6 +154,11 @@ QString ApplicationCore::selectedHouse() const
     return m_selectedHouse;
 }
 
+void ApplicationCore::clearHouseSelection()
+{
+    setSelectedHouse(QStringLiteral(""));
+}
+
 const QGeoCoordinate& ApplicationCore::selectedHousePosition() const
 {
     return m_selectedHousePosition;

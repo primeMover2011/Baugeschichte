@@ -143,14 +143,13 @@ BaseView {
             root.updateRadius();
         }
 
-        MouseArea {
+        MultiPointTouchArea {
             anchors.fill: parent
-            propagateComposedEvents: true
             onPressed: {
                 appCore.followPosition = false;
             }
-            onClicked: {
-                appCore.selectedHouse = "";
+            onReleased: {
+                appCore.clearHouseSelection();
             }
         }
 
@@ -254,9 +253,10 @@ BaseView {
                             }
                         }
                     }
-                    MouseArea {
+                    MultiPointTouchArea {
                         anchors.fill: parent
-                        onClicked: changeCurrentItem()
+
+                        onReleased: changeCurrentItem();
 
                         function changeCurrentItem() {
                             var showDetails = false;

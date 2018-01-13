@@ -70,7 +70,7 @@ Item {
             source: "qrc:/resources/icon-search.svg"
             onClicked: {
                 mapItem.resetToMainModel();
-                appCore.selectedHouse = "";
+                appCore.clearHouseSelection();
                 appCore.showDetails = false;
                 appCore.routeKML = "";
                 routeLoader.routeHouses = [];
@@ -86,7 +86,7 @@ Item {
             source: "qrc:/resources/icon-categories.svg"
             onClicked: {
                 mapItem.useCategoryModel();
-                appCore.selectedHouse = "";
+                appCore.clearHouseSelection();
                 appCore.showDetails = false;
                 appCore.routeKML = "";
                 routeLoader.routeHouses = [];
@@ -102,7 +102,7 @@ Item {
             source: "qrc:/resources/icon-route.svg"
             onClicked: {
                 mapItem.resetToMainModel();
-                appCore.selectedHouse = "";
+                appCore.clearHouseSelection();
                 appCore.showDetails = false;
                 appCore.routeKML = "";
                 routeLoader.routeHouses = [];

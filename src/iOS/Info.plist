@@ -8,27 +8,8 @@
 	<string>Baugeschichte</string>
 	<key>CFBundleGetInfoString</key>
 	<string>Created by Qt/QMake</string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIconFiles</key>
-	<array>
-		<string>Icon-180.png</string>
-		<string>Icon-167.png</string>
-		<string>Icon-1024.png</string>
-		<string>Icon-50@2x.png</string>
-		<string>Icon-72.png</string>
-		<string>Icon-72@2x.png</string>
-		<string>Icon-Small-50.png</string>
-		<string>Icon-Small.png</string>
-		<string>Icon-Small@2x.png</string>
-		<string>Icon.png</string>
-		<string>Icon@2x.png</string>
-		<string>Icon-120.png</string>
-		<string>Icon-76.png</string>
-		<string>Icon-152.png</string>
-	</array>
 	<key>CFBundleIdentifier</key>
-	<string>at.bitschmiede.grazwiki</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleName</key>
 	<string>Baugeschichte</string>
 	<key>CFBundlePackageType</key>
@@ -38,7 +19,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>16</string>
+	<string>20</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NOTE</key>

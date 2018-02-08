@@ -23,8 +23,10 @@ android {
 ios {
     QMAKE_INFO_PLIST = $$PWD/iOS/Info.plist
     BUNDLEID = at.bitschmiede.grazwiki
-    ios_icon.files = $$files($$PWD/iOS/AppIcons/*.png)
-    QMAKE_BUNDLE_DATA += ios_icon
+    QMAKE_ASSET_CATALOGS = $$PWD/ios/Images.xcassets
+    QMAKE_ASSET_CATALOGS_APP_ICON = "AppIcon"
+    #ios_icon.files = $$files($$PWD/iOS/AppIcons/*.png)
+    #QMAKE_BUNDLE_DATA += ios_icon
     ios_artwork.files = $$files($$PWD/iOS/Screenshots/*.png)
     QMAKE_BUNDLE_DATA += ios_artwork
     app_launch_images.files = $$files($$PWD/iOS/splash*.png)

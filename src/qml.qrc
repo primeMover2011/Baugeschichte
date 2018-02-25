@@ -12,7 +12,6 @@
         <file>qml/main.qml</file>
         <file>qml/MapComponent.qml</file>
         <file>qml/MapScale.qml</file>
-        <file>qml/MarkerLabel.qml</file>
         <file>qml/PositionIndicator.qml</file>
         <file>qml/RouteLine.qml</file>
         <file>qml/RouteLoader.qml</file>

@@ -7,15 +7,15 @@ android {
     QT += androidextras
     contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
         # Qt does not deploy MapboxGL automaticly? :(
-        ANDROID_EXTRA_LIBS += \
-            /opt/Qt/5.9.1/android_armv7/plugins/geoservices/libplugins_geoservices_libqtgeoservices_mapboxgl.so
+#        ANDROID_EXTRA_LIBS += \
+#            /opt/Qt/5.10.1/android_armv7/plugins/geoservices/libplugins_geoservices_libqtgeoservices_mapboxgl.so
         ANDROID_EXTRA_LIBS += $$PWD/../../android-openssl-qt/prebuilt/armeabi-v7a/libcrypto.so
         ANDROID_EXTRA_LIBS += $$PWD/../../android-openssl-qt/prebuilt/armeabi-v7a/libssl.so
     }
     contains(ANDROID_TARGET_ARCH,x86) {
         # Qt does not deploy MapboxGL automaticly? :(
-        ANDROID_EXTRA_LIBS = \
-            /opt/Qt/5.9.1/android_x86/plugins/geoservices/libplugins_geoservices_libqtgeoservices_mapboxgl.so
+#        ANDROID_EXTRA_LIBS = \
+#            /opt/Qt/5.10.1/android_x86/plugins/geoservices/libplugins_geoservices_libqtgeoservices_mapboxgl.so
         ANDROID_EXTRA_LIBS += $$PWD/../../android-openssl-qt/prebuilt/x86/libcrypto.so
         ANDROID_EXTRA_LIBS += $$PWD/../../android-openssl-qt/prebuilt/x86/libssl.so
     }

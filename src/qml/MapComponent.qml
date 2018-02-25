@@ -122,8 +122,6 @@ BaseView {
         height: parent.height / scale
         scale: appCore.extraScaling ? 2 : 1 //appCore.mapProvider === "mapboxgl" ? 1 : Screen.devicePixelRatio
 
-        property MarkerLabel markerLabel
-
         readonly property int markerSize: Theme.buttonHeight / map.scale
 
         onCenterChanged: {
@@ -147,6 +145,7 @@ BaseView {
             anchors.fill: parent
             onPressed: {
                 appCore.followPosition = false;
+                map.gesture.enabled = true; // workaround for issue #76 Text-Bubble muss 2x angetippt werden
             }
             onReleased: {
                 appCore.clearHouseSelection();
@@ -218,6 +217,8 @@ BaseView {
                 anchorPoint.x: image.width * 0.5
                 anchorPoint.y: image.height
 
+                z: appCore.selectedHouse === title ? 999 : 0
+
                 sourceItem: Item {
                     id: sourceItem
                     width: map.markerSize
@@ -254,18 +255,48 @@ BaseView {
                         }
                     }
                     MultiPointTouchArea {
+                        id: clickArea
                         anchors.fill: parent
 
                         onReleased: changeCurrentItem();
 
                         function changeCurrentItem() {
-                            var showDetails = false;
-                            if (selectedHouseLabel.visible) {
-                                showDetails = appCore.selectedHouse === title;
-                            }
-
+                            var showDetails = appCore.selectedHouse === title;
                             appCore.selectedHouse = title;
+                            map.gesture.enabled = false; // workaround for issue #76 Text-Bubble muss 2x angetippt werden
                             if (showDetails) {
+                                appCore.showDetails = true;
+                                appCore.centerSelectedHouse();
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        id: addressItem
+                        color: "#ffffff"
+                        x: -(textItem.implicitWidth * 1.2 / 2) + map.markerSize / 2
+                        width: textItem.implicitWidth * 1.2
+                        height: textItem.implicitHeight * 1.5
+                        anchors.bottom: image.top
+                        anchors.bottomMargin: height / 10
+                        border.width: 1
+                        border.color: "#0048a0"
+                        radius: 3
+                        visible: appCore.selectedHouse === title
+                        Text {
+                            id: textItem
+                            anchors.centerIn: parent
+                            text: title
+                            font.pixelSize: Theme.defaultFontSize
+                            color: "#0063DD"
+                            font.bold: true
+                        }
+                        MultiPointTouchArea {
+                            id: addressClickArea
+                            anchors.fill: parent
+
+                            onReleased: {
+                                appCore.selectedHouse = title;
                                 appCore.showDetails = true;
                                 appCore.centerSelectedHouse();
                             }
@@ -280,12 +311,6 @@ BaseView {
             positionSource: myPosition
             scale: 1 / map.scale
             visible: appCore.showPosition
-        }
-
-        MarkerLabel {
-            id: selectedHouseLabel
-            mapItem: parent
-            z: 9999
         }
 
         Component.onCompleted: {
@@ -348,11 +373,6 @@ BaseView {
 
     Connections {
         target: appCore
-        onSelectedHouseChanged: {
-            if (appCore.selectedHouse === "" && map.markerLabel) {
-                map.markerLabel.destroy();
-            }
-        }
         onCurrentMapPositionChanged: {
             if (map.center !== appCore.currentMapPosition) {
                 map.center = appCore.currentMapPosition;

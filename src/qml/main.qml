@@ -50,6 +50,20 @@ Item {
 
     property MapComponent mainMap: null
 
+    function goBack()
+    {
+        console.log("uiStack Depth:" + uiStack.depth)
+        if (uiStack.currentItem.detailsOpen) {
+            appCore.showDetails = false;
+        } else {
+            if (uiStack.depth > 1) {
+                uiStack.pop();
+            } else {
+                shutDownDialog.open();
+            }
+        }
+    }
+
     PositionSource {
         id: positionCheck
         preferredPositioningMethods: PositionSource.AllPositioningMethods
@@ -94,6 +108,13 @@ Item {
         }
     }
 
+    Connections {
+        target: mainView
+        onBackKeyPressed: {
+            root.goBack();
+        }
+    }
+
     Rectangle {
         id: background
         color: "#060606"
@@ -103,19 +124,6 @@ Item {
         focus: true
         Keys.onReleased: {
             console.log("Keys.onrelease")
-            console.log("uiStack Depth:" + uiStack.depth)
-            if (event.key === Qt.Key_Back) {
-                event.accepted = true
-                if (uiStack.currentItem.detailsOpen) {
-                    appCore.showDetails = false;
-                } else {
-                    if (uiStack.depth > 1) {
-                        uiStack.pop()
-                    } else {
-                        shutDownDialog.open();
-                    }
-                }
-            }
             if (event.key === Qt.Key_Menu) {
                 event.accepted = true;
                 uiStack.push(Qt.resolvedUrl("SettingsView.qml"));

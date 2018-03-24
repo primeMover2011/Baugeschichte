@@ -29,6 +29,7 @@
 #include "houselocationfilter.h"
 #include "housemarker.h"
 #include "housemarkermodel.h"
+#include "mainwindow.h"
 #include "markerloader.h"
 
 #include <QApplication>
@@ -59,7 +60,7 @@
 
 ApplicationCore::ApplicationCore(QObject* parent)
     : QObject(parent)
-    , m_view(new QQuickView())
+    , m_view(new MainWindow())
     , m_houseMarkerModel(new HouseMarkerModel(this))
     , m_markerLoader(new MarkerLoader(this))
     , m_selectedHouse("")
@@ -96,6 +97,7 @@ ApplicationCore::ApplicationCore(QObject* parent)
     context->setContextProperty(QStringLiteral("markerLoader"), m_markerLoader);
     context->setContextProperty(QStringLiteral("houseTrailModel"), m_houseMarkerModel);
     context->setContextProperty(QStringLiteral("categoryLoader"), m_categoryLoader);
+    context->setContextProperty(QStringLiteral("mainView"), m_view);
 
     connect(m_markerLoader, SIGNAL(newHousetrail(QVector<HouseMarker>)), m_houseMarkerModel,
         SLOT(append(QVector<HouseMarker>)));

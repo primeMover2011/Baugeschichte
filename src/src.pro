@@ -52,7 +52,8 @@ SOURCES += main.cpp \
     markerloader.cpp \
     housemarker.cpp \
     housemarkermodel.cpp \
-    categoryloader.cpp
+    categoryloader.cpp \
+    mainwindow.cpp
 
 HEADERS += \
     houselocationfilter.h \
@@ -60,7 +61,8 @@ HEADERS += \
     markerloader.h \
     housemarker.h \
     housemarkermodel.h \
-    categoryloader.h
+    categoryloader.h \
+    mainwindow.h
 
 DISTFILES += \
     android/AndroidManifest.xml \

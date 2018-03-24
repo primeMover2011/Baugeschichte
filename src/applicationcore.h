@@ -32,8 +32,9 @@
 #include <QString>
 
 class CategoryLoader;
-class MarkerLoader;
 class HouseMarkerModel;
+class MainWindow;
+class MarkerLoader;
 
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -134,7 +135,7 @@ private:
     void saveMarkers();
     void loadMarkers();
 
-    QQuickView* m_view;
+    MainWindow* m_view;
     HouseMarkerModel* m_houseMarkerModel;
     MarkerLoader* m_markerLoader;
     QString m_selectedHouse;

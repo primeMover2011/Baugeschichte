@@ -26,7 +26,7 @@
 
 import QtQuick 2.5
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.4 as Controls1
+import QtQuick.Controls 2.3
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Controls.Material 2.0
 import QtPositioning 5.5
@@ -67,9 +67,7 @@ Item {
         id: settingsMenuAction
         sequence: "Ctrl+M"
         onActivated: {
-            uiStack.push({
-                             item: Qt.resolvedUrl("SettingsView.qml")
-                         });
+            uiStack.push(Qt.resolvedUrl("SettingsView.qml"));
         }
     }
 
@@ -118,12 +116,9 @@ Item {
                     }
                 }
             }
-// settings disabled for now
             if (event.key === Qt.Key_Menu) {
                 event.accepted = true;
-                uiStack.push({
-                                 item: Qt.resolvedUrl("SettingsView.qml")
-                             });
+                uiStack.push(Qt.resolvedUrl("SettingsView.qml"));
             }
         }
     }
@@ -132,7 +127,7 @@ Item {
         id: routeLoader
     }
 
-    Controls1.StackView {
+    StackView {
         id: uiStack
         anchors.fill: background
         objectName: "theStackView"

@@ -75,9 +75,7 @@ Item {
                 appCore.routeKML = "";
                 routeLoader.routeHouses = [];
                 stackView.pop(null);
-                stackView.push({
-                                 item: Qt.resolvedUrl("SearchPage.qml")
-                             })
+                stackView.push(Qt.resolvedUrl("SearchPage.qml"));
             }
         }
         
@@ -91,9 +89,7 @@ Item {
                 appCore.routeKML = "";
                 routeLoader.routeHouses = [];
                 stackView.pop(null);
-                stackView.push({
-                                 item: Qt.resolvedUrl("CategoryselectionView.qml")
-                             })
+                stackView.push(Qt.resolvedUrl("CategoryselectionView.qml"));
             }
         }
         
@@ -106,9 +102,7 @@ Item {
                 appCore.showDetails = false;
                 appCore.routeKML = "";
                 routeLoader.routeHouses = [];
-                stackView.push({
-                                 item: Qt.resolvedUrl("RouteView.qml")
-                             })
+                stackView.push(Qt.resolvedUrl("RouteView.qml"));
             }
         }
         
@@ -186,9 +180,7 @@ Item {
                 anchors.fill: parent
                 anchors.margins: -Theme.smallMargin
                 onClicked: {
-                    stackView.push({
-                                     item: Qt.resolvedUrl("SettingsView.qml")
-                                 });
+                    stackView.push(Qt.resolvedUrl("SettingsView.qml"));
                     menuPopup.close();
                 }
             }

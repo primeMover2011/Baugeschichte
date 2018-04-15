@@ -31,6 +31,7 @@ MessageDialog {
     standardButtons: StandardButton.Yes | StandardButton.No
     modality: Qt.WindowModal
     title: qsTr("Quit Baugeschichte App?")
+    visible: false
     onYes: {
         Qt.quit();
     }

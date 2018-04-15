@@ -97,15 +97,8 @@ Item {
         loading: root.loading
     }
 
-    Loader {
+    ShutDownDialog {
         id: shutDownDialog
-
-        function open() {
-            if (source == "") {
-                source = "ShutDownDialog.qml";
-            }
-            item.visible = true;
-        }
     }
 
     Connections {

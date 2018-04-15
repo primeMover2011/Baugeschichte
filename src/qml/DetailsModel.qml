@@ -182,6 +182,20 @@ JsonModel {
             var preLink = splitup[0];
             var link = splitup[1];
             var postLink = splitup[2];
+
+            if (link.substring(0, 5) === "http:" || link.substring(0, 6) === "https:") {
+                // is an  external link
+                var linkText = link;
+                var linkLink = link;
+                var linkTerm = link.indexOf(" ");
+                if (linkTerm > -1) {
+                    linkLink = link.substring(0, linkTerm);
+                    linkText = link.substring(linkTerm+1, link.length);
+                }
+                var output = preLink + "<a href=\"" + linkLink + "\">" + linkText + "</a>" + postLink;
+                return convertExternalLink(output, output.length - postLink.length);
+            }
+
             var output = preLink + "<a href=\"internal://" + link + "\">" + link + "</a>" + postLink;
             return convertInternalLink(output, output.length - postLink.length);
         } else {

@@ -1,7 +1,7 @@
 name: baugeschichte
 version: 2.0.2.7
-summary: See images and the history of builings in a city
-description: See images and the history of builings in a city downloaded from www.housetrails.org
+summary: See images and the history of buildings in a city
+description: See images and the history of buildings in a city downloaded from www.housetrails.org
 confinement: strict
 grade: stable
 

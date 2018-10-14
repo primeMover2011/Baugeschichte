@@ -73,7 +73,31 @@ DISTFILES += \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew.bat \
     qml/qmldir \
-    qml/ToolBar.qml
+    qml/BaseView.qml \
+    qml/CategoryselectionView.qml \
+    qml/DetailsModel.qml \
+    qml/DetailsTextArea.qml \
+    qml/DetailsView.qml \
+    qml/ImageCarousel.qml \
+    qml/JsonModel.qml \
+    qml/LineInput.qml \
+    qml/LoadIndicator.qml \
+    qml/main.qml \
+    qml/MapComponent.qml \
+    qml/MapScale.qml \
+    qml/PositionIndicator.qml \
+    qml/RouteLine.qml \
+    qml/RouteLoader.qml \
+    qml/RouteView.qml \
+    qml/SearchModel.qml \
+    qml/SearchPage.qml \
+    qml/SearchResultDelegate.qml \
+    qml/SettingsView.qml \
+    qml/ShutDownDialog.qml \
+    qml/SizeTracer.qml \
+    qml/Theme.qml \
+    qml/ToolBar.qml \
+    qml/ToolBarButton.qml
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 

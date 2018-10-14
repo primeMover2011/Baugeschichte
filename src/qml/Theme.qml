@@ -27,46 +27,54 @@
 pragma Singleton
 
 import QtQuick 2.5
-//import QtQuick.Window 2.2
+import QtQuick.Window 2.2
 
 Item {
-    id: defaultHelper
+    id: root
 
-    readonly property int smallFontSize: Math.floor(fm.font.pixelSize * 1.1 * textScaleFactor)
-    readonly property int defaultFontSize: Math.floor(fm.font.pixelSize * 1.3 * textScaleFactor)
-    readonly property int largeFontSize: Math.floor(fm.font.pixelSize * 1.8 * textScaleFactor)
+    readonly property int smallFontSize: Math.floor(fm.font.pixelSize * 1.1 * internal.textScaleFactor)
+    readonly property int defaultFontSize: Math.floor(fm.font.pixelSize * 1.3 * internal.textScaleFactor)
+    readonly property int largeFontSize: Math.floor(fm.font.pixelSize * 1.8 * internal.textScaleFactor)
 
     readonly property int smallMargin: fm.font.pixelSize / 4.0
     readonly property int defaultMargin: fm.font.pixelSize / 2.0
     readonly property int largeMargin: fm.font.pixelSize
 
-    readonly property int buttonHeight: dp(50)
-
-    property real contentScaleFactor: fm.font.pixelSize / 16.0
-    property real textScaleFactor: 1
+    readonly property int buttonHeight: Math.floor(Math.min(dp(50), internal.maxToolButtonWidth))
 
     function dp(value) {
-        return Math.round(value * contentScaleFactor);
+        return Math.round(value * internal.contentScaleFactor);
     }
 
-    function mm(value) {
-        return Math.round(value * Screen.pixelDensity);
+    // Converts the given value (for mm length) to pixel size on screen
+    function mm(lengthInMM) {
+        return Math.round(lengthInMM * Screen.pixelDensity);
     }
 
     FontMetrics {
         id: fm
 
-//        Component.onCompleted: {
-//            console.log("Screen/Layout/sizes info:")
-//            console.log("Default font height height: "+height);
-//            console.log("Default font pixelSize: "+fm.font.pixelSize);
-//            console.log("Screen.devicePixelRatio "+Screen.devicePixelRatio)
-//            console.log("Screen.logicalPixelDensity "+Screen.logicalPixelDensity)
-//            console.log("Screen.pixelDensity "+Screen.pixelDensity)
-//            console.log("Screen.height: "+Screen.height)
-//            console.log("Screen.width: "+Screen.width)
-//            console.log("dp(50): "+dp(50));
-//            console.log("mm(8): "+mm(8));
-//        }
+        Component.onCompleted: {
+            console.log("Screen/Layout/sizes info:")
+            console.log("Default font height height: "+height);
+            console.log("Default font pixelSize: "+fm.font.pixelSize);
+            console.log("Default font pointSize: "+fm.font.pointSize);
+            console.log("Screen.devicePixelRatio "+Screen.devicePixelRatio)
+            console.log("Screen.logicalPixelDensity "+Screen.logicalPixelDensity)
+            console.log("Screen.pixelDensity "+Screen.pixelDensity)
+            console.log("Screen.height: "+Screen.height)
+            console.log("Screen.width: "+Screen.width)
+            console.log("buttonHeight: "+buttonHeight);
+            console.log("dp(50): "+dp(50));
+            console.log("mm(8): "+mm(8));
+        }
+    }
+
+    QtObject {
+        id: internal
+
+        property real textScaleFactor: 1
+        readonly property real maxToolButtonWidth: Math.min(Screen.height, Screen.width) / 6.5
+        readonly property real contentScaleFactor: fm.font.pixelSize / 16.0
     }
 }

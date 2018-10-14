@@ -60,7 +60,7 @@ class ApplicationCore : public QObject
     Q_PROPERTY(bool extraScaling READ extraScaling WRITE setExtraScaling NOTIFY extraScalingChanged)
     Q_OBJECT
 public:
-    explicit ApplicationCore(QObject* parent = 0);
+    explicit ApplicationCore(QObject* parent = nullptr);
     ~ApplicationCore();
 
     void showView();

@@ -50,7 +50,7 @@ FocusScope {
 
     signal accepted
 
-    height: Theme.dp(60)
+    height: Theme.buttonHeight
 
     Rectangle {
         id: background

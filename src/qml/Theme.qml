@@ -27,24 +27,25 @@
 pragma Singleton
 
 import QtQuick 2.5
+import QtQuick.Controls 2.3
 import QtQuick.Window 2.2
 
 Item {
     id: root
 
-    readonly property int smallFontSize: Math.floor(fm.font.pixelSize * 1.1 * internal.textScaleFactor)
-    readonly property int defaultFontSize: Math.floor(fm.font.pixelSize * 1.3 * internal.textScaleFactor)
-    readonly property int largeFontSize: Math.floor(fm.font.pixelSize * 1.8 * internal.textScaleFactor)
+    readonly property int smallFontSize: Math.floor(fm.font.pixelSize * 1.0 * internal.textScaleFactor)
+    readonly property int defaultFontSize: Math.floor(fm.font.pixelSize * 1.2 * internal.textScaleFactor)
+    readonly property int largeFontSize: Math.floor(fm.font.pixelSize * 1.6 * internal.textScaleFactor)
 
-    readonly property int smallMargin: fm.font.pixelSize / 4.0
-    readonly property int defaultMargin: fm.font.pixelSize / 2.0
-    readonly property int largeMargin: fm.font.pixelSize
+    readonly property int tinyMargin: Math.round(fm.font.pixelSize / 7.0)
+    readonly property int smallMargin: Math.round(fm.font.pixelSize / 4.0)
+    readonly property int defaultMargin: Math.round(fm.font.pixelSize / 2.0)
+    readonly property int largeMargin: Math.floor(fm.font.pixelSize)
 
-    readonly property int buttonHeight: Math.floor(Math.min(dp(50), internal.maxToolButtonWidth))
+    readonly property int buttonHeight: button.height
+    readonly property int toolButtonHeight: Math.floor(button.height, internal.maxToolButtonWidth)
 
-    function dp(value) {
-        return Math.round(value * internal.contentScaleFactor);
-    }
+    readonly property int defaultMarkerSize: Math.round(button.height * 0.8)
 
     // Converts the given value (for mm length) to pixel size on screen
     function mm(lengthInMM) {
@@ -65,16 +66,21 @@ Item {
             console.log("Screen.height: "+Screen.height)
             console.log("Screen.width: "+Screen.width)
             console.log("buttonHeight: "+buttonHeight);
-            console.log("dp(50): "+dp(50));
             console.log("mm(8): "+mm(8));
+            console.log("button.height: "+button.height);
         }
+    }
+
+    Button {
+        id: button
+        visible: false
     }
 
     QtObject {
         id: internal
 
         property real textScaleFactor: 1
-        readonly property real maxToolButtonWidth: Math.min(Screen.height, Screen.width) / 6.5
+        readonly property real maxToolButtonWidth: Math.floor(Math.min(Screen.height, Screen.width) / 6.5)
         readonly property real contentScaleFactor: fm.font.pixelSize / 16.0
     }
 }

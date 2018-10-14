@@ -133,7 +133,7 @@ ListView {
         MouseArea {
             id: previousClickArea
             anchors.fill: parent
-            anchors.margins: -Theme.dp(5)
+            anchors.margins: -Theme.smallMargin
 
             onClicked: {
                 decrementCurrentIndex();
@@ -157,7 +157,7 @@ ListView {
         MouseArea {
             id: nextClickArea
             anchors.fill: parent
-            anchors.margins: -Theme.dp(5)
+            anchors.margins: -Theme.smallMargin
 
             onClicked: {
                 incrementCurrentIndex();
@@ -180,14 +180,14 @@ ListView {
         sourceSize: Qt.size(width, height)
         anchors.top: parent.top
         anchors.right: parent.right
-        anchors.margins: Theme.dp(2)
+        anchors.margins: Theme.tinyMargin
 
         source: root.fullscreen ? "qrc:/resources/fullscreen_exit.svg" : "qrc:/resources/fullscreen.svg"
         opacity: fullViewButton.pressed ? 0.8 : 0.6
 
         MouseArea {
             anchors.fill: parent
-            anchors.margins: -Theme.dp(5)
+            anchors.margins: -Theme.smallMargin
 
             onClicked: {
                 root.fullscreen = !root.fullscreen;

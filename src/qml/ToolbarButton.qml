@@ -35,7 +35,7 @@ Item {
     signal clicked(var mouse)
 
     width: height
-    height: Theme.buttonHeight
+    height: Theme.toolButtonHeight
 
     opacity: enabled ? 1 : 0.3
 

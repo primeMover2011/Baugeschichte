@@ -122,7 +122,7 @@ BaseView {
         height: parent.height / scale
         scale: appCore.extraScaling ? 2 : 1 //appCore.mapProvider === "mapboxgl" ? 1 : Screen.devicePixelRatio
 
-        readonly property int markerSize: Theme.buttonHeight / map.scale
+        readonly property int markerSize: Theme.defaultMarkerSize / map.scale
 
         onCenterChanged: {
             if (autoUpdatePois) {

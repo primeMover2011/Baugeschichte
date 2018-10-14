@@ -36,7 +36,7 @@ Item {
 
     property bool loading: false
 
-    height: Theme.buttonHeight
+    height: Theme.toolButtonHeight
     
     Rectangle {
         id: toolBarBackground

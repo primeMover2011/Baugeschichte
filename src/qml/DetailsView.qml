@@ -207,7 +207,7 @@ BaseView {
                     id: titleText
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.margins: Theme.dp(5)
+                    anchors.margins: Theme.smallMargin
                     horizontalAlignment: Text.AlignHCenter
                     text: (poiName !== "") ? (poiName + ": " + title) : title
                     font.pixelSize: Theme.defaultFontSize

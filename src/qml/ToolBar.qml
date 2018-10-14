@@ -45,9 +45,11 @@ Item {
     }
     
     RowLayout {
-        anchors.fill: parent
-        anchors.rightMargin: menuButton.width
-
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: menuButton.left
+        anchors.rightMargin: Theme.largeMargin
         
         ToolbarButton {
             id: mapButton
@@ -191,7 +193,7 @@ Item {
         height: root.height
         width: height
         anchors.right: parent.right
-        anchors.rightMargin: width * 1.1
+        anchors.rightMargin: width * 1.05
         anchors.top: parent.top
         
         LoadIndicator {

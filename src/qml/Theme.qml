@@ -27,7 +27,7 @@
 pragma Singleton
 
 import QtQuick 2.5
-import QtQuick.Controls 2.3
+import QtQuick.Controls 2.0
 import QtQuick.Window 2.2
 
 Item {
@@ -43,9 +43,9 @@ Item {
     readonly property int largeMargin: Math.floor(fm.font.pixelSize)
 
     readonly property int buttonHeight: button.height
-    readonly property int toolButtonHeight: Math.floor(button.height, internal.maxToolButtonWidth)
+    readonly property int toolButtonHeight: Math.min(buttonHeight, internal.maxToolButtonWidth)
 
-    readonly property int defaultMarkerSize: Math.round(button.height * 0.8)
+    readonly property int defaultMarkerSize: Math.round(buttonHeight * 0.8)
 
     // Converts the given value (for mm length) to pixel size on screen
     function mm(lengthInMM) {
@@ -67,7 +67,9 @@ Item {
             console.log("Screen.width: "+Screen.width)
             console.log("buttonHeight: "+buttonHeight);
             console.log("mm(8): "+mm(8));
-            console.log("button.height: "+button.height);
+            console.log("buttonHeight: " + buttonHeight);
+            console.log("toolButtonHeight: "+ toolButtonHeight);
+            console.log("maxToolButtonWidth: "+ internal.maxToolButtonWidth);
         }
     }
 
@@ -80,7 +82,7 @@ Item {
         id: internal
 
         property real textScaleFactor: 1
-        readonly property real maxToolButtonWidth: Math.floor(Math.min(Screen.height, Screen.width) / 6.5)
+        readonly property real maxToolButtonWidth: Math.floor(Math.min(Screen.height, Screen.width) / 7)
         readonly property real contentScaleFactor: fm.font.pixelSize / 16.0
     }
 }
